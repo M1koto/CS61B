@@ -31,8 +31,8 @@ public class Tester {
     @Test
     public void threeSumTest() {
         // Change call to threeSum to make this call yours.
-        assertTrue(functions.threeSum(new int[] { -6, 3, 10, 200 }));
-        assertTrue(functions.threeSum(new int[]{5, 1, 0, 3, 6}));
+        assertTrue(functions.threesum(new int[] { -6, 3, 10, 200 }));
+        assertTrue(functions.threesum(new int[]{5, 1, 0, 3, 6}));
         // REPLACE THIS WITH MORE TESTS.
     }
 
