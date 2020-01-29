@@ -32,6 +32,7 @@ public class Tester {
     public void threeSumTest() {
         // Change call to threeSum to make this call yours.
         assertTrue(threeSum(new int[] { -6, 3, 10, 200 }));
+        assertTrue(threeSumDistinct(new int[]{5, 1, 0, 3, 6}));
         // REPLACE THIS WITH MORE TESTS.
     }
 
@@ -39,6 +40,8 @@ public class Tester {
     public void threeSumDistinctTest() {
         // Change call to threeSumDistinct to make this call yours.
         assertFalse(threeSumDistinct(new int[] { -6, 3, 10, 200 }));
+        assertFalse(threeSumDistinct(new int[]{5, 1, 0, 3, 6}));
+
         // REPLACE THIS WITH MORE TESTS.
     }
 
