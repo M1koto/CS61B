@@ -7,7 +7,7 @@ import ucb.junit.textui;
  *  @author YOUR NAMES HERE
  */
 public class Tester {
-
+    hw0 functions = new hw0();
     /* Feel free to add your own tests.  For now, you can just follow
      * the pattern you see here.  We'll look into the details of JUnit
      * testing later.
@@ -24,23 +24,23 @@ public class Tester {
     @Test
     public void maxTest() {
         // Change call to max to make this call yours.
-        assertEquals(14, max(new int[] { 0, -5, 2, 14, 10 }));
+        assertEquals(14, hw0.max(new int[] { 0, -5, 2, 14, 10 }));
         // REPLACE THIS WITH MORE TESTS.
     }
 
     @Test
     public void threeSumTest() {
         // Change call to threeSum to make this call yours.
-        assertTrue(threeSum(new int[] { -6, 3, 10, 200 }));
-        assertTrue(threeSumDistinct(new int[]{5, 1, 0, 3, 6}));
+        assertTrue(hw0.threeSum(new int[] { -6, 3, 10, 200 }));
+        assertTrue(hw0.threeSum(new int[]{5, 1, 0, 3, 6}));
         // REPLACE THIS WITH MORE TESTS.
     }
 
     @Test
     public void threeSumDistinctTest() {
         // Change call to threeSumDistinct to make this call yours.
-        assertFalse(threeSumDistinct(new int[] { -6, 3, 10, 200 }));
-        assertFalse(threeSumDistinct(new int[]{5, 1, 0, 3, 6}));
+        assertFalse(hw0.threeSumDistinct(new int[] { -6, 3, 10, 200 }));
+        assertFalse(hw0.threeSumDistinct(new int[]{5, 1, 0, 3, 6}));
 
         // REPLACE THIS WITH MORE TESTS.
     }
