@@ -42,7 +42,7 @@ public class hw0 {
     	
     	System.out.println(max(numbers));
     	System.out.println(threesum(trueorfalse));
-    	System.out.println(threeSumDistinct(trueorfalse));
+    	System.out.println(threeSumDistinctf(trueorfalse));
 
 	}
 }
