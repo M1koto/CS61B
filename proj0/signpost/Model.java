@@ -520,13 +520,51 @@ class Model implements Iterable<Model.Sq> {
          *    they are not part of the same connected sequence.
          */
         boolean connectable(Sq s1) {
-            // FIXME
+            if (signpost.Place.dirOf(x, y, s1.x, s1.y) != this.direction()) {
+                return false;
+            } else if (this.successor() != null || this.sequenceNum() == size() || s1.predecessor() != null ||s1.sequenceNum() == 1) {
+                return false;
+            } else if (this.sequenceNum() != 0 && s1.sequenceNum() != 0 && s1.sequenceNum() - this.sequenceNum() != 1) {
+                return false;
+            } else if (this.sequenceNum() == 0 && s1.sequenceNum() == 0 && s1.group() == this.group() && this.group() != -1) {
+                return false;
+            }
             return true;
         }
 
         /** Connect this square to S1, if both are connectable; otherwise do
          *  nothing. Returns true iff this square and S1 were connectable.
          *  Assumes S1 is in the proper arrow direction from this square. */
+        void helper_for_connect_suc(Sq target, int s1_num, Sq s0_head) {
+            if (target == null) {
+                ;
+            } else {
+                if (target.sequenceNum() == 0) {
+                    releaseGroup(target._group);
+                }
+                target._sequenceNum = s1_num;
+                helper_for_connect_suc(target.successor(), target._sequenceNum + 1, s0_head);
+            }
+        }
+        void helper_for_connect_pre(Sq target, int s0_num) {
+            if (target == null) {
+                ;
+            } else {
+                if (target.sequenceNum() == 0) {
+                    releaseGroup(target._group);
+                }
+                target._sequenceNum = s0_num;
+                helper_for_connect_pre(target.predecessor(), target._sequenceNum - 1);
+            }
+        }
+        void set_head(Sq target, Sq head) {
+            if (target == null) {
+                ;
+            } else {
+                target._head = head;
+                set_head(target.successor(), head);
+            }
+        }
         boolean connect(Sq s1) {
             if (!connectable(s1)) {
                 return false;
@@ -534,7 +572,6 @@ class Model implements Iterable<Model.Sq> {
             int sgroup = s1.group();
 
             _unconnected -= 1;
-
             // FIXME: Connect this square to its successor:
             //        + Set this square's _successor field and S1's
             //          _predecessor field.
@@ -550,7 +587,18 @@ class Model implements Iterable<Model.Sq> {
             //        + If both this square and S1 are unnumbered, set the
             //          group of this square's head to the result of joining
             //          the two groups.
-
+            this._successor = s1;
+            s1._predecessor = this;
+            if (this.sequenceNum() == 0 && s1.sequenceNum() == 0) {
+                this._head._group = joinGroups(this.group(), sgroup);
+            }
+            if (this.sequenceNum() != 0) {
+                helper_for_connect_suc(this.successor(), this.sequenceNum() + 1, this.head());
+            }
+            if (s1.sequenceNum() != 0) {
+                helper_for_connect_pre(s1.predecessor(), s1.sequenceNum() - 1);
+            }
+            set_head(this.successor(), this._head);
             return true;
         }
 
@@ -571,6 +619,7 @@ class Model implements Iterable<Model.Sq> {
                 //        number.
                 //        Otherwise, the group has been split into two multi-
                 //        element groups.  Create a new group for next.
+
             } else {
                 // FIXME: If neither this nor any square in its group that
                 //        precedes it has a fixed sequence number, set all
