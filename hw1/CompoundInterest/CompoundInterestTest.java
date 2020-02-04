@@ -40,7 +40,7 @@ public class CompoundInterestTest {
 
     /* Run the unit tests in this file. */
     public static void main(String... args) {
-        //System.exit(ucb.junit.textui.runClasses(CompoundInterestTest.class));
+        System.exit(ucb.junit.textui.runClasses(CompoundInterestTest.class));
         CompoundInterest.printDollarFV(2021, 0.03, 2);
         CompoundInterest.printSavingsFV(2021,0.12, 3, 5000);
     }
