@@ -239,7 +239,21 @@ public class ModelTests {
            This test requires that you pass sqConnectTest.
          */
 
+    @Test
+    public void test() {
+        Model model = new Model(tr(SOLN1));
+        Sq s1 = model.new Sq(0, 0, 1, true, 8, -1);
+        Sq s2 = model.new Sq(0, 0, 0, false, 8, -1);
+        Sq s3 = model.new Sq(0, 0, 0, false, 2, -1);
+        Sq s4 = model.new Sq(1, 0, 0, false, 8, -1);
 
+        s1.connect(s2);
+        s2.connect(s3);
+        s3.connect(s4);
+
+        s2.disconnect();
+        checkSquare(s2, s1, s1, null, 0, 1);
+    }
 
     @Test
     public void sqDisconnectTest() {

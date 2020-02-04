@@ -603,6 +603,53 @@ class Model implements Iterable<Model.Sq> {
         }
 
         /** Disconnect this square from its current successor, if any. */
+        boolean check_proced(Sq target) {
+            if (target == null) {
+                return false;
+            } else {
+                return (target.hasFixedNum() || check_proced(target.predecessor()));
+            }
+        }
+        /** true if has fixed num */
+        boolean check_suc(Sq target) {
+            if (target == null) {
+                return false;
+            } else {
+                return (target.hasFixedNum() || check_suc(target.successor()));
+            }
+        }
+        void set_seqNum_suc(Sq target, int num) {
+            if (target == null) {
+                ;
+            } else {
+                target._sequenceNum = num;
+                set_seqNum_prec(target.successor(), num);
+            }
+        }
+        void set_seqNum_prec(Sq target, int num) {
+            if (target == null) {
+                ;
+            } else {
+                target._sequenceNum = num;
+                set_seqNum_prec(target.predecessor(), num);
+            }
+        }
+        void set_group_pre(Sq target, int group_num) {
+            if (target == null) {
+                ;
+            } else {
+                target._group = group_num;
+                set_group_pre(target.predecessor(), group_num);
+            }
+        }
+        void set_group_suc(Sq target, int group_num) {
+            if (target == null) {
+                ;
+            } else {
+                target._group = group_num;
+                set_group_suc(target.successor(), group_num);
+            }
+        }
         void disconnect() {
             Sq next = _successor;
             if (next == null) {
@@ -610,6 +657,8 @@ class Model implements Iterable<Model.Sq> {
             }
             _unconnected += 1;
             next._predecessor = _successor = null;
+            boolean flag_for_this = false;
+            boolean flag_for_next = false;
             if (_sequenceNum == 0) {
                 // FIXME: If both this and next are now one-element groups,
                 //        release their former group and set both group
@@ -619,8 +668,27 @@ class Model implements Iterable<Model.Sq> {
                 //        number.
                 //        Otherwise, the group has been split into two multi-
                 //        element groups.  Create a new group for next.
+                if (this.successor() == null && this.predecessor() == null) {
+                    flag_for_this = true;
+                }
 
-            } else {
+                if (next.successor() == null && next.predecessor() == null) {
+                    flag_for_next = true;
+                }
+                if (flag_for_next && flag_for_this) {
+                    releaseGroup(this.group());
+                    releaseGroup(next.group());
+                    this._group = -1;
+                    next._group = -1;
+                } else if (!flag_for_next && flag_for_this) {
+                    this._group = -1;
+                } else if (flag_for_next && !flag_for_this) {
+                    next._group = -1;
+                } else {
+                    next._group = newGroup();
+                }
+            }
+            else {
                 // FIXME: If neither this nor any square in its group that
                 //        precedes it has a fixed sequence number, set all
                 //        their sequence numbers to 0 and create a new group
@@ -631,9 +699,26 @@ class Model implements Iterable<Model.Sq> {
                 //        their sequence numbers to 0 and create a new
                 //        group for them if next has a current successor
                 //        (otherwise set next's group to -1.)
+                if (!check_proced(this)) {
+                    set_seqNum_prec(this, 0);
+                    if (this._predecessor == null) {
+                        this._group = -1;
+                    } else {
+                        set_group_pre(this, newGroup());
+                    }
+                }
+                if (!check_suc(next)) {
+                    set_seqNum_suc(next, 0);
+                    if (next._successor == null) {
+                        next._group = -1;
+                    } else {
+                        set_group_suc(next, newGroup());
+                    }
+                }
             }
             // FIXME: Set the _head of next and all squares in its group to
             //        next.
+            set_head(next, next);
         }
 
         @Override
