@@ -10,6 +10,7 @@ import static org.junit.Assert.*;
 
 import static signpost.Place.pl;
 import signpost.Model.Sq;
+import signpost.Model;
 import static signpost.Utils.msg;
 import static signpost.Utils.tr;
 import static signpost.Utils.assertSetEquals;
@@ -173,6 +174,34 @@ public class ModelTests {
           (s6, S ) (s4, S ) (      )
           (s1, NE) (      ) (s2, N )
      */
+    static final int[][] SOLN0 = {
+            {1, 2},
+            {3, 4}
+    };
+    private static final int[][] BOARD0 = {
+            { 1, 0},
+            { 0, 4}
+    };
+    @Test
+     public void test_for_arrow_dir() {
+        Model model = new Model (tr(SOLN0));
+        signpost.Place first = pl(0, 1);
+        signpost.Place sec = pl(1, 1);
+        signpost.Place third = pl(0, 0);
+        signpost.Place fourth = pl(1, 0);
+        model._solnNumToPlace = new signpost.Place[] {null, first, sec, third, fourth};
+        Sq s1 = model.new Sq(0,1,1,false,2,1);
+        Sq s2 = model.new Sq(1,1,2,false,5,1);
+        Sq s3 = model.new Sq(0,0,0,false,1,-1);
+        Sq s4 = model.new Sq(1,0,0,false,2,-1);
+        model._board = new Sq[][] {{s1, s2}, {s3, s4}};
+        s1.connect(s2);
+        s2.connect(s3);
+        System.out.println(model);
+        checkSquare(s1, s1, null, s2, 1, 0);
+        assertEquals(2, model.arrowDirection(0,1));
+    }
+
 
     @Test
     public void sqConnectTest() {
@@ -239,21 +268,6 @@ public class ModelTests {
            This test requires that you pass sqConnectTest.
          */
 
-    @Test
-    public void test() {
-        Model model = new Model(tr(SOLN1));
-        Sq s1 = model.new Sq(0, 0, 1, true, 8, -1);
-        Sq s2 = model.new Sq(0, 0, 0, false, 8, -1);
-        Sq s3 = model.new Sq(0, 0, 0, false, 2, -1);
-        Sq s4 = model.new Sq(1, 0, 0, false, 8, -1);
-
-        s1.connect(s2);
-        s2.connect(s3);
-        s3.connect(s4);
-
-        s2.disconnect();
-        checkSquare(s2, s1, s1, null, 0, 1);
-    }
 
     @Test
     public void sqDisconnectTest() {

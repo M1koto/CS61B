@@ -7,8 +7,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Arrays;
 
-import static signpost.Place.pl;
-import static signpost.Place.PlaceList;
+import static signpost.Place.*;
 import static signpost.Utils.*;
 
 /** The state of a Signpost puzzle.  Each cell has coordinates (x, y),
@@ -97,7 +96,7 @@ class Model implements Iterable<Model.Sq> {
         // "// END DUMMY SETUP".
         _board = new Sq[][] {
             { new Sq(0, 0, 0, false, 2, -1), new Sq(0, 1, 0, false, 2, -1),
-              new Sq(0, 2, 0, false, 4, -1), new Sq(0, 3, 1, true, 2, 0) },
+              new Sq(0, 2, 0, false, 4, -1), new Sq(0, 3, 0, true, 2, 0) },
             { new Sq(1, 0, 0, false, 2, -1), new Sq(1, 1, 0, false, 2, -1),
               new Sq(1, 2, 0, false, 6, -1), new Sq(1, 3, 0, false, 2, -1) },
             { new Sq(2, 0, 0, false, 6, -1), new Sq(2, 1, 0, false, 2, -1),
@@ -263,6 +262,13 @@ class Model implements Iterable<Model.Sq> {
     private int arrowDirection(int x, int y) {
         int seq0 = _solution[x][y];
         // FIXME
+        for (int i = 0; i < _board.length; i++) {
+            for (int j = 0; j < _board[i].length; j++) {
+                if (_board[i][j]._sequenceNum - seq0 == 1) {
+                    return dirOf(x, y, _board[i][j].x, _board[i][j].y);
+                }
+            }
+        }
         return 0;
     }
 
@@ -791,7 +797,7 @@ class Model implements Iterable<Model.Sq> {
     /** Dimensions of board. */
     private int _width, _height;
     /** Contents of board, indexed by position. */
-    private Sq[][] _board;
+    public Sq[][] _board;
     /** Contents of board as a sequence of squares for convenient iteration. */
     private ArrayList<Sq> _allSquares = new ArrayList<>();
     /** _allSuccessors[x][y][dir] is a sequence of all queen moves possible
@@ -806,4 +812,6 @@ class Model implements Iterable<Model.Sq> {
     /** The set of positive group numbers currently in use. */
     private HashSet<Integer> _usedGroups = new HashSet<>();
 
+
 }
+
