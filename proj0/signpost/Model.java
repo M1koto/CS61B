@@ -9,8 +9,7 @@ import java.util.Arrays;
 
 import static signpost.Place.*;
 import static signpost.Utils.*;
-
-import static signpost.Place.pl;
+import static signpost.Place.PlaceList;
 
 /** The state of a Signpost puzzle.  Each cell has coordinates (x, y),
  *  where 0 <= x < width(), 0 <= y < height().  The upper-left corner
@@ -141,6 +140,18 @@ class Model implements Iterable<Model.Sq> {
             } else {
                 _board[previous[0]][previous[1]] = new Sq(previous[0], previous[1], 0, false, dir_of_prev, -1);
                 _allSquares.add(_board[previous[0]][previous[1]]);
+            }
+        }
+        for (int x = 0; x < _width; x++) {
+            for (int y = 0; y < _height; y++) {
+                for (int z = 0; z < _width; z++) {
+                    for (int w = 0; w < _height; w++) {
+                        if (_board[x][y].connectable(_board[z][w])) {
+                            _board[x][y]._successors.add(Place.pl(z, w));
+                            _board[x][y]._predecessors.add(Place.pl(x, y));
+                        }
+                    }
+                }
             }
         }
 
