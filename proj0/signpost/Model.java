@@ -10,6 +10,8 @@ import java.util.Arrays;
 import static signpost.Place.*;
 import static signpost.Utils.*;
 
+import static signpost.Place.pl;
+
 /** The state of a Signpost puzzle.  Each cell has coordinates (x, y),
  *  where 0 <= x < width(), 0 <= y < height().  The upper-left corner
  *  of the puzzle has coordinates (0, height() - 1), and the lower-right
@@ -89,6 +91,7 @@ class Model implements Iterable<Model.Sq> {
         _solution = new int[_width][_height];
         deepCopy(solution, _solution);
 
+        /**
         // DUMMY SETUP
         // This is a particular puzzle provided as a filler until the
         // puzzle-generation software is complete.
@@ -110,6 +113,36 @@ class Model implements Iterable<Model.Sq> {
             }
         }
         // END DUMMY SETUP
+         */
+        Sq[][] _board = new Sq [_width][_height];
+        for (int i = 1; i < last; i++) {
+            int [] previous;
+            int [] following;
+            for (int j = 0; j < _width; j++) {
+                for (int k = 0; k < _height; k++) {
+                    if (_solution[j][k] == i) {
+                        previous = new int[] {k, j};
+                        _solnNumToPlace[i] = Place.pl(k, j);
+                    } else {
+                        throw badArgs("IllegalArgumentException");
+                    }
+                    if (_solution[j][k] == i+1) {
+                        following = new int[] {k, j};
+                    }
+                }
+            }
+            int dir_of_prev = arrowDirection(previous[0], previous[1], following[0], following[1]);
+            if (i == 1) {
+                _board[previous[0]][previous[1]] = new Sq(previous[0], previous[1], i, true, dir_of_prev, -1);
+                _allSquares.add(_board[previous[0]][previous[1]]);
+            } else if (i == last) {
+                _board[previous[0]][previous[1]] = new Sq(previous[0], previous[1], last, true, 0, -1);
+                _allSquares.add(_board[previous[0]][previous[1]]);
+            } else {
+                _board[previous[0]][previous[1]] = new Sq(previous[0], previous[1], 0, false, dir_of_prev, -1);
+                _allSquares.add(_board[previous[0]][previous[1]]);
+            }
+        }
 
         // FIXME: Initialize _board so that _board[x][y] contains the Sq object
         //        representing the contents at cell (x, y), _allSquares
@@ -125,6 +158,7 @@ class Model implements Iterable<Model.Sq> {
         //        in the direction of its arrow).
         //        Likewise, set its _predecessors list to the list of
         //        all cells that might connect to it.
+
 
         _unconnected = last - 1;
     }
@@ -254,6 +288,7 @@ class Model implements Iterable<Model.Sq> {
      *  this board was last initialized by the constructor. */
     void solve() {
         // FIXME
+
         _unconnected = 0;
     }
 
