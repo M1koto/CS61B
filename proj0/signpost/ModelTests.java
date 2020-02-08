@@ -182,7 +182,7 @@ public class ModelTests {
             { 1, 0},
             { 0, 4}
     };
-    @Test
+    /**@Test
      public void test_for_arrow_dir() {
         Model model = new Model (tr(SOLN0));
         signpost.Place first = pl(0, 1);
@@ -201,6 +201,7 @@ public class ModelTests {
         checkSquare(s1, s1, null, s2, 1, 0);
         assertEquals(2, model.arrowDirection(0,1));
     }
+     */
 
 
     @Test

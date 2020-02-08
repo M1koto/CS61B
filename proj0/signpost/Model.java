@@ -7,9 +7,11 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Arrays;
 
-import static signpost.Place.*;
-import static signpost.Utils.*;
+import static signpost.Place.pl;
 import static signpost.Place.PlaceList;
+import static signpost.Utils.*;
+import static signpost.Place.*;
+
 
 /** The state of a Signpost puzzle.  Each cell has coordinates (x, y),
  *  where 0 <= x < width(), 0 <= y < height().  The upper-left corner
@@ -113,24 +115,26 @@ class Model implements Iterable<Model.Sq> {
         }
         // END DUMMY SETUP
          */
-        Sq[][] _board = new Sq [_width][_height];
-        for (int i = 1; i < last; i++) {
-            int [] previous;
-            int [] following;
-            for (int j = 0; j < _width; j++) {
-                for (int k = 0; k < _height; k++) {
-                    if (_solution[j][k] == i) {
+        _board = new Sq[_width][_height];
+        Place[] _solnNumToPlace = new Place[last];
+        for (int i = 1; i < last+1; i++) {
+            int [] previous = new int[] {-1, -1};
+            int [] following = new int[] {-1, -1};
+            for (int j = 0; j < _height; j++) {    //5
+                for (int k = 0; k < _width ; k++) {   //4
+                    if (_solution[k][j] == i) {
                         previous = new int[] {k, j};
-                        _solnNumToPlace[i] = Place.pl(k, j);
-                    } else {
-                        throw badArgs("IllegalArgumentException");
+                        _solnNumToPlace[i-1] = Place.pl(k, j);
                     }
-                    if (_solution[j][k] == i+1) {
+                    if (_solution[k][j] == i+1) {
                         following = new int[] {k, j};
                     }
                 }
             }
-            int dir_of_prev = arrowDirection(previous[0], previous[1], following[0], following[1]);
+            if (previous[0] == -1 || previous[1] == -1) {
+                throw new IllegalArgumentException("bad args");
+            }
+            int dir_of_prev = dirOf(previous[0], previous[1], following[0], following[1]);
             if (i == 1) {
                 _board[previous[0]][previous[1]] = new Sq(previous[0], previous[1], i, true, dir_of_prev, -1);
                 _allSquares.add(_board[previous[0]][previous[1]]);
@@ -142,18 +146,25 @@ class Model implements Iterable<Model.Sq> {
                 _allSquares.add(_board[previous[0]][previous[1]]);
             }
         }
-        for (int x = 0; x < _width; x++) {
-            for (int y = 0; y < _height; y++) {
-                for (int z = 0; z < _width; z++) {
-                    for (int w = 0; w < _height; w++) {
-                        if (_board[x][y].connectable(_board[z][w])) {
-                            _board[x][y]._successors.add(Place.pl(z, w));
-                            _board[x][y]._predecessors.add(Place.pl(x, y));
+
+        for (int x = 0; x < _height; x++) { //5
+            for (int y = 0; y < _width; y++) { //4
+                _board[y][x]._successors = new PlaceList() {};
+                for (int z = 0; z < _height; z++) {
+                    for (int w = 0; w < _width; w++) {
+                        if (_board[y][x].connectable(_board[w][z])) {
+                            _board[y][x]._successors.add(Place.pl(w, z));
+                            if (_board[y][x]._predecessors == null) {
+                                _board[y][x]._predecessors = new PlaceList() {};
+                            } else {
+                                _board[y][x]._predecessors.add(Place.pl(y, x));
+                            }
                         }
                     }
                 }
             }
         }
+
 
         // FIXME: Initialize _board so that _board[x][y] contains the Sq object
         //        representing the contents at cell (x, y), _allSquares
