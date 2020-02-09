@@ -48,7 +48,13 @@ public class IntDList {
      */
     public int size() {
         // FIXME: Implement this method and return correct value
-        return 0;
+        DNode temp = _front;
+        int ans = 0;
+        while (temp != null) {
+            temp = temp._next;
+            ans = ans + 1;
+        }
+        return ans;
     }
 
     /**
@@ -63,7 +69,23 @@ public class IntDList {
      */
     public int get(int i) {
         // FIXME: Implement this method and return correct value
-        return 0;
+        if (i > 0) {
+            DNode temp = _front;
+            while (i != 0) {
+                temp = temp._next;
+                i -= 1;
+            }
+            return temp._val;
+        } else if (i < 0){
+            DNode temp = _back;
+            while (i != -1) {
+                temp = temp._prev;
+                i += 1;
+            }
+            return temp._val;
+        } else {
+            return _front._val;
+        }
     }
 
     /**
@@ -71,6 +93,17 @@ public class IntDList {
      */
     public void insertFront(int d) {
         // FIXME: Implement this method
+        if (_front != null && _back != null) {
+            DNode temp = new DNode(null, d, null);
+            _front._prev = temp;
+            temp._next = _front;
+            _front = temp;
+        } else {
+            DNode temp = new DNode(null, d, null);
+            _front = temp;
+            _back = temp;
+        }
+
     }
 
     /**
@@ -78,6 +111,16 @@ public class IntDList {
      */
     public void insertBack(int d) {
         // FIXME: Implement this method
+        if (_front != null && _back != null) {
+            DNode temp = new DNode(null, d, null);
+            temp._prev = _back;
+            _back._next = temp;
+            _back = temp;
+        } else {
+            DNode temp = new DNode(null, d, null);
+            _front = temp;
+            _back = temp;
+        }
     }
 
     /**
@@ -93,6 +136,37 @@ public class IntDList {
      */
     public void insertAtIndex(int d, int index) {
         // FIXME: Implement this method
+        if (index > 0) {
+            if (index == size()) {
+                insertBack(d);
+            } else {
+                DNode temp = _front;
+                while (index != 1) {
+                    temp = temp._next;
+                    index -= 1;
+                }
+                DNode extra = new DNode(temp, d, temp._next);
+                temp._next._prev = extra;
+                temp._next = extra;
+            }
+        } else if (index < -1){
+            if (-index == size()+1) {
+                insertFront(d);
+            } else {
+                DNode temp = _back;
+                while (index != -2) {
+                    temp = temp._prev;
+                    index += 1;
+                }
+                DNode extra = new DNode(temp._prev, d, temp);
+                temp._prev._next = extra;
+                temp._prev = extra;
+            }
+        } else if (index == 0){
+            insertFront(d);
+        } else {
+            insertBack(d);
+        }
     }
 
     /**
@@ -102,7 +176,18 @@ public class IntDList {
      */
     public int deleteFront() {
         // FIXME: Implement this method and return correct value
-        return 0;
+        boolean flag = false;
+        if (size() == 1) {
+            flag = true;
+        }
+        DNode temp = _front;
+        _front = _front._next;
+        if (flag) {
+            return temp._val;
+        }
+        _front._prev = null;
+        temp._next = null;
+        return temp._val;
     }
 
     /**
@@ -112,7 +197,19 @@ public class IntDList {
      */
     public int deleteBack() {
         // FIXME: Implement this method and return correct value
-        return 0;
+        boolean flag = false;
+        if (size() == 1) {
+            flag = true;
+        }
+        DNode temp = _back;
+        _back = _back._prev;
+        if (flag) {
+            _front = null;
+            return temp._val;
+        }
+        _back._next = null;
+        temp._prev = null;
+        return temp._val;
     }
 
     /**
@@ -128,7 +225,49 @@ public class IntDList {
      */
     public int deleteAtIndex(int index) {
         // FIXME: Implement this method and return correct value
-        return 0;
+        if (size() == 1) {
+           int temp = _front._val;
+           _front = null;
+           _back = null;
+           return temp;
+        }
+        if (index > 0) {
+            if (index == size()-1) {
+                return deleteBack();
+            } else {
+                DNode temp = _front;
+                while (index != 1) {
+                    temp = temp._next;
+                    index -= 1;
+                }
+                int ans = temp._next._val;
+                temp._next = temp._next._next;
+                temp._next._prev._next = null;
+                temp._next._prev._prev = null;
+                temp._next._prev = temp;
+                return ans;
+            }
+        } else if (index < -1){
+            if (-index == size()) {
+                return deleteFront();
+            } else {
+                DNode temp = _back;
+                while (index != -2) {
+                    temp = temp._prev;
+                    index += 1;
+                }
+                int ans = temp._prev._val;
+                temp._prev = temp._prev._prev;
+                temp._prev._next._prev = null;
+                temp._prev._next._next = null;
+                temp._prev._next = temp;
+                return ans;
+            }
+        } else if (index == 0){
+            return deleteFront();
+        } else {
+            return deleteBack();
+        }
     }
 
     /**
@@ -140,8 +279,16 @@ public class IntDList {
      * System.out.println(a); //prints ab
      */
     public String toString() {
-        // FIXME: Implement this method to return correct value
-        return null;
+        if (size() == 0) {
+            return "[]";
+        }
+        String str = "[";
+        DNode curr = _front;
+        for (; curr._next != null; curr = curr._next) {
+            str += curr._val + ", ";
+        }
+        str += curr._val +"]";
+        return str;
     }
 
     /**
