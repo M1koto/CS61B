@@ -154,18 +154,18 @@ class Model implements Iterable<Model.Sq> {
                     for (int w = 0; w < _width; w++) {
                         if (_board[y][x].connectable(_board[w][z])) {
                             _board[y][x]._successors.add(Place.pl(w, z));
-                            if (_board[y][x]._predecessors == null) {
-                                _board[y][x]._predecessors = new PlaceList() {};
+                            if (_board[w][z]._predecessors == null) {
+                                _board[w][z]._predecessors = new PlaceList() {};
+                                _board[w][z]._predecessors.add(Place.pl(y, x));
                             } else {
-                                _board[y][x]._predecessors.add(Place.pl(y, x));
+                                _board[w][z]._predecessors.add(Place.pl(y, x));
                             }
                         }
                     }
                 }
             }
+
         }
-
-
         // FIXME: Initialize _board so that _board[x][y] contains the Sq object
         //        representing the contents at cell (x, y), _allSquares
         //        contains the list of all Sq objects on the board, and
@@ -193,6 +193,32 @@ class Model implements Iterable<Model.Sq> {
         _solution = model._solution;
         _usedGroups.addAll(model._usedGroups);
         _allSuccessors = model._allSuccessors;
+        int last = _width * _height;
+
+        _board = new Sq[_width][_height];
+        //_allSquares = new Place[last];
+        for (int j = 0; j < _height; j++) {    //5
+            for (int k = 0; k < _width ; k++) {   //4
+                Sq target1 = model._board[k][j];
+                _board[k][j] = new Sq(target1.x, target1.y, target1._sequenceNum, target1._hasFixedNum, target1._dir, target1._group);
+                _allSquares.add(_board[k][j]);
+            }
+        }
+        for (int a = 0; a < _height; a++) {
+            for (int b = 0; b < _width; b++) {
+                Sq target2 = model._board[b][a];
+                Sq this_square = _board[b][a];
+                if (target2._successor != null) {
+                    this_square._successor = get(target2._successor);
+                }
+                if (target2._predecessor != null) {
+                    this_square._predecessor = get(target2._predecessor);
+                }
+                if (target2._head != null) {
+                    this_square._head = get(target2._head);
+                }
+            }
+        }
 
         // FIXME: Initialize _board and _allSquares to contain copies of the
         //        the Sq objects in MODEL other than their _successor,
@@ -303,14 +329,53 @@ class Model implements Iterable<Model.Sq> {
      *  unconnected and are separated by a queen move.  Returns true iff
      *  any changes were made. */
     boolean autoconnect() {
-        return false; // FIXME
+        ArrayList<Sq> the_squares = new ArrayList<Sq>();
+        boolean flag_to_return = false;
+        for (int i = 0; i < _height; i++) {
+            for (int j = 0; j < _width; j++) {
+                if (_board[j][i]._sequenceNum != 0 && _board[j][i]._successor == null) {
+                    the_squares.add(_board[j][i]);
+                }
+            }
+        }
+        for (int k = 0; k < the_squares.size()-1; k++) {
+            for (int m = k; m <= the_squares.size()-1; m++) {
+                if (the_squares.get(k) == the_squares.get(m)) {
+                    ;
+                } else if (the_squares.get(k)._sequenceNum == the_squares.get(m)._sequenceNum - 1 ) {  //k connect to m
+                    the_squares.get(k).connect(the_squares.get(m));
+                    flag_to_return = true;
+                } else if (the_squares.get(m)._sequenceNum == the_squares.get(k)._sequenceNum - 1 ) {//m connect to k
+                    the_squares.get(m).connect(the_squares.get(k));
+                    flag_to_return = true;
+                }
+            }
+        }
+        return flag_to_return; // FIXME
     }
 
     /** Sets the numbers in this board's squares to the solution from which
      *  this board was last initialized by the constructor. */
     void solve() {
         // FIXME
-
+        for (int i = 0; i < _height; i++) {
+            for (int j = 0; j < _width; j++) {
+                int target_num = _solution[j][i];
+                _board[j][i]._sequenceNum = target_num;
+            }
+        }
+        for (int a = 0; a < _height; a++) {
+            for (int b = 0; b < _width; b++) {
+                for (int c = 0; c < _height; c++) {
+                    for (int d = 0; d < _width; d++) {
+                        if (_board[b][a]._sequenceNum == _board[d][c]._sequenceNum - 1) {
+                            _board[b][a].disconnect();
+                            _board[b][a].connect(_board[d][c]);
+                        }
+                    }
+                }
+            }
+        }
         _unconnected = 0;
     }
 
