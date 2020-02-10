@@ -130,6 +130,12 @@ class PuzzleGenerator implements PuzzleSource {
      *  number in sequence). */
     static Sq findUniqueSuccessor(Model model, Sq start) {
         // FIXME: Fill in to satisfy the comment.
+        boolean is_unique;
+        for (int i = 0; i < model._height; i++) {
+            for (int j = 0; j < model._width; j++) {
+                start.connectable()
+            }
+        }
         return null;
     }
 
