@@ -130,13 +130,38 @@ class PuzzleGenerator implements PuzzleSource {
      *  number in sequence). */
     static Sq findUniqueSuccessor(Model model, Sq start) {
         // FIXME: Fill in to satisfy the comment.
-        //boolean is_unique;
-        //for (int i = 0; i < model._height; i++) {
-           // for (int j = 0; j < model._width; j++) {
-               // start.connectable()
-            //}
-       // }
-        return null;
+        int the_num = start.sequenceNum();
+        Sq[] temp = {null};
+        boolean occupied = false;
+        int _width = model.width();
+        int _height = model.height();
+        if (the_num == 0) {
+            for (int i = 0; i < _height; i++) {
+                for (int j = 0; j < _width; j++) {
+                    if (start.connectable(model._board[j][i])) {
+                        if (occupied == true) {
+                            return null;
+                        } else {
+                            temp[0] = model._board[j][i];
+                            occupied = true;
+                        }
+                    }
+                }
+            }
+        } else {
+            for (int a = 0; a < _height; a++) {
+                for (int b = 0; b < _width; b++) {
+                    int others_num = model._board[b][a].sequenceNum();
+                    if (the_num + 1 == others_num && start.connectable(model._board[b][a]) && occupied == false) {
+                        temp[0] = model._board[b][a];
+                        occupied = true;
+                    } else if (the_num + 1 == others_num && start.connectable(model._board[b][a]) && occupied == true) {
+                        return null;
+                    }
+                }
+            }
+        }
+        return temp[0];
     }
 
     /** Make all unique backward connections in MODEL (those in which there is
@@ -165,7 +190,19 @@ class PuzzleGenerator implements PuzzleSource {
      *  already finds the other cases of numbered, unconnected cells. */
     static Sq findUniquePredecessor(Model model, Sq end) {
         // FIXME: Replace the following to satisfy the comment.
-        return null;
+        int the_num = end.sequenceNum();
+        Sq[] temp = {null};
+        boolean occupied = false;
+        int _width = model.width();
+        int _height = model.height();
+        for (int i = 0; i < _height; i++) {
+            for (int j = 0; j < _width; j++) {
+                if (model._board[j][i].connectable(end) && model._board[j][i].sequenceNum() != 0 && end.sequenceNum() != 0 && occupied == false) {
+                    temp[0] = model._board[j][i];
+                }
+            }
+        }
+        return temp[0];
     }
 
     /** Remove all links in MODEL and unfix numbers (other than the first and
