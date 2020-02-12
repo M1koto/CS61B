@@ -88,6 +88,19 @@ class Model implements Iterable<Model.Sq> {
         _allSuccessors = Place.successorCells(_width, _height);
         _solution = new int[_width][_height];
         deepCopy(solution, _solution);
+        for (int i = 1; i < last+1; i++) {
+            boolean flag = false;
+            for (int j = 0; j < _height; j++) {
+                for (int k = 0; k < _width; k++) {
+                    if (_solution[k][j] == i) {
+                        flag = true;
+                    }
+                }
+            }
+            if (flag == false) {
+                throw new IllegalArgumentException("bad args");
+            }
+        }
 
         /**
          // DUMMY SETUP
@@ -113,7 +126,8 @@ class Model implements Iterable<Model.Sq> {
          // END DUMMY SETUP
          */
         _board = new Sq[_width][_height];
-        Place[] _solnNumToPlace = new Place[last];
+        //Place[] _solnNumToPlace = new Place[last+1];
+        _solnNumToPlace = new Place[last+1];
         for (int i = 1; i < last+1; i++) {
             int [] previous = new int[] {-1, -1};
             int [] following = new int[] {-1, -1};
@@ -121,16 +135,16 @@ class Model implements Iterable<Model.Sq> {
                 for (int k = 0; k < _width ; k++) {   //4
                     if (_solution[k][j] == i) {
                         previous = new int[] {k, j};
-                        _solnNumToPlace[i-1] = Place.pl(k, j);
+                        _solnNumToPlace[i] = Place.pl(k, j);
                     }
                     if (_solution[k][j] == i+1) {
                         following = new int[] {k, j};
                     }
                 }
             }
-            if (previous[0] == -1 || previous[1] == -1) {
-                throw new IllegalArgumentException("bad args");
-            }
+            //if (previous[0] == -1 && previous[1] == -1) {
+                //throw new IllegalArgumentException("bad args");
+            //}
             int dir_of_prev = dirOf(previous[0], previous[1], following[0], following[1]);
             if (i == 1) {
                 _board[previous[0]][previous[1]] = new Sq(previous[0], previous[1], i, true, dir_of_prev, -1);
@@ -177,8 +191,6 @@ class Model implements Iterable<Model.Sq> {
         //        in the direction of its arrow).
         //        Likewise, set its _predecessors list to the list of
         //        all cells that might connect to it.
-
-
         _unconnected = last - 1;
     }
 

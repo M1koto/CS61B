@@ -80,7 +80,7 @@ public class PuzzleGeneratorTests {
         assertEquals("Unique connection through connected Sq", M.get(5, 0),
                      findUniqueSuccessor(M, M.get(3, 2)));
         assertEquals("Ambiguous connection", null,
-                     findUniqueSuccessor(M, M.get(3, 4)));
+                findUniqueSuccessor(M, M.get(3, 4)));
         assertEquals("Successive numbered squares", M.get(3, 1),
                      findUniqueSuccessor(M, M.get(2, 0)));
         assertEquals("Unique connection to numbered Sq", M.get(1, 1),
