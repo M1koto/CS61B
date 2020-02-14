@@ -22,7 +22,6 @@ class PuzzleGenerator implements PuzzleSource {
     public Model getPuzzle(int width, int height, boolean allowFreeEnds) {
         Model model =
                 new Model(makePuzzleSolution(width, height, allowFreeEnds));
-        // FIXME: Remove the "//" on the following two lines.
         makeSolutionUnique(model);
         model.autoconnect();
         return model;
@@ -52,9 +51,6 @@ class PuzzleGenerator implements PuzzleSource {
         }
         _vals[x0][y0] = 1;
         _vals[x1][y1] = last;
-        // FIXME: Remove the following return statement and uncomment the
-        //        next three lines.
-
         boolean ok = findSolutionPathFrom(x0, y0);
         assert ok;
         return _vals;
@@ -129,7 +125,6 @@ class PuzzleGenerator implements PuzzleSource {
      *  numbered square in the proper direction from START (with the next
      *  number in sequence). */
     static Sq findUniqueSuccessor(Model model, Sq start) {
-        // FIXME: Fill in to satisfy the comment.
         Sq real_start = model._board[start.x][start.y];
         int the_num = real_start.sequenceNum();
         Sq[] temp = {null};
@@ -193,7 +188,6 @@ class PuzzleGenerator implements PuzzleSource {
      *  the only unconnected predecessor.  This is because findUniqueSuccessor
      *  already finds the other cases of numbered, unconnected cells. */
     static Sq findUniquePredecessor(Model model, Sq end) {
-        // FIXME: Replace the following to satisfy the comment.
         Sq real_start = model._board[end.x][end.y];
         int the_num = real_start.sequenceNum();
         Sq[] temp = {null};
