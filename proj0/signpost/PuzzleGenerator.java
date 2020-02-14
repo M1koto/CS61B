@@ -125,17 +125,17 @@ class PuzzleGenerator implements PuzzleSource {
      *  numbered square in the proper direction from START (with the next
      *  number in sequence). */
     static Sq findUniqueSuccessor(Model model, Sq start) {
-        Sq real_start = model._board[start.x][start.y];
-        int the_num = real_start.sequenceNum();
+        Sq realstart = model._board[start.x][start.y];
+        int thenum = realstart.sequenceNum();
         Sq[] temp = {null};
         boolean occupied = false;
-        int _width = model.width();
-        int _height = model.height();
-        if (the_num == 0) {
-            for (int i = 0; i < _height; i++) {
-                for (int j = 0; j < _width; j++) {
-                    if (real_start.connectable(model._board[j][i])) {
-                        if (occupied == true) {
+        int width = model.width();
+        int height = model.height();
+        if (thenum == 0) {
+            for (int i = 0; i < height; i++) {
+                for (int j = 0; j < width; j++) {
+                    if (realstart.connectable(model._board[j][i])) {
+                        if (occupied) {
                             return null;
                         } else {
                             temp[0] = model._board[j][i];
@@ -145,16 +145,19 @@ class PuzzleGenerator implements PuzzleSource {
                 }
             }
         } else {
-            for (int a = 0; a < _height; a++) {
-                for (int b = 0; b < _width; b++) {
-                    int others_num = model._board[b][a].sequenceNum();
-                    if (the_num + 1 == others_num && real_start.connectable(model._board[b][a]) && occupied == false) {
+            for (int a = 0; a < height; a++) {
+                for (int b = 0; b < width; b++) {
+                    int othersnum = model._board[b][a].sequenceNum();
+                    if (thenum + 1 == othersnum
+                            && realstart.connectable(model._board[b][a]) && occupied == false) {
                         temp[0] = model._board[b][a];
                         return temp[0];
-                    } else if ( others_num == 0 && real_start.connectable(model._board[b][a]) && occupied == false) {
+                    } else if ( othersnum == 0
+                            && realstart.connectable(model._board[b][a]) && occupied == false) {
                         temp[0] = model._board[b][a];
                         occupied = true;
-                    } else if ((the_num + 1 == others_num || others_num == 0) && real_start.connectable(model._board[b][a]) && occupied == true) {
+                    } else if ((thenum + 1 == othersnum || othersnum == 0)
+                            && realstart.connectable(model._board[b][a]) && occupied == true) {
                         return null;
                     }
                 }

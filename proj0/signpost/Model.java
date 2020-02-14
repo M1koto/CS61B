@@ -298,10 +298,12 @@ class Model implements Iterable<Model.Sq> {
             for (int m = k + 1; m <= theSquares.size() - 1; m++) {
                 if (theSquares.get(k) == theSquares.get(m)) {
                     ;
-                } else if (theSquares.get(k)._sequenceNum == theSquares.get(m)._sequenceNum - 1) {
+                } else if (theSquares.get(k)._sequenceNum
+                        == theSquares.get(m)._sequenceNum - 1) {
                     theSquares.get(k).connect(theSquares.get(m));
                     flag = true;
-                } else if (theSquares.get(m)._sequenceNum == theSquares.get(k)._sequenceNum - 1) {
+                } else if (theSquares.get(m)._sequenceNum
+                        == theSquares.get(k)._sequenceNum - 1) {
                     theSquares.get(m).connect(theSquares.get(k));
                     flag = true;
                 }
@@ -670,10 +672,12 @@ class Model implements Iterable<Model.Sq> {
                 this._head._group = joinGroups(this.group(), sgroup);
             }
             if (this.sequenceNum() != 0) {
-                helper_for_connect_Suc(this.successor(), this.sequenceNum() + 1, this.head());
+                helper_for_connect_Suc(this.successor(),
+                        this.sequenceNum() + 1, this.head());
             }
             if (s1.sequenceNum() != 0) {
-                helper_for_connect_Pre(s1.predecessor(), s1.sequenceNum() - 1);
+                helper_for_connect_Pre(s1.predecessor(),
+                        s1.sequenceNum() - 1);
             }
             set_Head(this.successor(), this._head);
             return true;
