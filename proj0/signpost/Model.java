@@ -341,15 +341,17 @@ class Model implements Iterable<Model.Sq> {
         boolean flag = false;
         for (int i = 0; i < _height; i++) {
             for (int j = 0; j < _width; j++) {
-                if (_board[j][i]._sequenceNum != 0 && _board[j][i]._successor == null) {
-                    the_Squares.add(_board[j][i]);
+                if (_board[j][i]._sequenceNum != 0) {
+                    if (_board[j][i]._successor == null || _board[j][i]._successor == null) {
+                        the_Squares.add(_board[j][i]);
+                    }
                 }
             }
         }
         for (int k = 0; k < the_Squares.size() - 1; k++) {
             for (int m = k; m <= the_Squares.size() - 1; m++) {
                 if (the_Squares.get(k) == the_Squares.get(m)) {
-                    continue;
+                    ;
                 } else if (the_Squares.get(k)._sequenceNum == the_Squares.get(m)._sequenceNum - 1) {
                     the_Squares.get(k).connect(the_Squares.get(m));
                     flag = true;
@@ -818,6 +820,7 @@ class Model implements Iterable<Model.Sq> {
                     this._group = -1;
                     next._group = -1;
                 } else if (!flag_for_next && flag_for_this) {
+                    next._group = _group;
                     this._group = -1;
                 } else if (flag_for_next && !flag_for_this) {
                     next._group = -1;

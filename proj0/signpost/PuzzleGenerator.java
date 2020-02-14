@@ -22,7 +22,7 @@ class PuzzleGenerator implements PuzzleSource {
     public Model getPuzzle(int width, int height, boolean allowFreeEnds) {
         Model model =
                 new Model(makePuzzleSolution(width, height, allowFreeEnds));
-        makeSolutionUnique(model);
+        //makeSolutionUnique(model);
         model.autoconnect();
         return model;
     }
