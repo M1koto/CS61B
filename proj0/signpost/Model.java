@@ -870,7 +870,7 @@ class Model implements Iterable<Model.Sq> {
     /** Dimensions of board. */
     private int _width, _height;
     /** Contents of board, indexed by position. */
-    public Sq[][] _board;
+    protected Sq[][] _board;
     /** Contents of board as a sequence of squares for convenient iteration. */
     private ArrayList<Sq> _allSquares = new ArrayList<>();
     /** _allSuccessors[x][y][dir] is a sequence of all queen moves possible
