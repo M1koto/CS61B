@@ -129,6 +129,11 @@ class Model implements Iterable<Model.Sq> {
                 _allSquares.add(_board[prev[0]][prev[1]]);
             }
         }
+        function();
+        _unconnected = last - 1;
+    }
+    /** extra function. */
+    public void function() {
         for (int x = 0; x < _height; x++) {
             for (int y = 0; y < _width; y++) {
                 _board[y][x]._successors = new PlaceList() { };
@@ -147,9 +152,7 @@ class Model implements Iterable<Model.Sq> {
                     }
                 }
             }
-
         }
-        _unconnected = last - 1;
     }
 
     /** Initializes a copy of MODEL. */
@@ -775,8 +778,7 @@ class Model implements Iterable<Model.Sq> {
                 } else {
                     next._group = newGroup();
                 }
-            }
-            else {
+            } else {
                 if (!checkproced(this)) {
                     setseqNumprec(this, 0);
                     if (this._predecessor == null) {
@@ -860,7 +862,7 @@ class Model implements Iterable<Model.Sq> {
 
     /** ASCII denotations of arrows, indexed by direction. */
     private static final String[] ARROWS = {
-            " *", "NE", "E ", "SE", "S ", "SW", "W ", "NW", "N "
+        " *", "NE", "E ", "SE", "S ", "SW", "W ", "NW", "N "
     };
 
     /** Number of squares that haven't been connected. */
