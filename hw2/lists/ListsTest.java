@@ -11,7 +11,16 @@ import static org.junit.Assert.*;
 public class ListsTest {
     /** FIXME
      */
-
+    @Test
+    public void testing() {
+        int[][] a = {
+                {1, 4, 6},
+                {2, 4, 7}
+        };
+        int[] args_test = {1, 4, 6, 2, 4, 7};
+        IntList for_testing = IntList.list(args_test);
+        assertEquals("wrong", IntListList.list(a), Lists.naturalRuns(for_testing));
+    }
     // It might initially seem daunting to try to set up
     // IntListList expected.
     //

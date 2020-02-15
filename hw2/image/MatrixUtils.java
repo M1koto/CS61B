@@ -1,9 +1,11 @@
 package image;
 
+
+
 /** Provides a variety of utilities for operating on matrices.
  *  All methods assume that the double[][] arrays provided are rectangular.
  *
- *  @author Josh Hug and YOU
+ *  @author Josh Hug and kenny
  */
 
 public class MatrixUtils {
@@ -53,9 +55,39 @@ public class MatrixUtils {
      *  2162923   2124919   2124919   2124919
      *
      */
+    public static double minfunc(double[] a) {
+        double ans = a[0];
+        for (int i = 0; i < a.length; i++) {
+            if (a[i] < ans && a[i] != 0) {
+                ans = a[i];
+            }
+        }
+        return ans;
+    }
 
     public static double[][] accumulateVertical(double[][] m) {
-        return null; //your code here
+        double[][] ans = new double[m.length][m[0].length];
+        ans[0] = m[0];
+        for (int i = 1; i < m.length; i++) {
+            for (int j = 0; j < m[0].length; j++) {
+                double[] temp = new double[3];
+                if (j == 0) {
+                    temp[0] = ans[i - 1][j];
+                    temp[1] = ans[i - 1][j + 1];
+                    ans[i][j] = minfunc(temp) + m[i][j];
+                } else if (j == m[0].length - 1) {
+                    temp[0] = ans[i - 1][j];
+                    temp[1] = ans[i - 1][j - 1];
+                    ans[i][j] = minfunc(temp) + m[i][j];
+                } else {
+                    temp[0] = ans[i - 1][j - 1];
+                    temp[1] = ans[i - 1][j];
+                    temp[2] = ans[i - 1][j + 1];
+                    ans[i][j] = minfunc(temp) + m[i][j];
+                }
+            }
+        }
+        return ans;
     }
 
     /** Non-destructively accumulates a matrix M along the specified
@@ -80,9 +112,22 @@ public class MatrixUtils {
      *  for project 1, but in a more complex way.
      *
      */
+    public static double[][] helper1(double[][] a) {
+        double[][] ans = new double[a[0].length][a.length];
+        for (int i = 0; i < a[0].length; i++) {
+            for (int j = 0; j < a.length; j++) {
+                ans[i][j] = a[j][i];
+            }
+        }
+        return ans;
+    }
 
     public static double[][] accumulate(double[][] m, Orientation orientation) {
-        return null; //your code here
+        if (orientation == Orientation.VERTICAL) {
+            return accumulateVertical(m);
+        } else {
+            return accumulateVertical(helper1(m));
+        }
     }
 
     /** Finds the vertical seam VERTSEAM of the given matrix M.
@@ -115,7 +160,7 @@ public class MatrixUtils {
      */
 
     public static int[] findVerticalSeam(double[][] m) {
-        return null; //your code here
+        return null;
     }
 
     /** Returns the SEAM of M with the given ORIENTATION.
@@ -124,37 +169,12 @@ public class MatrixUtils {
      */
 
     public static int[] findSeam(double[][] m, Orientation orientation) {
-        return null; //your code here
+        return null;
     }
 
     /** does nothing. ARGS not used. use for whatever purposes you'd like */
     public static void main(String[] args) {
-        /* sample calls to functions in this class are below
 
-        Rescaler sc = new Rescaler("4x6.png");
-
-        double[][] em Rescaler.energyMatrix(sc);
-
-        //double[][] m = sc.cumulativeEnergyMatrix(true);
-        double[][] m = MatrixUtils.accumulateVertical(em);
-        System.out.println(MatrixUtils.matrixToString(em));
-        System.out.println();
-
-        double[][] ms = MatrixUtils.accumulate(em, Orientation.HORIZONTAL);
-
-        System.out.println(MatrixUtils.matrixToString(m));
-        System.out.println();
-        System.out.println(MatrixUtils.matrixToString(ms));
-
-
-        int[] lep = MatrixUtils.findVerticalSeam(m);
-
-        System.out.println(seamToString(m, lep, Orientation.VERTICAL));
-
-        int[] leps = MatrixUtils.findSeam(ms, Orientation.HORIZONTAL);
-
-        System.out.println(seamToString(ms, leps, Orientation.HORIZONTAL));
-        */
     }
 
 

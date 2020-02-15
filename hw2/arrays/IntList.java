@@ -18,7 +18,6 @@ public class IntList {
 
     /** A List with null tail, and head = 0. */
     public IntList() {
-        /* NOTE: public IntList () { }  would also work. */
         this (0, null);
     }
 
