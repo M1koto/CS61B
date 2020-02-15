@@ -8,7 +8,7 @@ import static signpost.Place.PlaceList;
 import static signpost.Utils.*;
 
 /** A creator of random Signpost puzzles.
- *  @author
+ *  @author kenny
  */
 class PuzzleGenerator implements PuzzleSource {
 
@@ -22,7 +22,6 @@ class PuzzleGenerator implements PuzzleSource {
     public Model getPuzzle(int width, int height, boolean allowFreeEnds) {
         Model model =
                 new Model(makePuzzleSolution(width, height, allowFreeEnds));
-        //makeSolutionUnique(model);
         model.autoconnect();
         return model;
     }
@@ -149,15 +148,18 @@ class PuzzleGenerator implements PuzzleSource {
                 for (int b = 0; b < width; b++) {
                     int othersnum = model._board[b][a].sequenceNum();
                     if (thenum + 1 == othersnum
-                            && realstart.connectable(model._board[b][a]) && occupied == false) {
+                            && realstart.connectable(model._board[b][a])
+                            && !occupied) {
                         temp[0] = model._board[b][a];
                         return temp[0];
-                    } else if ( othersnum == 0
-                            && realstart.connectable(model._board[b][a]) && occupied == false) {
+                    } else if (othersnum == 0
+                            && realstart.connectable(model._board[b][a])
+                            && !occupied) {
                         temp[0] = model._board[b][a];
                         occupied = true;
                     } else if ((thenum + 1 == othersnum || othersnum == 0)
-                            && realstart.connectable(model._board[b][a]) && occupied == true) {
+                            && realstart.connectable(model._board[b][a])
+                            && occupied) {
                         return null;
                     }
                 }
@@ -191,17 +193,17 @@ class PuzzleGenerator implements PuzzleSource {
      *  the only unconnected predecessor.  This is because findUniqueSuccessor
      *  already finds the other cases of numbered, unconnected cells. */
     static Sq findUniquePredecessor(Model model, Sq end) {
-        Sq real_start = model._board[end.x][end.y];
-        int the_num = real_start.sequenceNum();
+        Sq realstart = model._board[end.x][end.y];
+        int thenum = realstart.sequenceNum();
         Sq[] temp = {null};
         boolean occupied = false;
-        int _width = model.width();
-        int _height = model.height();
-        if (the_num == 0) {
-            for (int i = 0; i < _height; i++) {
-                for (int j = 0; j < _width; j++) {
-                    if (model._board[j][i].connectable(real_start)) {
-                        if (occupied == true) {
+        int width = model.width();
+        int height = model.height();
+        if (thenum == 0) {
+            for (int i = 0; i < height; i++) {
+                for (int j = 0; j < width; j++) {
+                    if (model._board[j][i].connectable(realstart)) {
+                        if (occupied) {
                             return null;
                         } else {
                             temp[0] = model._board[j][i];
@@ -211,16 +213,22 @@ class PuzzleGenerator implements PuzzleSource {
                 }
             }
         } else {
-            for (int a = 0; a < _height; a++) {
-                for (int b = 0; b < _width; b++) {
-                    int others_num = model._board[b][a].sequenceNum();
-                    if (the_num + 1 == others_num && model._board[b][a].connectable(real_start) && occupied == false) {
+            for (int a = 0; a < height; a++) {
+                for (int b = 0; b < width; b++) {
+                    int othersnum = model._board[b][a].sequenceNum();
+                    if (thenum + 1 == othersnum
+                            && model._board[b][a].connectable(realstart)
+                            && !occupied) {
                         temp[0] = model._board[b][a];
                         return temp[0];
-                    } else if ( others_num == 0 && model._board[b][a].connectable(real_start) && occupied == false) {
+                    } else if (othersnum == 0
+                            && model._board[b][a].connectable(realstart)
+                            && !occupied) {
                         temp[0] = model._board[b][a];
                         occupied = true;
-                    } else if ((the_num + 1 == others_num || others_num == 0) && model._board[b][a].connectable(real_start) && occupied == true) {
+                    } else if ((thenum + 1 == othersnum || othersnum == 0)
+                            && model._board[b][a].connectable(realstart)
+                            && occupied) {
                         return null;
                     }
                 }

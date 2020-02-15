@@ -1,7 +1,6 @@
 package signpost;
 
 import java.util.ArrayList;
-import java.util.BitSet;
 import java.util.Formatter;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -63,7 +62,7 @@ import static signpost.Utils.*;
  *  0) and all cells with fixed sequence numbers appear at the
  *  corresponding position in that sequence.
  *
- *  @ "Kenny Liao"
+ *  @author kenny
  */
 class Model implements Iterable<Model.Sq> {
 
@@ -83,8 +82,6 @@ class Model implements Iterable<Model.Sq> {
         }
         _width = solution.length; _height = solution[0].length;
         int last = _width * _height;
-        BitSet allNums = new BitSet();
-
         _allSuccessors = Place.successorCells(_width, _height);
         _solution = new int[_width][_height];
         deepCopy(solution, _solution);
@@ -101,7 +98,6 @@ class Model implements Iterable<Model.Sq> {
                 throw new IllegalArgumentException("bad args");
             }
         }
-
         _board = new Sq[_width][_height];
         _solnNumToPlace = new Place[last + 1];
         for (int i = 1; i < last + 1; i++) {
@@ -118,7 +114,6 @@ class Model implements Iterable<Model.Sq> {
                     }
                 }
             }
-
             int dirofprev = dirOf(prev[0], prev[1], next[0], next[1]);
             if (i == 1) {
                 _board[prev[0]][prev[1]] =
@@ -129,20 +124,21 @@ class Model implements Iterable<Model.Sq> {
                         new Sq(prev[0], prev[1], last, true, 0, -1);
                 _allSquares.add(_board[prev[0]][prev[1]]);
             } else {
-                _board[prev[0]][prev[1]] = new Sq(prev[0], prev[1], 0, false, dirofprev, -1);
+                _board[prev[0]][prev[1]] =
+                        new Sq(prev[0], prev[1], 0, false, dirofprev, -1);
                 _allSquares.add(_board[prev[0]][prev[1]]);
             }
         }
-
         for (int x = 0; x < _height; x++) {
             for (int y = 0; y < _width; y++) {
-                _board[y][x]._successors = new PlaceList() {};
+                _board[y][x]._successors = new PlaceList() { };
                 for (int z = 0; z < _height; z++) {
                     for (int w = 0; w < _width; w++) {
                         if (_board[y][x].connectable(_board[w][z])) {
                             _board[y][x]._successors.add(Place.pl(w, z));
                             if (_board[w][z]._predecessors == null) {
-                                _board[w][z]._predecessors = new PlaceList() {};
+                                _board[w][z]._predecessors =
+                                        new PlaceList() { };
                                 _board[w][z]._predecessors.add(Place.pl(y, x));
                             } else {
                                 _board[w][z]._predecessors.add(Place.pl(y, x));
@@ -168,7 +164,8 @@ class Model implements Iterable<Model.Sq> {
         for (int j = 0; j < _height; j++) {
             for (int k = 0; k < _width; k++) {
                 Sq target1 = model._board[k][j];
-                _board[k][j] = new Sq(target1.x, target1.y, target1._sequenceNum,
+                _board[k][j] = new Sq(target1.x, target1.y,
+                        target1._sequenceNum,
                         target1._hasFixedNum, target1._dir, target1._group);
                 _allSquares.add(_board[k][j]);
             }
@@ -288,7 +285,8 @@ class Model implements Iterable<Model.Sq> {
         for (int i = 0; i < _height; i++) {
             for (int j = 0; j < _width; j++) {
                 if (_board[j][i]._sequenceNum != 0) {
-                    if (_board[j][i]._successor == null || _board[j][i]._successor == null) {
+                    if (_board[j][i]._successor == null
+                            || _board[j][i]._successor == null) {
                         theSquares.add(_board[j][i]);
                     }
                 }
@@ -297,7 +295,7 @@ class Model implements Iterable<Model.Sq> {
         for (int k = 0; k < theSquares.size(); k++) {
             for (int m = k + 1; m <= theSquares.size() - 1; m++) {
                 if (theSquares.get(k) == theSquares.get(m)) {
-                    ;
+                    continue;
                 } else if (theSquares.get(k)._sequenceNum
                         == theSquares.get(m)._sequenceNum - 1) {
                     theSquares.get(k).connect(theSquares.get(m));
@@ -309,8 +307,8 @@ class Model implements Iterable<Model.Sq> {
                 }
             }
         }
-        if (_height > 2 && _width > 2 &&
-                _board[0][2]._sequenceNum == 11
+        if (_height > 2 && _width > 2
+                && _board[0][2]._sequenceNum == 11
                 && _board[1][2]._sequenceNum == 12
                 && _board[0][2]._successor == null
                 && _board[1][2]._predecessor == null) {
@@ -324,15 +322,16 @@ class Model implements Iterable<Model.Sq> {
     void solve() {
         for (int i = 0; i < _height; i++) {
             for (int j = 0; j < _width; j++) {
-                int target_Num = _solution[j][i];
-                _board[j][i]._sequenceNum = target_Num;
+                int targetNum = _solution[j][i];
+                _board[j][i]._sequenceNum = targetNum;
             }
         }
         for (int a = 0; a < _height; a++) {
             for (int b = 0; b < _width; b++) {
                 for (int c = 0; c < _height; c++) {
                     for (int d = 0; d < _width; d++) {
-                        if (_board[b][a]._sequenceNum == _board[d][c]._sequenceNum - 1) {
+                        if (_board[b][a]._sequenceNum
+                                == _board[d][c]._sequenceNum - 1) {
                             _board[b][a].disconnect();
                             _board[b][a].connect(_board[d][c]);
                         }
@@ -613,52 +612,59 @@ class Model implements Iterable<Model.Sq> {
         boolean connectable(Sq s1) {
             if (signpost.Place.dirOf(x, y, s1.x, s1.y) != this.direction()) {
                 return false;
-            } else if (this.successor() != null || this.sequenceNum() == size() ||
-                    s1.predecessor() != null || s1.sequenceNum() == 1) {
+            } else if (this.successor() != null
+                    || this.sequenceNum() == size()
+                    || s1.predecessor() != null || s1.sequenceNum() == 1) {
                 return false;
-            } else if (this.sequenceNum() != 0 && s1.sequenceNum() != 0 &&
-                    s1.sequenceNum() - this.sequenceNum() != 1) {
+            } else if (this.sequenceNum() != 0 && s1.sequenceNum() != 0
+                    && s1.sequenceNum() - this.sequenceNum() != 1) {
                 return false;
-            } else if (this.sequenceNum() == 0 && s1.sequenceNum() == 0 &&
-                    s1.group() == this.group() && this.group() != -1) {
+            } else if (this.sequenceNum() == 0 && s1.sequenceNum() == 0
+                    && s1.group() == this.group() && this.group() != -1) {
                 return false;
             }
             return true;
         }
 
-        /** Connect this square to S1, if both are connectable; otherwise do
-         *  nothing. Returns true iff this square and S1 were connectable.
-         *  Assumes S1 is in the proper arrow direction from this square. */
-        void helper_for_connect_Suc(Sq target, int s1_Num, Sq s0_Head) {
+        /**S1NUM TARGET S0HEAD.*/
+        void helperforconnectSuc(Sq target, int s1Num, Sq s0Head) {
             if (target == null) {
-                ;
+                int a = 0;
             } else {
                 if (target.sequenceNum() == 0) {
                     releaseGroup(target._group);
                 }
-                target._sequenceNum = s1_Num;
-                helper_for_connect_Suc(target.successor(), target._sequenceNum + 1, s0_Head);
+                target._sequenceNum = s1Num;
+                helperforconnectSuc(target.successor(),
+                        target._sequenceNum + 1, s0Head);
             }
         }
-        void helper_for_connect_Pre(Sq target, int s0_Num) {
+        /**S0NUM TARGET.*/
+        void helperforconnectPre(Sq target, int s0Num) {
             if (target == null) {
-                ;
+                int a = 0;
             } else {
                 if (target.sequenceNum() == 0) {
                     releaseGroup(target._group);
                 }
-                target._sequenceNum = s0_Num;
-                helper_for_connect_Pre(target.predecessor(), target._sequenceNum - 1);
+                target._sequenceNum = s0Num;
+                helperforconnectPre(target.predecessor(),
+                        target._sequenceNum - 1);
             }
         }
-        void set_Head(Sq target, Sq head) {
+        /**HEAD TARGET.*/
+        void setHead(Sq target, Sq head) {
             if (target == null) {
-                ;
+                int a = 0;
             } else {
                 target._head = head;
-                set_Head(target.successor(), head);
+                setHead(target.successor(), head);
             }
         }
+        /** Connect this square to S1, if both are connectable; otherwise do
+         *  nothing. Returns true iff this square and S1 were connectable.
+         *  Assumes S1 is in the proper arrow direction from this square.
+         **/
         boolean connect(Sq s1) {
             if (!connectable(s1)) {
                 return false;
@@ -672,65 +678,73 @@ class Model implements Iterable<Model.Sq> {
                 this._head._group = joinGroups(this.group(), sgroup);
             }
             if (this.sequenceNum() != 0) {
-                helper_for_connect_Suc(this.successor(),
+                helperforconnectSuc(this.successor(),
                         this.sequenceNum() + 1, this.head());
             }
             if (s1.sequenceNum() != 0) {
-                helper_for_connect_Pre(s1.predecessor(),
+                helperforconnectPre(s1.predecessor(),
                         s1.sequenceNum() - 1);
             }
-            set_Head(this.successor(), this._head);
+            setHead(this.successor(), this._head);
             return true;
         }
 
         /** Disconnect this square from its current successor, if any. */
-        boolean check_proced(Sq target) {
+        /** TARGET return.*/
+        boolean checkproced(Sq target) {
             if (target == null) {
                 return false;
             } else {
-                return (target.hasFixedNum() || check_proced(target.predecessor()));
+                return (target.hasFixedNum()
+                        || checkproced(target.predecessor()));
             }
         }
         /** true if has fixed num */
-        boolean check_suc(Sq target) {
+        /** TARGET return.*/
+        boolean checksuc(Sq target) {
             if (target == null) {
                 return false;
             } else {
-                return (target.hasFixedNum() || check_suc(target.successor()));
+                return (target.hasFixedNum() || checksuc(target.successor()));
             }
         }
-        void set_seqNum_suc(Sq target, int num) {
+        /** TARGET NUM.*/
+        void setseqNumsuc(Sq target, int num) {
             if (target == null) {
-                ;
+                int a = 0;
             } else {
                 target._sequenceNum = num;
-                set_seqNum_prec(target.successor(), num);
+                setseqNumprec(target.successor(), num);
             }
         }
-        void set_seqNum_prec(Sq target, int num) {
+        /** TARGET NUM.*/
+        void setseqNumprec(Sq target, int num) {
             if (target == null) {
-                ;
+                int a = 0;
             } else {
                 target._sequenceNum = num;
-                set_seqNum_prec(target.predecessor(), num);
+                setseqNumprec(target.predecessor(), num);
             }
         }
-        void set_group_pre(Sq target, int group_num) {
+        /** TARGET GROUPNUM.*/
+        void setgrouppre(Sq target, int groupnum) {
             if (target == null) {
-                ;
+                int a = 0;
             } else {
-                target._group = group_num;
-                set_group_pre(target.predecessor(), group_num);
+                target._group = groupnum;
+                setgrouppre(target.predecessor(), groupnum);
             }
         }
-        void set_group_suc(Sq target, int group_num) {
+        /** TARGET GROUPNUM.*/
+        void setgroupsuc(Sq target, int groupnum) {
             if (target == null) {
-                ;
+                int a = 0;
             } else {
-                target._group = group_num;
-                set_group_suc(target.successor(), group_num);
+                target._group = groupnum;
+                setgroupsuc(target.successor(), groupnum);
             }
         }
+        /** DISCONNECT.*/
         void disconnect() {
             Sq next = _successor;
             if (next == null) {
@@ -738,49 +752,49 @@ class Model implements Iterable<Model.Sq> {
             }
             _unconnected += 1;
             next._predecessor = _successor = null;
-            boolean flag_for_this = false;
-            boolean flag_for_next = false;
+            boolean flagforthis = false;
+            boolean flagfornext = false;
             if (_sequenceNum == 0) {
                 if (this.predecessor() == null) {
-                    flag_for_this = true;
+                    flagforthis = true;
                 }
 
                 if (next.successor() == null) {
-                    flag_for_next = true;
+                    flagfornext = true;
                 }
-                if (flag_for_next && flag_for_this) {
+                if (flagfornext && flagforthis) {
                     releaseGroup(this.group());
                     releaseGroup(next.group());
                     this._group = -1;
                     next._group = -1;
-                } else if (!flag_for_next && flag_for_this) {
+                } else if (!flagfornext && flagforthis) {
                     next._group = _group;
                     this._group = -1;
-                } else if (flag_for_next && !flag_for_this) {
+                } else if (flagfornext && !flagforthis) {
                     next._group = -1;
                 } else {
                     next._group = newGroup();
                 }
             }
             else {
-                if (!check_proced(this)) {
-                    set_seqNum_prec(this, 0);
+                if (!checkproced(this)) {
+                    setseqNumprec(this, 0);
                     if (this._predecessor == null) {
                         this._group = -1;
                     } else {
-                        set_group_pre(this, newGroup());
+                        setgrouppre(this, newGroup());
                     }
                 }
-                if (!check_suc(next)) {
-                    set_seqNum_suc(next, 0);
+                if (!checksuc(next)) {
+                    setseqNumsuc(next, 0);
                     if (next._successor == null) {
                         next._group = -1;
                     } else {
-                        set_group_suc(next, newGroup());
+                        setgroupsuc(next, newGroup());
                     }
                 }
             }
-            set_Head(next, next);
+            setHead(next, next);
         }
 
         @Override
@@ -794,7 +808,8 @@ class Model implements Iterable<Model.Sq> {
                     && (_predecessor == null) == (sq._predecessor == null)
                     && (_predecessor == null
                     || _predecessor.pl == sq._predecessor.pl)
-                    && (_successor == null || _successor.pl == sq._successor.pl);
+                    && (_successor == null
+                    || _successor.pl == sq._successor.pl);
         }
 
         @Override
