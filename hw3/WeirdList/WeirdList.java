@@ -4,17 +4,19 @@
 public class WeirdList {
     /** The empty sequence of integers. */
     public static final WeirdList EMPTY =
-        null;  // TODO: REPLACE THIS LINE
+        protected int myhead;
+        protected WeirdList mytail;
 
     /** A new WeirdList whose head is HEAD and tail is TAIL. */
     public WeirdList(int head, WeirdList tail) { 
-        /* TODO: FILL IN */ 
+         this.myhead = head;
+         this.mytail = tail;
     }
 
     /** Returns the number of elements in the sequence that
      *  starts with THIS. */
     public int length() {
-        return 0;  // TODO: REPLACE THIS LINE
+        return this.mytail.length() + 1;
     }
 
     /** Return a string containing my contents as a sequence of numerals
@@ -22,13 +24,13 @@ public class WeirdList {
      *  5, 4, and 2, this returns " 5 4 2". */
     @Override
     public String toString() {
-        return ""; // TODO: REPLACE THIS LINE
+        return " " + this.myhead + this.mytail.toString();
     }
 
     /** Part 3b: Apply FUNC.apply to every element of THIS WeirdList in
      *  sequence, and return a WeirdList of the resulting values. */
     public WeirdList map(IntUnaryFunction func) {
-        return null;  // TODO: REPLACE THIS LINE
+        return new WeirdList(func.apply(this.myhead), this.mytail.map(func));
     }
 
     /*
