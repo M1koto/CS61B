@@ -48,6 +48,11 @@ public class TrReaderTest {
         return new StringReader(result.replace("\r\n", "\n"));
     }
 
+    @Test
+    public void test1() {
+
+    }
+
     public static void main(String[] args) {
         System.exit(textui.runClasses(TrReaderTest.class));
     }

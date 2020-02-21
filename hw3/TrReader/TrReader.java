@@ -34,7 +34,11 @@ public class TrReader extends Reader {
         if (off >= word.length() || word.length() == count) {
             return -1;
         }
+        if (word.length() - count <= len) {
+            len = word.length() - count;
+        }
         word.getChars(count, count + len, cbuf, off);
+        count += len;
         return len;
     }
     @Override
