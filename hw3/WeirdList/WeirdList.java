@@ -3,7 +3,7 @@
  */
 public class WeirdList {
     /** The empty sequence of integers. */
-    public static final WeirdList EMPTY =
+    public static final WeirdList EMPTY = new EmptyWeirdList(0,null);
         protected int myhead;
         protected WeirdList mytail;
 
@@ -63,8 +63,30 @@ public class WeirdList {
      * }
      * You are NOT required to do this, just an extra thing you can
      * do if you want to avoid making a separate .java file. */
+    private static class EmptyWeirdList extends WeirdList {
+        public EmptyWeirdList(int head, WeirdList tail) {
+            super(head, tail);
+        }
+
+        @Override
+        public int length() {
+            return 0;
+        }
+
+        @Override
+        public String toString() {
+            return "";
+        }
+
+        @Override
+        public WeirdList map(IntUnaryFunction func) {
+            return this;
+        }
+    }
 
 }
+
+
 
 /*
  * Hint: The first non-trivial thing you'll probably do to WeirdList
