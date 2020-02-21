@@ -208,6 +208,7 @@ public class Table implements Iterable<Table.TableRow> {
             Iterable<TableRow> {
 
         private JoinIterator(Table t1, Table t2) {
+            _table1 = t1;
             _table2 = t2;
             _tableIter1 = t1.iterator();
             _tableIter2 = t2.iterator();
@@ -217,6 +218,11 @@ public class Table implements Iterable<Table.TableRow> {
         @Override
         public boolean hasNext() {
             if (_nextRow == null) {
+                for (int i = 0; i < _table1.numRows(); i++) {
+                    for (int j = 0; j < _table2.numRows(); j++) {
+                        _nextRow = _table1.getRow(i).joinRows(_table1.getRow(i), _table2.getRow(j));
+                    }
+                }
                 // FIXME: Fill in the hasNext method to update the _nextRow
                 //        variable to be the next joined row to be returned
                 //        by the iterator. The rows should be returned in the
@@ -268,6 +274,8 @@ public class Table implements Iterable<Table.TableRow> {
          * Store table2 for convenient creation of iterators when we "reset".
          */
         private Table _table2;
+
+        private Table _table1;
     }
 
     /**
