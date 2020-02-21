@@ -1,14 +1,18 @@
-/** Functions to increment and sum the elements of a WeirdList. */
+/** Functions to increment and sum the elements of a WeirdList.
+ */
 class WeirdListClient {
 
     /** Return the result of adding N to each element of L. */
     static WeirdList add(WeirdList L, int n) {
-        return null; // TODO: REPLACE THIS LINE
+        Adding function = new Adding(n);
+        return L.map(function);
     }
 
     /** Return the sum of all the elements in L. */
     static int sum(WeirdList L) {
-        return 0; // TODO: REPLACE THIS LINE
+        summing function = new summing();
+        L.map(function);
+        return function.getSum();
     }
 
     /* IMPORTANT: YOU ARE NOT ALLOWED TO USE RECURSION IN ADD AND SUM
@@ -25,3 +29,31 @@ class WeirdListClient {
      *       Can we use it somehow?
      */
 }
+    class Adding implements IntUnaryFunction {
+        private int number;
+        public Adding(int n) {
+            this.number = n;
+        }
+
+        @Override
+        public int apply(int x) {
+            return this.number + x;
+        }
+    }
+
+    class summing implements IntUnaryFunction {
+    private int sum;
+        public summing() {
+            this.sum = 0;
+        }
+
+        @Override
+        public int apply(int x) {
+            this.sum += x;
+            return this.sum;
+        }
+        public int getSum() {
+            return this.sum;
+        }
+    }
+
