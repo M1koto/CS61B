@@ -19,15 +19,15 @@ public class ColumnMatchFilter extends TableFilter {
         int one = _table.colNameToIndex(_col1);
         int two = _table.colNameToIndex(_col2);
         Table.TableRow _next = candidateNext();
-        if (_next.getValue(one) != _next.getValue(two)) {
-            return false;
+        if (_next.getValue(one).equals( _next.getValue(two))) {
+            return true;
         }
-        return true;
+        return false;
     }
 
     // FIXME: Add instance variables?
-    private Table _table;
-    private String _col1;
+    public Table _table;
+    public String _col1;
 
-    private String _col2;
+    public String _col2;
 }

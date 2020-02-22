@@ -17,7 +17,7 @@ public class EqualityFilter extends TableFilter {
     protected boolean keep() {
         // FIXME: Replace this line with your code.
         int data = _table.colNameToIndex(_name);
-        if (candidateNext().getValue(data) != _match){
+        if (!candidateNext().getValue(data).equals(_match)){
             return false;
         }
         return true;

@@ -277,12 +277,12 @@ public class TestTable {
                 "HashMap", "Michelle",
                 "Hwang", "Black");
 
-        //assertEquals("Filtered Table size is incorrect.", 3, filtered.numRows());
-        //assertEquals("Header is Incorrect", expectedHeaderList,
-                //filtered.headerList());
-        //testRow(filtered.getRow(0), expectedRow0);
-        //testRow(filtered.getRow(1), expectedRow1);
-        //testRow(filtered.getRow(2), expectedRow2);
+        assertEquals("Filtered Table size is incorrect.", 3, filtered.numRows());
+        assertEquals("Header is Incorrect", expectedHeaderList,
+                filtered.headerList());
+        testRow(filtered.getRow(0), expectedRow0);
+        testRow(filtered.getRow(1), expectedRow1);
+        testRow(filtered.getRow(2), expectedRow2);
     }
 
 
