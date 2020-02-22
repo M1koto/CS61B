@@ -26,6 +26,5 @@ public class EqualityFilter extends TableFilter {
     // FIXME: Add instance variables?
     private Table _table;
     private String _name;
-
     private String _match;
 }

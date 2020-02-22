@@ -18,7 +18,8 @@ public class ColumnMatchFilter extends TableFilter {
         // FIXME: Replace this line with your code.
         int one = _table.colNameToIndex(_col1);
         int two = _table.colNameToIndex(_col2);
-        if (candidateNext().getValue(one) != candidateNext().getValue(two)) {
+        Table.TableRow _next = candidateNext();
+        if (_next.getValue(one) != _next.getValue(two)) {
             return false;
         }
         return true;
