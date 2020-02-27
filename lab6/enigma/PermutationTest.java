@@ -104,18 +104,18 @@ public abstract class PermutationTest {
     @Test
     public void testPermute() {
         Permutation p = getNewPermutation("(YKNEACBD)", getNewAlphabet("KENYABCD"));
-        assertEquals(2,p.permute(18));
+        assertEquals(1,p.permute(18));
     }
     @Test
     public void testPermute2() {
         Permutation p = getNewPermutation("(YKNEACBD)", getNewAlphabet("KENYABCD"));
-        assertEquals('K',p.permute('E'));
+        assertEquals('N',p.permute('E'));
     }
 
     @Test
     public void testinvert2() {
         Permutation p = getNewPermutation("(YKNEACBD)", getNewAlphabet("KENYABCD"));
-        assertEquals(4,p.invert(4));
+        assertEquals(1,p.invert(4));
     }
     // FIXME: Add tests here that pass on a correct Permutation and fail on buggy Permutations.
 }
