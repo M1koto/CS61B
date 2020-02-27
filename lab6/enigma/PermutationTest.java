@@ -83,10 +83,11 @@ public abstract class PermutationTest {
     }
 
     @Test
-    public void testInvertChar() {
+    public void testInvertChar() throws EnigmaException{
         Permutation p = getNewPermutation("(BACD)", getNewAlphabet("ABCD"));
         assertEquals('B', p.invert('A'));
         assertEquals('D', p.invert('B'));
+        p.invert('Z');
     }
 
     @Test
@@ -105,11 +106,13 @@ public abstract class PermutationTest {
     public void testPermute() {
         Permutation p = getNewPermutation("(YKNEACBD)", getNewAlphabet("KENYABCD"));
         assertEquals(1,p.permute(18));
+        assertEquals(1,p.permute(-5));
     }
     @Test
-    public void testPermute2() {
+    public void testPermute2() throws  EnigmaException{
         Permutation p = getNewPermutation("(YKNEACBD)", getNewAlphabet("KENYABCD"));
         assertEquals('A',p.permute('E'));
+        p.permute('Z');
     }
 
     @Test
