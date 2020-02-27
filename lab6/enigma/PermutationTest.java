@@ -106,7 +106,8 @@ public abstract class PermutationTest {
         Permutation p = getNewPermutation("(YKNEACBD)", getNewAlphabet("KENYABCD"));
         assertEquals(1,p.permute(18));
         assertEquals(0,p.permute(-5));
-        assertEquals(3,p.permute(0));
+        assertEquals(2,p.permute(1));
+        assertEquals(2,p.permute(0));
 
     }
     @Test
