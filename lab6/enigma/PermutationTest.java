@@ -110,6 +110,7 @@ public abstract class PermutationTest {
     public void testPermute1() {
         Permutation p = getNewPermutation("(YKNEACBD)", getNewAlphabet("KENYABCD"));
         assertEquals(0,p.permute(-5));
+        // 先找在alphabet裡對應的號碼，對應過去，map, 對應回alphabet找號碼
     }
     @Test
     public void testPermute2() {
@@ -136,12 +137,30 @@ public abstract class PermutationTest {
     public void testinvert2() {
         Permutation p = getNewPermutation("(YKNEACBD)", getNewAlphabet("KENYABCD"));
         assertEquals(1,p.invert(4));
-        assertEquals(3,p.invert(0)); //3
+        assertEquals(3,p.invert(0));
     }
     @Test
     public void testinvert3() {
         Permutation p = getNewPermutation("(YKNEACBD)", getNewAlphabet("KENYABCD"));
         assertEquals(2,p.invert(-7));
+    }
+
+    @Test
+    public void testinvert4() {
+        Permutation p = getNewPermutation("(YKNEACB)(D)", getNewAlphabet("KENYABCD"));
+        assertEquals('D',p.invert('D'));
+    }
+
+    @Test
+    public void testP5() {
+        Permutation p = getNewPermutation("(YKNEACB)(D)", getNewAlphabet("KENYABCD"));
+        assertEquals('D',p.invert('D'));
+    }
+
+    @Test
+    public void test() {
+        Permutation p = getNewPermutation("(YKNEACBD)", getNewAlphabet("KENYABCD"));
+        assertTrue(p.derangement());
     }
     // FIXME: Add tests here that pass on a correct Permutation and fail on buggy Permutations.
 }
