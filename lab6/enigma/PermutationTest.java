@@ -82,5 +82,40 @@ public abstract class PermutationTest {
         checkPerm("identity", UPPER_STRING, UPPER_STRING, perm, alpha);
     }
 
+    @Test
+    public void testInvertChar() {
+        Permutation p = getNewPermutation("(BACD)", getNewAlphabet("ABCD"));
+        assertEquals('B', p.invert('A'));
+        assertEquals('D', p.invert('B'));
+    }
+
+    @Test
+    public void testSize() {
+        Permutation p = getNewPermutation("(YKNEACBD)", getNewAlphabet("KENYABCD"));
+        assertEquals(8, p.size());
+    }
+
+    @Test(expected = EnigmaException.class)
+    public void testNotInAlphabet() throws EnigmaException{
+        Permutation p = getNewPermutation("(BACD)", getNewAlphabet("ABCD"));
+        p.invert('F');
+    }
+
+    @Test
+    public void testPermute() {
+        Permutation p = getNewPermutation("(YKNEACBD)", getNewAlphabet("KENYABCD"));
+        assertEquals(2,p.permute(18));
+    }
+    @Test
+    public void testPermute2() {
+        Permutation p = getNewPermutation("(YKNEACBD)", getNewAlphabet("KENYABCD"));
+        assertEquals('K',p.permute('E'));
+    }
+
+    @Test
+    public void testinvert2() {
+        Permutation p = getNewPermutation("(YKNEACBD)", getNewAlphabet("KENYABCD"));
+        assertEquals(4,p.invert(4));
+    }
     // FIXME: Add tests here that pass on a correct Permutation and fail on buggy Permutations.
 }
