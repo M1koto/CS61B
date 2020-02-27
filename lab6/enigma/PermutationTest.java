@@ -123,9 +123,10 @@ public abstract class PermutationTest {
         assertEquals(2,p.permute(0)); //2
     }
     @Test
-    public void testPermute4() throws  EnigmaException{
+    public void testPermute4(){
         Permutation p = getNewPermutation("(YKNEACBD)", getNewAlphabet("KENYABCD"));
         assertEquals('A',p.permute('E'));
+        assertEquals('Y',p.permute('D'));
     }
     @Test(expected = EnigmaException.class)
     public void testPermute5() throws  EnigmaException{
@@ -142,13 +143,15 @@ public abstract class PermutationTest {
     @Test
     public void testinvert3() {
         Permutation p = getNewPermutation("(YKNEACBD)", getNewAlphabet("KENYABCD"));
-        assertEquals(2,p.invert(-7));
+        assertEquals(2,p.invert(-7));  // 看alphabet連invert也是從左邊數
     }
 
     @Test
     public void testinvert4() {
         Permutation p = getNewPermutation("(YKNEACB)(D)", getNewAlphabet("KENYABCD"));
         assertEquals('D',p.invert('D'));
+        assertEquals('C',p.invert('B'));
+        assertEquals('B',p.invert('Y'));
     }
 
     @Test
@@ -161,6 +164,15 @@ public abstract class PermutationTest {
     public void test() {
         Permutation p = getNewPermutation("(YKNEACBD)", getNewAlphabet("KENYABCD"));
         assertTrue(p.derangement());
+    }
+
+    @Test
+    public void testlast() {
+        Permutation p = getNewPermutation("(YKNEAC)(BD)", getNewAlphabet("KENYABCD"));
+        assertEquals('B',p.invert('D'));
+        assertEquals('D',p.invert('B'));
+        assertEquals('B',p.permute('D'));
+        assertFalse(p.derangement());
     }
     // FIXME: Add tests here that pass on a correct Permutation and fail on buggy Permutations.
 }
