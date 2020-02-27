@@ -109,7 +109,7 @@ public abstract class PermutationTest {
     @Test
     public void testPermute2() {
         Permutation p = getNewPermutation("(YKNEACBD)", getNewAlphabet("KENYABCD"));
-        assertEquals('N',p.permute('E'));
+        assertEquals('A',p.permute('E'));
     }
 
     @Test
