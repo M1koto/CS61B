@@ -105,18 +105,29 @@ public abstract class PermutationTest {
     public void testPermute() {
         Permutation p = getNewPermutation("(YKNEACBD)", getNewAlphabet("KENYABCD"));
         assertEquals(1,p.permute(18));
-        assertEquals(4,p.permute(-5));
-        assertEquals(1,p.permute(2));
-        assertEquals(0,p.permute(0));
-
     }
     @Test
-    public void testPermute2() throws  EnigmaException{
+    public void testPermute1() {
+        Permutation p = getNewPermutation("(YKNEACBD)", getNewAlphabet("KENYABCD"));
+        assertEquals(4,p.permute(-5));
+    }
+    @Test
+    public void testPermute2() {
+        Permutation p = getNewPermutation("(YKNEACBD)", getNewAlphabet("KENYABCD"));
+        assertEquals(1,p.permute(2));
+    }
+    @Test
+    public void testPermute3() {
+        Permutation p = getNewPermutation("(YKNEACBD)", getNewAlphabet("KENYABCD"));
+        assertEquals(0,p.permute(0));
+    }
+    @Test
+    public void testPermute4() throws  EnigmaException{
         Permutation p = getNewPermutation("(YKNEACBD)", getNewAlphabet("KENYABCD"));
         assertEquals('A',p.permute('E'));
     }
     @Test(expected = EnigmaException.class)
-    public void testPermute3() throws  EnigmaException{
+    public void testPermute5() throws  EnigmaException{
         Permutation p = getNewPermutation("(YKNEACBD)", getNewAlphabet("KENYABCD"));
         p.permute('Z');
     }
@@ -125,9 +136,12 @@ public abstract class PermutationTest {
     public void testinvert2() {
         Permutation p = getNewPermutation("(YKNEACBD)", getNewAlphabet("KENYABCD"));
         assertEquals(1,p.invert(4));
-        assertEquals(6,p.invert(2));
-        assertEquals(5,p.invert(1)); //2
-        assertEquals(7,p.invert(-7));
+        assertEquals(7,p.invert(0));
+    }
+    @Test
+    public void testinvert3() {
+        Permutation p = getNewPermutation("(YKNEACBD)", getNewAlphabet("KENYABCD"));
+        assertEquals(5,p.invert(-7));
     }
     // FIXME: Add tests here that pass on a correct Permutation and fail on buggy Permutations.
 }
