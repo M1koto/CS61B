@@ -109,7 +109,7 @@ public abstract class PermutationTest {
     @Test
     public void testPermute1() {
         Permutation p = getNewPermutation("(YKNEACBD)", getNewAlphabet("KENYABCD"));
-        assertEquals(4,p.permute(-5));
+        assertEquals(0,p.permute(-5));
     }
     @Test
     public void testPermute2() {
@@ -119,7 +119,7 @@ public abstract class PermutationTest {
     @Test
     public void testPermute3() {
         Permutation p = getNewPermutation("(YKNEACBD)", getNewAlphabet("KENYABCD"));
-        assertEquals(0,p.permute(0));
+        assertEquals(2,p.permute(0)); //2
     }
     @Test
     public void testPermute4() throws  EnigmaException{
@@ -136,12 +136,12 @@ public abstract class PermutationTest {
     public void testinvert2() {
         Permutation p = getNewPermutation("(YKNEACBD)", getNewAlphabet("KENYABCD"));
         assertEquals(1,p.invert(4));
-        assertEquals(7,p.invert(0));
+        assertEquals(3,p.invert(0)); //3
     }
     @Test
     public void testinvert3() {
         Permutation p = getNewPermutation("(YKNEACBD)", getNewAlphabet("KENYABCD"));
-        assertEquals(5,p.invert(-7));
+        assertEquals(2,p.invert(-7));
     }
     // FIXME: Add tests here that pass on a correct Permutation and fail on buggy Permutations.
 }
