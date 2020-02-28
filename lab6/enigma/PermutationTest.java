@@ -109,6 +109,16 @@ public abstract class PermutationTest {
     }
 
     @Test
+    public void testNotInAlphabet3() throws EnigmaException{
+        Permutation p = getNewPermutation("(ABCD%dm)", getNewAlphabet("ABCD%dm"));
+    }
+
+    @Test(expected = EnigmaException.class)
+    public void testNotInAlphabet4() throws EnigmaException{
+        Permutation p = getNewPermutation("(ABCD%dm)", getNewAlphabet("ABCD%dmm"));
+    }
+
+    @Test
     public void testPermute() {
         Permutation p = getNewPermutation("(YKNEACBD)", getNewAlphabet("KENYABCD"));
         assertEquals(1,p.permute(18));
@@ -134,6 +144,7 @@ public abstract class PermutationTest {
         Permutation p = getNewPermutation("(YKNEACBD)", getNewAlphabet("KENYABCD"));
         assertEquals('A',p.permute('E'));
         assertEquals('Y',p.permute('D'));
+        assertEquals('K',p.alphabet());
     }
     @Test(expected = EnigmaException.class)
     public void testPermute5() throws  EnigmaException{
