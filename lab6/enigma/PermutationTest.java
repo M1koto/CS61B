@@ -108,14 +108,20 @@ public abstract class PermutationTest {
         Permutation p = getNewPermutation("(BACZ)", getNewAlphabet("ABCD"));
     }
 
-    @Test
+    @Test(expected = EnigmaException.class)
     public void testNotInAlphabet3() throws EnigmaException{
-        Permutation p = getNewPermutation("(ABCD%dm)", getNewAlphabet("ABCD%dm"));
+        Permutation p = getNewPermutation("(ABCD%d)", getNewAlphabet("ABCD%dm"));
     }
 
     @Test(expected = EnigmaException.class)
     public void testNotInAlphabet4() throws EnigmaException{
         Permutation p = getNewPermutation("(ABCD%dm)", getNewAlphabet("ABCD%dmm"));
+    }
+
+    @Test(expected = EnigmaException.class)
+    public void testNotInAlphabet5() throws EnigmaException{
+        Permutation p = getNewPermutation("(ABCD%dm)", getNewAlphabet("ABCD%dm"));
+        p.permute(' ');
     }
 
     @Test
@@ -182,6 +188,7 @@ public abstract class PermutationTest {
     public void testP5() {
         Permutation p = getNewPermutation("(YKNEACB)(D)", getNewAlphabet("KENYABCD"));
         assertEquals('D',p.invert('D'));
+        assertEquals('B',p.invert('Y'));
     }
 
     @Test
