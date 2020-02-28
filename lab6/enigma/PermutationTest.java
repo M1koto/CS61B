@@ -164,7 +164,8 @@ public abstract class PermutationTest {
         assertEquals(3,p.invert(80));
         assertEquals(3,p.invert(800));
         assertEquals(3,p.invert(8000));
-        checkPerm("error", "YKNEACB", "KNEACBY", p, getNewAlphabet("KENYABC") );
+        Permutation p2 = getNewPermutation("(YKNEACB)", getNewAlphabet("KENYABC"));
+        checkPerm("error", "YKNEACB", "KNEACBY", p2, getNewAlphabet("KENYABC") );
     }
 
     @Test
