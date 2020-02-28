@@ -144,7 +144,7 @@ public abstract class PermutationTest {
         Permutation p = getNewPermutation("(YKNEACBD)", getNewAlphabet("KENYABCD"));
         assertEquals('A',p.permute('E'));
         assertEquals('Y',p.permute('D'));
-        assertEquals('K',p.alphabet());
+        assertEquals('Y',p.alphabet());
     }
     @Test(expected = EnigmaException.class)
     public void testPermute5() throws  EnigmaException{
