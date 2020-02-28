@@ -108,7 +108,7 @@ public abstract class PermutationTest {
         Permutation p = getNewPermutation("(BACZ)", getNewAlphabet("ABCD"));
     }
 
-    @Test(expected = EnigmaException.class)
+    @Test(expected = enigma.EnigmaException.class)
     public void testNotInAlphabet3() throws EnigmaException{
         Permutation p = getNewPermutation("(ABCD%d)", getNewAlphabet("ABCD%dm"));
     }
