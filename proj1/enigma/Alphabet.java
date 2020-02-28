@@ -25,7 +25,7 @@ class Alphabet {
 
     /** Returns true if CH is in this alphabet. */
     boolean contains(char ch) {
-        return _chars.indexOf(ch) > 0; // FIXME
+        return _chars.indexOf(ch) > -1; // FIXME
     }
 
     /** Returns character number INDEX in the alphabet, where
