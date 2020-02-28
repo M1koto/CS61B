@@ -93,6 +93,8 @@ public abstract class PermutationTest {
     public void testSize() {
         Permutation p = getNewPermutation("(YKNEACBD)", getNewAlphabet("KENYABCD"));
         assertEquals(8, p.size());
+        Permutation p2 = getNewPermutation("(YKNE)(ACBD)", getNewAlphabet("KENYABCD"));
+        assertEquals(8, p2.size());
     }
 
     @Test(expected = EnigmaException.class)
@@ -152,6 +154,8 @@ public abstract class PermutationTest {
         assertEquals('D',p.invert('D'));
         assertEquals('C',p.invert('B'));
         assertEquals('B',p.invert('Y'));
+        assertEquals(2,p.invert(-7));
+        assertEquals(7,p.invert(-9));
     }
 
     @Test
@@ -172,7 +176,9 @@ public abstract class PermutationTest {
         assertEquals('B',p.invert('D'));
         assertEquals('D',p.invert('B'));
         assertEquals('B',p.permute('D'));
-        assertFalse(p.derangement());
+        assertEquals(7,p.invert(5));
+        assertEquals(3,p.permute(6));
+        assertTrue(p.derangement());
     }
     // FIXME: Add tests here that pass on a correct Permutation and fail on buggy Permutations.
 }
