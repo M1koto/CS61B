@@ -3,6 +3,9 @@ package enigma;
 import org.junit.Test;
 import org.junit.Rule;
 import org.junit.rules.Timeout;
+
+import java.util.ArrayList;
+
 import static org.junit.Assert.*;
 
 import static enigma.TestUtils.*;
@@ -91,6 +94,40 @@ public class PermutationTest {
         assertEquals('A', A.toChar(0));
         assertEquals(4, A.size());
     }
+    /* ***** PERMUTATION PARTIAL TESTS ***** */
+    @Test
+    public void testForAddCycle() {
+        ArrayList A = new ArrayList<String>();
+        A.add("AB");
+        A.add("CD");
+        Permutation P = new Permutation("(AB) (CD)", getNewAlphabet("ABCD"));
+        Permutation P2 = new Permutation("(AB) (CD) (%3) (kl) (m)", getNewAlphabet("ABCDklm%33"));
+        assertEquals(A, P.container);
+        System.out.println(P2.container);
+    }
+
+    @Test
+    public void testPermuteperm() {
+        Permutation p = getNewPermutation("(YKNEACBD)", getNewAlphabet("KENYABCD"));
+        assertEquals(1,p.permute(2));
+    }
+
+    @Test
+    public void testPermuteperm2(){
+        Permutation p = getNewPermutation("(YKNEACBD)", getNewAlphabet("KENYABCD"));
+        assertEquals('A',p.permute('E'));
+        assertEquals('Y',p.permute('D'));
+    }
+
+
+
+
+
+
+
+
+
+
 
     /* ***** PERMUTATION TESTS ***** */
     @Test
@@ -109,10 +146,10 @@ public class PermutationTest {
 
     @Test
     public void testSize() {
+        Permutation p2 = getNewPermutation("(YKNE) (ACBD)", getNewAlphabet("KENYABCD"));
+        assertEquals(8, p2.size());
         Permutation p = getNewPermutation("(YKNEACBD)", getNewAlphabet("KENYABCD"));
         assertEquals(8, p.size());
-        Permutation p2 = getNewPermutation("(YKNE)(ACBD)", getNewAlphabet("KENYABCD"));
-        assertEquals(8, p2.size());
     }
 
     @Test(expected = EnigmaException.class)

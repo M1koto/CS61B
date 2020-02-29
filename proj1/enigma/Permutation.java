@@ -1,5 +1,7 @@
 package enigma;
 
+import java.util.ArrayList;
+
 import static enigma.EnigmaException.*;
 
 /** Represents a permutation of a range of integers starting at 0 corresponding
@@ -16,12 +18,30 @@ class Permutation {
     Permutation(String cycles, Alphabet alphabet) {
         _alphabet = alphabet;
         // FIXME
+        _cycles = cycles;
+        container = new ArrayList<String>();
+        addCycle(_cycles);
     }
 
     /** Add the cycle c0->c1->...->cm->c0 to the permutation, where CYCLE is
      *  c0c1...cm. */
     private void addCycle(String cycle) {
         // FIXME
+        int count = 0; int frontindex = 0; int backindex = 0;
+        while (count < cycle.length()) {
+            if (cycle.charAt(count) == '(') {
+                frontindex = count;
+            }
+            if (cycle.charAt(count) == ')') {
+                backindex = count;
+            }
+            if (backindex != 0) {
+                container.add(cycle.substring(frontindex + 1, backindex));
+                addCycle(cycle.substring(backindex + 1));
+                break;
+            }
+            count ++;
+        }
     }
 
     /** Return the value of P modulo the size of this permutation. */
@@ -33,15 +53,45 @@ class Permutation {
         return r;
     }
 
+    /** Makes integer positive by adding alphabet lengths to it */
+    int MakePositive(int p) {
+        if (p < 0) {
+            return MakePositive(p + _alphabet.size());
+        } else {
+            return p;
+        }
+    }
+
+    /** maps straightly to target */
+    char MapStraight(String cycle, char a){
+        int index = cycle.indexOf(a);
+        if (index == cycle.length() - 1) {
+            return cycle.charAt(0);
+        }
+        index += 1;
+        return cycle.charAt(index);
+    }
+    /** maps inversely to target */
+    char MapInverse(String cycle, char a){
+        int index = cycle.indexOf(a);
+        if (index == 0) {
+            return cycle.charAt(cycle.length());
+        }
+        index -= 1;
+        return cycle.charAt(index);
+    }
+
     /** Returns the size of the alphabet I permute. */
     int size() {
-        return 0; // FIXME
+        return _alphabet.size(); // FIXME
     }
 
     /** Return the result of applying this permutation to P modulo the
      *  alphabet size. */
     int permute(int p) {
-        return 0;  // FIXME
+        p = wrap(MakePositive(p));
+        char letter = _alphabet.toChar(p);
+        return _alphabet.toInt(permute(letter));
     }
 
     /** Return the result of applying the inverse of this permutation
@@ -53,7 +103,14 @@ class Permutation {
     /** Return the result of applying this permutation to the index of P
      *  in ALPHABET, and converting the result to a character of ALPHABET. */
     char permute(char p) {
-        return 0;  // FIXME
+        char target = ' ';
+        for (int i = 0; i < container.size(); i++) {
+            String temp = container.get(i);
+            if (temp.indexOf(p) != -1) {
+                target = MapStraight(temp, p);
+            }
+        }
+        return target;
     }
 
     /** Return the result of applying the inverse of this permutation to C. */
@@ -69,11 +126,20 @@ class Permutation {
     /** Return true iff this permutation is a derangement (i.e., a
      *  permutation for which no value maps to itself). */
     boolean derangement() {
-        return true;  // FIXME
+        for (int i = 0; i < container.size(); i++) {
+            if (container.get(i).length() == 1) {
+                return true;
+            }
+        }
+        return false;  // FIXME
     }
 
     /** Alphabet of this permutation. */
     private Alphabet _alphabet;
 
     // FIXME: ADDITIONAL FIELDS HERE, AS NEEDED
+    /** Cycle of permutation */
+    private String _cycles;
+
+    public ArrayList<String> container;
 }

@@ -11,6 +11,24 @@ class Alphabet {
     Alphabet(String chars) {
         // FIXME
         _chars = chars;
+        CheckUnique(_chars);
+    }
+
+    /** Throws Exception if not unique */
+    void CheckUnique(String chars) {
+        char[] temp = new char[chars.length()];
+        for (int i = 0; i < temp.length; i++) {
+            temp[i] = chars.charAt(i);
+        }
+
+        for (int j = 0; j < temp.length; j++) {
+            for (int k = j + 1; k < temp.length; k++) {
+                if (temp[j] == temp[k]) {
+                    throw new EnigmaException("No Duplicates");
+                }
+            }
+        }
+
     }
 
     /** A default alphabet of all upper-case characters. */
