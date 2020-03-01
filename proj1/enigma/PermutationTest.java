@@ -124,15 +124,20 @@ public class PermutationTest {
         assertEquals('B',p.invert('Y'));
     }
 
+    /* ***** Rotors PARTIAL TESTS ***** */
+    @Test
+    public void rotor1() {
+        Permutation p = getNewPermutation("(YKNEACB)(D)", getNewAlphabet("KENYABCD"));
+        Rotor R = new Rotor("Namba one", p);
+        assertEquals(0, R.setting());
+    }
 
-
-
-
-
-
-
-
-
+    /* ***** Moving Rotors PARTIAL TESTS ***** */
+    public void Moving1() {
+        Permutation p = getNewPermutation("(YKNEACB)(D)", getNewAlphabet("KENYABCD"));
+        Rotor R = new Rotor("Namba one", p);
+        assertEquals(0, R.setting());
+    }
 
     /* ***** PERMUTATION TESTS ***** */
     @Test
