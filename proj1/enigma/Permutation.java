@@ -24,19 +24,31 @@ class Permutation {
     }
 
     /** Add the cycle c0->c1->...->cm->c0 to the permutation, where CYCLE is
-     *  c0c1...cm. */
+     *  c0c1...cm.
+     *  Haven't taken into account cycles like
+     *  (() or
+     *  chars not in alphabet or
+     *  repeated chars
+     *  in cycle*/
     private void addCycle(String cycle) {
-        int count = 0; int frontindex = 0; int backindex = 0;
+        int count = 0; int frontindex = -1; int backindex = -1;
         while (count < cycle.length()) {
-            if (cycle.charAt(count) == '(') {
+            char target = cycle.charAt(count);
+            if (target == '(') {
                 frontindex = count;
             }
-            if (cycle.charAt(count) == ')') {
+            if (target == ')') {
                 backindex = count;
             }
-            if (backindex != 0) {
+            if (frontindex == -1 && backindex == -1 &&
+                    (target != '(' && target != ' ')) {
+                throw new EnigmaException("Wrong format passed in");
+            }
+            if (backindex != -1) {
+                _alphabet.CheckUnique(cycle.substring(frontindex + 1, backindex));
                 container.add(cycle.substring(frontindex + 1, backindex));
                 addCycle(cycle.substring(backindex + 1));
+                frontindex = -1; backindex  = -1;
                 break;
             }
             count ++;

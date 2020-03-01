@@ -118,6 +118,11 @@ public class PermutationTest {
     }
 
     @Test
+    public void testPermuteperm3(){
+        Permutation p = getNewPermutation("(D)(D)", getNewAlphabet("KENYABCD"));
+    }
+
+    @Test
     public void testInv() {
         Permutation p = getNewPermutation("(YKNEACB)(D)", getNewAlphabet("KENYABCD"));
         assertEquals('D',p.invert('D'));
@@ -127,7 +132,7 @@ public class PermutationTest {
     /* ***** Rotors PARTIAL TESTS ***** */
     @Test
     public void rotor1() {
-        Permutation p = getNewPermutation("(YKNEACB)(D)", getNewAlphabet("KENYABCD"));
+        Permutation p = getNewPermutation("(YKNEACB) (D)", getNewAlphabet("KENYABCD"));
         Rotor R = new Rotor("Namba one", p);
         assertEquals(0, R.setting());
     }
@@ -140,7 +145,6 @@ public class PermutationTest {
         assertEquals(0, R.setting());
         R.advance();
         System.out.println(R.convertForward(19));
-        //assertEquals(6, R.convertForward(0));
     }
 
     /* ***** PERMUTATION TESTS ***** */

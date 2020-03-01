@@ -17,9 +17,12 @@ class Alphabet {
     void CheckUnique(String chars) {
         char[] temp = new char[chars.length()];
         for (int i = 0; i < temp.length; i++) {
-            temp[i] = chars.charAt(i);
+            char theChar = chars.charAt(i);
+            if (theChar == '(' || theChar == ')' || theChar == '*') {
+                throw new EnigmaException("No '(' or ')' or '*' ");
+            }
+            temp[i] = theChar;
         }
-
         for (int j = 0; j < temp.length; j++) {
             for (int k = j + 1; k < temp.length; k++) {
                 if (temp[j] == temp[k]) {
