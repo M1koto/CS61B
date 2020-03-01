@@ -6,7 +6,7 @@ import static enigma.EnigmaException.*;
 
 /** Represents a permutation of a range of integers starting at 0 corresponding
  *  to the characters of an alphabet.
- *  @author
+ *  @author kenny liao
  */
 class Permutation {
 
@@ -17,16 +17,15 @@ class Permutation {
      *  Whitespace is ignored. */
     Permutation(String cycles, Alphabet alphabet) {
         _alphabet = alphabet;
-        // FIXME
         _cycles = cycles;
         container = new ArrayList<String>();
         addCycle(_cycles);
+        MakeMapSelf(cycles, alphabet);
     }
 
     /** Add the cycle c0->c1->...->cm->c0 to the permutation, where CYCLE is
      *  c0c1...cm. */
     private void addCycle(String cycle) {
-        // FIXME
         int count = 0; int frontindex = 0; int backindex = 0;
         while (count < cycle.length()) {
             if (cycle.charAt(count) == '(') {
@@ -52,6 +51,21 @@ class Permutation {
         }
         return r;
     }
+    /** Let non-included alphabets map to themselves */
+    void MakeMapSelf(String s, Alphabet a) {
+        for (int i = 0; i < a.size(); i++) {
+            boolean flag = false;
+            for (int j = 0; j < s.length(); j++) {
+                if (a.toChar(i) == s.charAt(j)) {
+                    flag = true;
+                }
+            }
+            if (!flag) {
+                String temp = "" + a.toChar(i);
+                container.add(temp);
+            }
+        }
+    }
 
     /** Makes integer positive by adding alphabet lengths to it */
     int MakePositive(int p) {
@@ -65,7 +79,7 @@ class Permutation {
     /** maps straightly to target */
     char MapStraight(String cycle, char a){
         int index = cycle.indexOf(a);
-        if (index == cycle.length() - 1) {
+        if (cycle.length() == 1 || index == cycle.length() - 1) {
             return cycle.charAt(0);
         }
         index += 1;
@@ -74,8 +88,11 @@ class Permutation {
     /** maps inversely to target */
     char MapInverse(String cycle, char a){
         int index = cycle.indexOf(a);
+        if (cycle.length() == 1) {
+            return cycle.charAt(0);
+        }
         if (index == 0) {
-            return cycle.charAt(cycle.length());
+            return cycle.charAt(cycle.length() - 1);
         }
         index -= 1;
         return cycle.charAt(index);
@@ -83,7 +100,7 @@ class Permutation {
 
     /** Returns the size of the alphabet I permute. */
     int size() {
-        return _alphabet.size(); // FIXME
+        return _alphabet.size();
     }
 
     /** Return the result of applying this permutation to P modulo the
@@ -97,12 +114,17 @@ class Permutation {
     /** Return the result of applying the inverse of this permutation
      *  to  C modulo the alphabet size. */
     int invert(int c) {
-        return 0;  // FIXME
+        c = wrap(MakePositive(c));
+        char letter = _alphabet.toChar(c);
+        return _alphabet.toInt(invert(letter));
     }
 
     /** Return the result of applying this permutation to the index of P
      *  in ALPHABET, and converting the result to a character of ALPHABET. */
     char permute(char p) {
+        if (!_alphabet.contains(p)) {
+            throw new EnigmaException("Does not contain this letter");
+        }
         char target = ' ';
         for (int i = 0; i < container.size(); i++) {
             String temp = container.get(i);
@@ -115,7 +137,17 @@ class Permutation {
 
     /** Return the result of applying the inverse of this permutation to C. */
     char invert(char c) {
-        return 0;  // FIXME
+        if (!_alphabet.contains(c)) {
+            throw new EnigmaException("Does not contain this letter");
+        }
+        char target = ' ';
+        for (int i = 0; i < container.size(); i++) {
+            String temp = container.get(i);
+            if (temp.indexOf(c) != -1) {
+                target = MapInverse(temp, c);
+            }
+        }
+        return target;
     }
 
     /** Return the alphabet used to initialize this Permutation. */
@@ -128,10 +160,10 @@ class Permutation {
     boolean derangement() {
         for (int i = 0; i < container.size(); i++) {
             if (container.get(i).length() == 1) {
-                return true;
+                return false;
             }
         }
-        return false;  // FIXME
+        return true;
     }
 
     /** Alphabet of this permutation. */

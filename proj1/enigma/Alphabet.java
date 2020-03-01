@@ -9,7 +9,6 @@ class Alphabet {
     /** A new alphabet containing CHARS.  Character number #k has index
      *  K (numbering from 0). No character may be duplicated. */
     Alphabet(String chars) {
-        // FIXME
         _chars = chars;
         CheckUnique(_chars);
     }
@@ -38,25 +37,24 @@ class Alphabet {
 
     /** Returns the size of the alphabet. */
     int size() {
-        return _chars.length(); // FIXME
+        return _chars.length();
     }
 
     /** Returns true if CH is in this alphabet. */
     boolean contains(char ch) {
-        return _chars.indexOf(ch) > -1; // FIXME
+        return _chars.indexOf(ch) > -1;
     }
 
     /** Returns character number INDEX in the alphabet, where
      *  0 <= INDEX < size(). */
     char toChar(int index) {
-        return _chars.charAt(index); // FIXME
+        return _chars.charAt(index);
     }
 
     /** Returns the index of character CH which must be in
      *  the alphabet. This is the inverse of toChar(). */
     int toInt(char ch) {
         return _chars.indexOf(ch);
-        // FIXME
     }
 
     /** class variable - self work*/

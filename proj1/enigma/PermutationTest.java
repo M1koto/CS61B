@@ -17,7 +17,7 @@ import static enigma.TestUtils.*;
  * this class concrete by removing the 4 abstract keywords and implementing the
  * 3 abstract methods.
  *
- *  @author
+ *  @author kenny liao
  */
 public class PermutationTest {
 
@@ -101,9 +101,7 @@ public class PermutationTest {
         A.add("AB");
         A.add("CD");
         Permutation P = new Permutation("(AB) (CD)", getNewAlphabet("ABCD"));
-        Permutation P2 = new Permutation("(AB) (CD) (%3) (kl) (m)", getNewAlphabet("ABCDklm%33"));
-        assertEquals(A, P.container);
-        System.out.println(P2.container);
+        Permutation P2 = new Permutation("(AB) (CD) (%3) (kl) (m)", getNewAlphabet("ABCDklm%3"));
     }
 
     @Test
@@ -117,6 +115,13 @@ public class PermutationTest {
         Permutation p = getNewPermutation("(YKNEACBD)", getNewAlphabet("KENYABCD"));
         assertEquals('A',p.permute('E'));
         assertEquals('Y',p.permute('D'));
+    }
+
+    @Test
+    public void testInv() {
+        Permutation p = getNewPermutation("(YKNEACB)(D)", getNewAlphabet("KENYABCD"));
+        assertEquals('D',p.invert('D'));
+        assertEquals('B',p.invert('Y'));
     }
 
 
@@ -134,6 +139,7 @@ public class PermutationTest {
     public void checkIdTransform() {
         Alphabet alpha = getNewAlphabet();
         Permutation perm = getNewPermutation("", alpha);
+        System.out.println(perm.container);
         checkPerm("identity", UPPER_STRING, UPPER_STRING, perm, alpha);
     }
 
