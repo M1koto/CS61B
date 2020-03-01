@@ -95,14 +95,6 @@ public class PermutationTest {
         assertEquals(4, A.size());
     }
     /* ***** PERMUTATION PARTIAL TESTS ***** */
-    @Test
-    public void testForAddCycle() {
-        ArrayList A = new ArrayList<String>();
-        A.add("AB");
-        A.add("CD");
-        Permutation P = new Permutation("(AB) (CD)", getNewAlphabet("ABCD"));
-        Permutation P2 = new Permutation("(AB) (CD) (%3) (kl) (m)", getNewAlphabet("ABCDklm%3"));
-    }
 
     @Test
     public void testPermuteperm() {
