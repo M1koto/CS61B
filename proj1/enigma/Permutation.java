@@ -183,5 +183,5 @@ class Permutation {
     /** Cycle of permutation */
     private String _cycles;
 
-    public ArrayList<String> container;
+    private ArrayList<String> container;
 }

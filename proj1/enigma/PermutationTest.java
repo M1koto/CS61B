@@ -170,7 +170,6 @@ public class PermutationTest {
     public void checkIdTransform() {
         Alphabet alpha = getNewAlphabet();
         Permutation perm = getNewPermutation("", alpha);
-        System.out.println(perm.container);
         checkPerm("identity", UPPER_STRING, UPPER_STRING, perm, alpha);
     }
 
