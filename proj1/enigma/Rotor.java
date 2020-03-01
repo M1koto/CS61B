@@ -11,7 +11,6 @@ class Rotor {
     Rotor(String name, Permutation perm) {
         _name = name;
         _permutation = perm;
-        // FIXME
         _setting = 0;
         _alphabet = perm.alphabet();
     }
@@ -95,8 +94,6 @@ class Rotor {
 
     /** The permutation implemented by this rotor in its 0 position. */
     protected Permutation _permutation;
-
-    // FIXME: ADDITIONAL FIELDS HERE, AS NEEDED
 
     protected int _setting;
 

@@ -25,34 +25,32 @@ class Permutation {
 
     /** Add the cycle c0->c1->...->cm->c0 to the permutation, where CYCLE is
      *  c0c1...cm.
-     *  Haven't taken into account cycles like
-     *  (() or
+     *  Haven't taken into account cycles :
      *  chars not in alphabet or
      *  repeated chars
      *  in cycle*/
     private void addCycle(String cycle) {
         int count = 0; int frontindex = -1; int backindex = -1;
+        int leftparan = 0; int rightparen = 0;
         while (count < cycle.length()) {
             char target = cycle.charAt(count);
             if (target == '(') {
                 frontindex = count;
+                leftparan += 1;
             }
             if (target == ')') {
                 backindex = count;
+                rightparen += 1;
             }
-            if (frontindex == -1 && backindex == -1 &&
-                    (target != '(' && target != ' ')) {
-                throw new EnigmaException("Wrong format passed in");
-            }
-            if (backindex != -1) {
+            if (frontindex != -1 && backindex != -1) {
                 _alphabet.CheckUnique(cycle.substring(frontindex + 1, backindex));
                 container.add(cycle.substring(frontindex + 1, backindex));
                 addCycle(cycle.substring(backindex + 1));
-                frontindex = -1; backindex  = -1;
                 break;
             }
             count ++;
         }
+        if (leftparan != rightparen) {throw new EnigmaException("Wrong format: paranthesis");}
     }
 
     /** Return the value of P modulo the size of this permutation. */

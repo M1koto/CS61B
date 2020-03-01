@@ -18,8 +18,8 @@ class Alphabet {
         char[] temp = new char[chars.length()];
         for (int i = 0; i < temp.length; i++) {
             char theChar = chars.charAt(i);
-            if (theChar == '(' || theChar == ')' || theChar == '*') {
-                throw new EnigmaException("No '(' or ')' or '*' ");
+            if (theChar == '*') {
+                throw new EnigmaException("No '*' ");
             }
             temp[i] = theChar;
         }

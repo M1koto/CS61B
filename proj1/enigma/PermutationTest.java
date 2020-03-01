@@ -117,16 +117,17 @@ public class PermutationTest {
         assertEquals('Y',p.permute('D'));
     }
 
-    @Test
+    @Test(expected = EnigmaException.class)
     public void testPermuteperm3(){
-        Permutation p = getNewPermutation("(D)(D)", getNewAlphabet("KENYABCD"));
+        Permutation p = getNewPermutation("(()", getNewAlphabet("KENYABCD"));
     }
 
     @Test
     public void testInv() {
-        Permutation p = getNewPermutation("(YKNEACB)(D)", getNewAlphabet("KENYABCD"));
+        Permutation p = getNewPermutation("(YKNEACB)", getNewAlphabet("KENYABCD"));
         assertEquals('D',p.invert('D'));
         assertEquals('B',p.invert('Y'));
+        assertFalse(p.derangement());
     }
 
     /* ***** Rotors PARTIAL TESTS ***** */
@@ -146,7 +147,24 @@ public class PermutationTest {
         R.advance();
         System.out.println(R.convertForward(19));
     }
-
+    /* ***** Fixed Rotors PARTIAL TESTS ***** */
+    @Test
+    public void FixedRoter1() {
+        Permutation p = getNewPermutation("(AELTPHQXRU) (BKNW) (CMOY) (DFG) (IV) (JZ) (S)", getNewAlphabet("ABCDEFGHIJKLMNOPQRSTUVWXYZ"));
+        Rotor R = new FixedRotor("Namba one", p);
+        assertEquals(0, R.setting());
+        R.advance();
+        System.out.println(R.setting());
+    }
+    /* ***** Reflectors PARTIAL TESTS ***** */
+    @Test
+    public void Reflector1() {
+        Permutation p = getNewPermutation("(AELTPHQXRU) (BKNW) (CMOY) (DFG) (IV) (JZ) (S)", getNewAlphabet("ABCDEFGHIJKLMNOPQRSTUVWXYZ"));
+        Rotor R = new Reflector("Namba one", p);
+        assertEquals(0, R.setting());
+        R.advance();
+        System.out.println(R.setting());
+    }
     /* ***** PERMUTATION TESTS ***** */
     @Test
     public void checkIdTransform() {
