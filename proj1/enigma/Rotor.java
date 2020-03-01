@@ -62,15 +62,17 @@ class Rotor {
     }
 
     /** Return the conversion of P (an integer in the range 0..size()-1)
-     *  according to my permutation. */
+     *  according to my permutation. 這個要換算一整路：完整地從右邊進左邊出*/
     int convertForward(int p) {
-        return p + _setting;
+        return _permutation.MakePositive(
+                _permutation.permute(p + _setting) - _setting);
     }
 
     /** Return the conversion of E (an integer in the range 0..size()-1)
-     *  according to the inverse of my permutation. */
+     *  according to the inverse of my permutation. 這個要換算一整路：完整地從左邊進右邊出*/
     int convertBackward(int e) {
-        return e - _setting;
+        return _permutation.MakePositive(
+                _permutation.invert(e + _setting) - _setting);
     }
 
     /** Returns true iff I am positioned to allow the rotor to my left
@@ -89,15 +91,15 @@ class Rotor {
     }
 
     /** My name. */
-    private final String _name;
+    protected final String _name;
 
     /** The permutation implemented by this rotor in its 0 position. */
-    private Permutation _permutation;
+    protected Permutation _permutation;
 
     // FIXME: ADDITIONAL FIELDS HERE, AS NEEDED
 
-    private int _setting;
+    protected int _setting;
 
-    private Alphabet _alphabet;
+    protected Alphabet _alphabet;
 
 }

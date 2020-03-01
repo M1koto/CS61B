@@ -133,10 +133,14 @@ public class PermutationTest {
     }
 
     /* ***** Moving Rotors PARTIAL TESTS ***** */
+    @Test
     public void Moving1() {
-        Permutation p = getNewPermutation("(YKNEACB)(D)", getNewAlphabet("KENYABCD"));
-        Rotor R = new Rotor("Namba one", p);
+        Permutation p = getNewPermutation("(AELTPHQXRU) (BKNW) (CMOY) (DFG) (IV) (JZ) (S)", getNewAlphabet("ABCDEFGHIJKLMNOPQRSTUVWXYZ"));
+        Rotor R = new MovingRotor("Namba one", p, "C");
         assertEquals(0, R.setting());
+        R.advance();
+        System.out.println(R.convertForward(19));
+        //assertEquals(6, R.convertForward(0));
     }
 
     /* ***** PERMUTATION TESTS ***** */
