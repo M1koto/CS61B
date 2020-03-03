@@ -5,6 +5,9 @@ import org.junit.Rule;
 import org.junit.rules.Timeout;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
 
 import static org.junit.Assert.*;
 
@@ -157,6 +160,27 @@ public class PermutationTest {
         R.advance();
         System.out.println(R.setting());
     }
+    /* ***** Machine PARTIAL TESTS ***** */
+
+    @Test
+    public void Machine1() {
+        Permutation p = getNewPermutation("(YKNEACB) (D)", getNewAlphabet("KENYABCD"));
+        Rotor M = new MovingRotor("Namba two", p, "C");
+        Rotor R = new Reflector("Namba one", p);
+        Permutation p2 = getNewPermutation("(AELTPHQXRU) (BKNW) (CMOY) (DFG) (IV) (JZ) (S)", getNewAlphabet("ABCDEFGHIJKLMNOPQRSTUVWXYZ"));
+        Rotor R2 = new MovingRotor("Namba three", p2, "");
+        Rotor[] test = {R, M, R2};
+        Machine Mach = new Machine(getNewAlphabet("KENYABCD"), 3, 2, Arrays.asList(test));
+        Mach.insertRotors(new String[] {"Namba one", "Namba two","Namba three"});
+        Mach.setRotors("AQ");
+        assertTrue(M.setting() == 4);
+        assertTrue(R2.setting() == 16);
+        Mach.setPlugboard(p);
+    }
+
+
+
+
     /* ***** PERMUTATION TESTS ***** */
     @Test
     public void checkIdTransform() {
