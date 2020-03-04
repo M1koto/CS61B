@@ -76,9 +76,9 @@ class Machine {
         }
     }
 
-    /** Set the plugboard to PLUGBOARD.
-     * HAVEN'T CHECK IF ONLY COMES IN PAIR FORM*/
+    /** Set the plugboard to PLUGBOARD.*/
     void setPlugboard(Permutation plugboard) {
+        plugboard.checkPlugboard();
         _plugboard = plugboard;
     }
 
@@ -101,7 +101,12 @@ class Machine {
             memorize = target.convertBackward(memorize);
             count += 1;
         }
+        memorize = applyPlugboard(memorize);
         return memorize;
+    }
+
+    int applyPlugboard(int c) {
+        return _plugboard.applyPlugboard(c);
     }
 
     /** Returns the result of converting the input character C (as an
@@ -114,13 +119,14 @@ class Machine {
             }
         }
          _myRotors[_myRotors.length - 1].advance();
+        c = applyPlugboard(c);
         return convFoward(c);
     }
 
     /** Returns the encoding/decoding of MSG, updating the state of
      *  the rotors accordingly. */
     String convert(String msg) {
-        return ""; // FIXME
+        return "";
     }
 
     /** Common alphabet of my rotors. */

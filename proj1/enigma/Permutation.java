@@ -22,7 +22,6 @@ class Permutation {
         addCycle(_cycles);
         MakeMapSelf(cycles, alphabet);
     }
-
     /** Add the cycle c0->c1->...->cm->c0 to the permutation, where CYCLE is
      *  c0c1...cm.
      *  Haven't taken into account cycles :
@@ -31,16 +30,15 @@ class Permutation {
      *  in cycle*/
     private void addCycle(String cycle) {
         int count = 0; int frontindex = -1; int backindex = -1;
-        int leftparan = 0; int rightparen = 0;
         while (count < cycle.length()) {
             char target = cycle.charAt(count);
             if (target == '(') {
                 frontindex = count;
-                leftparan += 1;
+                _leftParen += 1;
             }
             if (target == ')') {
                 backindex = count;
-                rightparen += 1;
+                _rightParen += 1;
             }
             if (frontindex != -1 && backindex != -1) {
                 _alphabet.CheckUnique(cycle.substring(frontindex + 1, backindex));
@@ -50,7 +48,7 @@ class Permutation {
             }
             count ++;
         }
-        if (leftparan != rightparen) {throw new EnigmaException("Wrong format: paranthesis");}
+        if (_leftParen != _rightParen) {throw new EnigmaException("Wrong format: parenthesis");}
     }
 
     /** Return the value of P modulo the size of this permutation. */
@@ -89,6 +87,9 @@ class Permutation {
     /** maps straightly to target */
     char MapStraight(String cycle, char a){
         int index = cycle.indexOf(a);
+        if (index == -1) {
+            return a;
+        }
         if (cycle.length() == 1 || index == cycle.length() - 1) {
             return cycle.charAt(0);
         }
@@ -175,7 +176,20 @@ class Permutation {
         }
         return true;
     }
-
+    void checkPlugboard() throws EnigmaException{
+        int temp = container.size();
+        for (int j = temp - 1; j >= _leftParen; j--) {
+            container.remove(j);
+        }
+        for (int i = 0; i < container.size(); i++) {
+            if (container.get(i).length() != 2) {
+                throw new EnigmaException("This cannot be a plugboard");
+            }
+        }
+    }
+    int applyPlugboard(int a) {
+        return permute(a);
+    }
     /** Alphabet of this permutation. */
     private Alphabet _alphabet;
 
@@ -184,4 +198,8 @@ class Permutation {
     private String _cycles;
 
     private ArrayList<String> container;
+
+    private int _leftParen = 0;
+
+    private int _rightParen = 0;
 }
