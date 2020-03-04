@@ -143,7 +143,11 @@ class Permutation {
                 target = MapStraight(temp, p);
             }
         }
-        return target;
+        if (target == ' '){
+            return p;
+        } else {
+            return target;
+        }
     }
 
     /** Return the result of applying the inverse of this permutation to C. */

@@ -204,9 +204,9 @@ public class PermutationTest {
         Machine Mach = new Machine(getNewAlphabet(), 5, 3, Arrays.asList(test));
         Mach.insertRotors(new String[] {"B", "Beta", "III", "IV", "I"});
         Mach.setRotors("AXLE");
-        System.out.println(R5.setting());
         Mach.setPlugboard(plugboard);
-        assertEquals(25, Mach.convert(24));
+        assertEquals("GOATUKFWSNXW", Mach.convert("IAMKENNYLIAO"));
+        assertEquals("EHQFTRJSSRXMRTMOUWPPEK", Mach.convert("PLEASELETTHISBECORRECT"));
     }
 
     /* ***** PERMUTATION TESTS ***** */

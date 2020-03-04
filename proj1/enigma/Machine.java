@@ -126,7 +126,12 @@ class Machine {
     /** Returns the encoding/decoding of MSG, updating the state of
      *  the rotors accordingly. */
     String convert(String msg) {
-        return "";
+        String ret = "";
+        for (int i = 0; i < msg.length(); i++) {
+            int temp = convert(_alphabet.toInt(msg.charAt(i)));
+            ret = ret + _alphabet.toChar(temp);
+        }
+        return ret;
     }
 
     /** Common alphabet of my rotors. */
