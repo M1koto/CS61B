@@ -178,8 +178,33 @@ public class PermutationTest {
         Mach.setPlugboard(p);
     }
 
+    /* ***** Accumulative TESTS ***** */
+
+    @Test
+    public void VIDEOEXAMPLE() {
+        Permutation PR1 = getNewPermutation("(AE) (BN) (CK) (DQ) (FU) (GY) (HW) (IJ) (LO) (MP) (RX) (SZ) (TV)", getNewAlphabet());
+        Rotor R1 = new Reflector("B", PR1);
+
+        Permutation PR2 = getNewPermutation("(ALBEVFCYODJWUGNMQTZSKPR) (HIX)", getNewAlphabet());
+        Rotor R2 = new Rotor("Beta", PR2);
+
+        Permutation PR3 = getNewPermutation("(ABDHPEJT) (CFLVMZOYQIRWUKXSG) (N)", getNewAlphabet());
+        MovingRotor R3 = new MovingRotor("III", PR3, "V");
+
+        Permutation PR4 = getNewPermutation("(AEPLIYWCOXMRFZBSTGJQNH) (DV) (KU)", getNewAlphabet());
+        MovingRotor R4 = new MovingRotor("IV", PR4, "J");
+
+        Permutation PR5 = getNewPermutation("(AELTPHQXRU) (BKNW) (CMOY) (DFG) (IV) (JZ) (S)", getNewAlphabet());
+        MovingRotor R5 = new MovingRotor("I", PR5, "Q");
 
 
+        Rotor[] test = {R1, R2, R3, R4, R5};
+        Machine Mach = new Machine(getNewAlphabet(), 5, 3, Arrays.asList(test));
+        Mach.insertRotors(new String[] {"B", "Beta", "III", "IV", "I"});
+        Mach.setRotors("AXLE");
+        System.out.println(R5.setting());
+        assertEquals(7, Mach.convert(5));
+    }
 
     /* ***** PERMUTATION TESTS ***** */
     @Test

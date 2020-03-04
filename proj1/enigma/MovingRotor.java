@@ -14,9 +14,11 @@ class MovingRotor extends Rotor {
      */
     MovingRotor(String name, Permutation perm, String notches) {
         super(name, perm);
-        _setting = super._setting;
-        _alphabet = super._alphabet;
+        _alphabet = super.alphabet();
+        _perm = super.permutation();
+        _name = super.name();
         _notches = notches;
+        _setting = 0;
     }
     /** True for Moving Rotors */
     @Override
@@ -25,7 +27,7 @@ class MovingRotor extends Rotor {
     /** Has notch */
     @Override
     boolean atNotch() {
-        char NowAtChar = _alphabet.toChar(_setting);
+        char NowAtChar = _alphabet.toChar(this._setting);
         for (int i = 0; i < _notches.length(); i++) {
             if (NowAtChar == _notches.charAt(i)) {
                 return true;
@@ -37,11 +39,39 @@ class MovingRotor extends Rotor {
     /** Moves rotor forward */
     @Override
     void advance() {
-        if (_setting == _alphabet.size() - 1) {
-            set(0);
+        if (this._setting == _alphabet.size() - 1) {
+            this.set(0);
         } else {
-            set(_setting + 1);
+            this.set(this._setting + 1);
         }
+    }
+
+    int setting() {
+        return this._setting;
+    }
+
+    /** Set setting() to POSN.  */
+    void set(int posn) {
+        this._setting = posn;
+    }
+
+    /** Set setting() to character CPOSN. */
+    void set(char cposn) {
+        this.set(_alphabet.toInt(cposn));
+    }
+
+    /** Return the conversion of P (an integer in the range 0..size()-1)
+     *  according to my permutation. 這個要換算一整路：完整地從右邊進左邊出*/
+    int convertForward(int p) {
+        return _perm.MakePositive(
+                _perm.permute(p + this.setting()) - this.setting());
+    }
+
+    /** Return the conversion of E (an integer in the range 0..size()-1)
+     *  according to the inverse of my permutation. 這個要換算一整路：完整地從左邊進右邊出*/
+    int convertBackward(int e) {
+        return _perm.MakePositive(
+                _perm.invert(e + this.setting()) - this.setting());
     }
 
     // FIXME: ADDITIONAL FIELDS HERE, AS NEEDED

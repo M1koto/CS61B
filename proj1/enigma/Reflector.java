@@ -13,8 +13,6 @@ class Reflector extends FixedRotor {
         super(name, perm);
     }
 
-    // FIXME?
-
     @Override
     boolean reflecting() { return true;}
 

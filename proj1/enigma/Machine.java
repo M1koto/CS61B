@@ -83,9 +83,9 @@ class Machine {
     }
 
     int convFoward(int c) {
-        int count = _myRotors.length;
+        int count = _myRotors.length - 1;
         int memorize = c;
-        while (count != 1) {
+        while (count >= 0) {
             Rotor target = _myRotors[count];
             memorize = target.convertForward(memorize);
             count -= 1;
@@ -108,12 +108,12 @@ class Machine {
      *  index in the range 0..alphabet size - 1), after first advancing
      *  the machine. */
     int convert(int c) {
-        for (int i = _myRotors.length; i > 0; i--) {
+        for (int i = _myRotors.length - 1; i > 0; i--) {
             if (_myRotors[i].atNotch()) {
                 _myRotors[i - 1].advance();
             }
         }
-         _myRotors[_myRotors.length].advance();
+         _myRotors[_myRotors.length - 1].advance();
         return convFoward(c);
     }
 

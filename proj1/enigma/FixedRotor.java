@@ -11,5 +11,43 @@ class FixedRotor extends Rotor {
      * is given by PERM. */
     FixedRotor(String name, Permutation perm) {
         super(name, perm);
+        _alphabet = super.alphabet();
+        _perm = super.permutation();
+        _name = super.name();
+        _setting = 0;
     }
+    int setting() {
+        return this._setting;
+    }
+
+    /** Set setting() to POSN.  */
+    void set(int posn) {
+        this._setting = posn;
+    }
+
+    /** Set setting() to character CPOSN. */
+    void set(char cposn) {
+        this.set(_alphabet.toInt(cposn));
+    }
+
+    /** Return the conversion of P (an integer in the range 0..size()-1)
+     *  according to my permutation. 這個要換算一整路：完整地從右邊進左邊出*/
+    int convertForward(int p) {
+        return _perm.MakePositive(
+                _perm.permute(p + this.setting()) - this.setting());
+    }
+
+    /** Return the conversion of E (an integer in the range 0..size()-1)
+     *  according to the inverse of my permutation. 這個要換算一整路：完整地從左邊進右邊出*/
+    int convertBackward(int e) {
+        return _perm.MakePositive(
+                _perm.invert(e + this.setting()) - this.setting());
+    }
+    private String _name;
+
+    private Permutation _perm;
+
+    private Alphabet _alphabet;
+
+    private int _setting;
 }

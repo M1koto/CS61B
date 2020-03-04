@@ -11,10 +11,9 @@ class Rotor {
     Rotor(String name, Permutation perm) {
         _name = name;
         _permutation = perm;
-        _setting = 0;
         _alphabet = perm.alphabet();
+        _setting = 0;
     }
-
     /** Return my name. */
     String name() {
         return _name;
@@ -64,14 +63,14 @@ class Rotor {
      *  according to my permutation. 這個要換算一整路：完整地從右邊進左邊出*/
     int convertForward(int p) {
         return _permutation.MakePositive(
-                _permutation.permute(p + _setting) - _setting);
+                _permutation.permute(p + setting()) - setting());
     }
 
     /** Return the conversion of E (an integer in the range 0..size()-1)
      *  according to the inverse of my permutation. 這個要換算一整路：完整地從左邊進右邊出*/
     int convertBackward(int e) {
         return _permutation.MakePositive(
-                _permutation.invert(e + _setting) - _setting);
+                _permutation.invert(e + setting()) - setting());
     }
 
     /** Returns true iff I am positioned to allow the rotor to my left
@@ -90,13 +89,13 @@ class Rotor {
     }
 
     /** My name. */
-    protected final String _name;
+    private final String _name;
 
     /** The permutation implemented by this rotor in its 0 position. */
-    protected Permutation _permutation;
+    private Permutation _permutation;
 
-    protected int _setting;
+    private int _setting;
 
-    protected Alphabet _alphabet;
+    private Alphabet _alphabet;
 
 }
