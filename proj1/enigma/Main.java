@@ -102,7 +102,22 @@ public final class Main {
     /** Return a rotor, reading its description from _config. */
     private Rotor readRotor() {
         try {
-
+            String name = _config.next();
+            String type = _config.next();
+            String permutations = "";
+            while (_config.hasNext("()+")) {
+                permutations += _config.nextLine();
+            }
+            Permutation perm = new Permutation(permutations, _alphabet);
+            if (type.charAt(0) == 'M') {
+                return new MovingRotor(name, perm, type.substring(1));
+            } else if (type.charAt(0) == 'N') {
+                return new FixedRotor(name, perm);
+            } else if (type.charAt(0) == 'R') {
+                return new Reflector(name, perm);
+            } else {
+                throw new EnigmaException(String.format("Wrong Rotor format at %s", name));
+            }
         } catch (NoSuchElementException excp) {
             throw error("bad rotor description");
         }
