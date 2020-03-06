@@ -77,16 +77,23 @@ public final class Main {
      *  file _config and apply it to the messages in _input, sending the
      *  results to _output. */
     private void process() {
-        // FIXME
     }
 
     /** Return an Enigma machine configured from the contents of configuration
      *  file _config. */
     private Machine readConfig() {
         try {
+            _alphabet = new Alphabet(_config.next());
+            int total = _config.nextInt();
+            int movable = _config.nextInt();
+            ArrayList<Rotor> Rotors = new ArrayList<Rotor>();
+            while (_config.hasNext()) {
+                Rotors.add(readRotor());
+            }
+            return new Machine(_alphabet, total, movable, Rotors);
             // FIXME
-            _alphabet = new Alphabet();
-            return new Machine(_alphabet, 2, 1, null);
+            //_alphabet = new Alphabet();
+            //return new Machine(_alphabet, 2, 1, null);
         } catch (NoSuchElementException excp) {
             throw error("configuration file truncated");
         }
@@ -95,7 +102,7 @@ public final class Main {
     /** Return a rotor, reading its description from _config. */
     private Rotor readRotor() {
         try {
-            return null; // FIXME
+
         } catch (NoSuchElementException excp) {
             throw error("bad rotor description");
         }
@@ -110,7 +117,17 @@ public final class Main {
     /** Print MSG in groups of five (except that the last group may
      *  have fewer letters). */
     private void printMessageLine(String msg) {
-        // FIXME
+        if (msg.length() != 5) {
+            for (int i = 0; i < msg.length(); i++) {
+                System.out.print(msg.charAt(i));
+            }
+        } else {
+            for (int i = 0; i < 5; i++) {
+                System.out.print(msg.charAt(i));
+            }
+            System.out.print("\t");
+            printMessageLine(msg.substring(5));
+        }
     }
 
     /** Alphabet used in this machine. */

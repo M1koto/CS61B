@@ -205,9 +205,10 @@ public class PermutationTest {
         Mach.insertRotors(new String[] {"B", "Beta", "III", "IV", "I"});
         Mach.setRotors("AXLE");
         Mach.setPlugboard(plugboard);
-        assertEquals("GOATUKFWSNXW", Mach.convert("IAMKENNYLIAO"));
+        assertEquals("IAMKENNYLIAO", Mach.convert("GOATUKFWSNXW"));
         assertEquals("EHQFTRJSSRXMRTMOUWPPEK", Mach.convert("PLEASELETTHISBECORRECT"));
     }
+    /* ***** Main TESTS ***** */
 
     /* ***** PERMUTATION TESTS ***** */
     @Test
