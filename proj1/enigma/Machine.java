@@ -19,7 +19,6 @@ class Machine {
         _numRotors = numRotors;
         _pawls = pawls;
         _allRotors = new ArrayList<>(allRotors);
-        checkReflector();
         _myRotors = new Rotor[numRotors];
     }
 
@@ -34,17 +33,17 @@ class Machine {
     }
     /** Throws exception if see reflector not in fat left */
     void checkReflector() throws EnigmaException{
-        if (!(_allRotors.get(0) instanceof Reflector)) {
+        if (!(_myRotors[0] instanceof Reflector)) {
             throw new EnigmaException("Reflector needed in the far left");
         }
-        for (int i = 1; i < _allRotors.size(); i++) {
-            if (_allRotors.get(i) instanceof Reflector) {
+        for (int i = 1; i < _myRotors.length; i++) {
+            if (_myRotors[i] instanceof Reflector) {
                 throw new EnigmaException(String.format("Reflector cannot be in the %d", i));
             }
         }
     }
     /** Function that loops through a rotor array and throws exception if any of the elements are null
-     * : tagetting insertRotors when rotors not in allRotors is passed in*/
+     * : targetting insertRotors when rotors not in allRotors is passed in*/
     void CheckRotorArray(Rotor[] array) throws EnigmaException {
         for (int i = 0; i < array.length; i++) {
             if (array[i] == null) {
@@ -58,11 +57,12 @@ class Machine {
     void insertRotors(String[] rotors) {
         for (int i = 0; i < rotors.length; i++) {
             for (int j = 0; j < _allRotors.size(); j++) {
-                if (_allRotors.get(j).name() == rotors[i]) {
+                if (rotors[i].equals(_allRotors.get(j).name())) {
                     _myRotors[i] = _allRotors.get(j);
                 }
             }
         }
+        checkReflector();
         CheckRotorArray(_myRotors);
     }
 
@@ -114,7 +114,7 @@ class Machine {
      *  the machine. */
     int convert(int c) {
         for (int i = _myRotors.length - 1; i > 0; i--) {
-            if (_myRotors[i].atNotch()) {
+            if (_myRotors[i].atNotch() && _myRotors[i - 1] instanceof MovingRotor ) {
                 _myRotors[i - 1].advance();
             }
         }
@@ -127,6 +127,7 @@ class Machine {
      *  the rotors accordingly. */
     String convert(String msg) {
         String ret = "";
+        msg = msg.replaceAll("\\s+", "");
         for (int i = 0; i < msg.length(); i++) {
             int temp = convert(_alphabet.toInt(msg.charAt(i)));
             ret = ret + _alphabet.toChar(temp);

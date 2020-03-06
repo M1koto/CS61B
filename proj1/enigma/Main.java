@@ -78,21 +78,23 @@ public final class Main {
      *  results to _output. */
     private void process() {
         Machine M = readConfig();
+
         if (!_input.hasNext("\\*")) {
             throw new EnigmaException("No asterik");
         }
         _input.next();
-        String insert = "";
+        String[] insert = new String[_total];
         for (int i = 0; i < _total; i++) {
-            insert += _input.next();
+            insert[i] = _input.next();
         }
+        M.insertRotors(insert);
         String instructions = _input.nextLine();
         setUp(M, instructions);
-        String put = "";
         while (_input.hasNext()) {
+            String put = "";
             put += _input.nextLine();
+            printMessageLine(M.convert(put));
         }
-        printMessageLine(M.convert(put));
     }
 
     /** Return an Enigma machine configured from the contents of configuration
@@ -120,7 +122,7 @@ public final class Main {
             String name = _config.next();
             String type = _config.next();
             String permutations = "";
-            while (_config.hasNext("(.+)")) {
+            while (_config.hasNext("\\(.+\\)")) {
                 permutations += _config.nextLine();
             }
             Permutation perm = new Permutation(permutations, _alphabet);
@@ -141,6 +143,7 @@ public final class Main {
     /** Set M according to the specification given on SETTINGS,
      *  which must have the format specified in the assignment. */
     private void setUp(Machine M, String settings) {
+        settings = settings.trim();
         String[] temp = settings.split("\\s+");
         M.setRotors(temp[0]);
         String str = "";
@@ -156,16 +159,16 @@ public final class Main {
     private void printMessageLine(String msg) {
         if (msg.length() != 5) {
             for (int i = 0; i < msg.length(); i++) {
-                System.out.print(msg.charAt(i));
+                //System.out.print(msg.charAt(i));
                 _output.append(msg.charAt(i));
             }
         } else {
             for (int i = 0; i < 5; i++) {
-                System.out.print(msg.charAt(i));
+                //System.out.print(msg.charAt(i));
                 _output.append(msg.charAt(i));
             }
-            System.out.print("\t");
-            _output.append(msg.charAt('\t'));
+            //System.out.print("\t");
+            _output.append(msg.charAt(' '));
             printMessageLine(msg.substring(5));
         }
     }
