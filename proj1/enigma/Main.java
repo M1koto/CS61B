@@ -77,6 +77,22 @@ public final class Main {
      *  file _config and apply it to the messages in _input, sending the
      *  results to _output. */
     private void process() {
+        Machine M = readConfig();
+        if (!_input.hasNext("\\*")) {
+            throw new EnigmaException("No asterik");
+        }
+        _input.next();
+        String insert = "";
+        for (int i = 0; i < _total; i++) {
+            insert += _input.next();
+        }
+        String instructions = _input.nextLine();
+        setUp(M, instructions);
+        String put = "";
+        while (_input.hasNext()) {
+            put += _input.nextLine();
+        }
+        printMessageLine(M.convert(put));
     }
 
     /** Return an Enigma machine configured from the contents of configuration
@@ -84,14 +100,13 @@ public final class Main {
     private Machine readConfig() {
         try {
             _alphabet = new Alphabet(_config.next());
-            int total = _config.nextInt();
+            _total = _config.nextInt();
             int movable = _config.nextInt();
             ArrayList<Rotor> Rotors = new ArrayList<Rotor>();
             while (_config.hasNext()) {
                 Rotors.add(readRotor());
             }
-            return new Machine(_alphabet, total, movable, Rotors);
-            // FIXME
+            return new Machine(_alphabet, _total, movable, Rotors);
             //_alphabet = new Alphabet();
             //return new Machine(_alphabet, 2, 1, null);
         } catch (NoSuchElementException excp) {
@@ -105,7 +120,7 @@ public final class Main {
             String name = _config.next();
             String type = _config.next();
             String permutations = "";
-            while (_config.hasNext("()+")) {
+            while (_config.hasNext("(.+)")) {
                 permutations += _config.nextLine();
             }
             Permutation perm = new Permutation(permutations, _alphabet);
@@ -126,7 +141,14 @@ public final class Main {
     /** Set M according to the specification given on SETTINGS,
      *  which must have the format specified in the assignment. */
     private void setUp(Machine M, String settings) {
-        // FIXME
+        String[] temp = settings.split("\\s+");
+        M.setRotors(temp[0]);
+        String str = "";
+        for (int i = 1; i < temp.length; i++) {
+            str += temp[i];
+        }
+        Permutation plugboard = new Permutation(str, _alphabet);
+        M.setPlugboard(plugboard);
     }
 
     /** Print MSG in groups of five (except that the last group may
@@ -135,12 +157,15 @@ public final class Main {
         if (msg.length() != 5) {
             for (int i = 0; i < msg.length(); i++) {
                 System.out.print(msg.charAt(i));
+                _output.append(msg.charAt(i));
             }
         } else {
             for (int i = 0; i < 5; i++) {
                 System.out.print(msg.charAt(i));
+                _output.append(msg.charAt(i));
             }
             System.out.print("\t");
+            _output.append(msg.charAt('\t'));
             printMessageLine(msg.substring(5));
         }
     }
@@ -156,4 +181,6 @@ public final class Main {
 
     /** File for encoded/decoded messages. */
     private PrintStream _output;
+
+    private int _total;
 }
