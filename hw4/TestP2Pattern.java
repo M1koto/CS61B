@@ -19,7 +19,6 @@ public class TestP2Pattern {
     @Test
     public void testP1() {
         Pattern p = Pattern.compile(P2Pattern.P1);
-
         String good1 = "3/4/2012";
         String good2 = "03/4/2012";
         String good3 = "3/04/2012";
