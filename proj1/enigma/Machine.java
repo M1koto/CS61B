@@ -114,8 +114,11 @@ class Machine {
      *  the machine. */
     int convert(int c) {
         for (int i = _myRotors.length - 1; i > 0; i--) {
-            if (_myRotors[i].atNotch() && _myRotors[i - 1] instanceof MovingRotor ) {
+            if (_myRotors[i].atNotch()) {
                 _myRotors[i - 1].advance();
+                if (i != _myRotors.length - 1 && _myRotors[i - 1] instanceof MovingRotor) {
+                    _myRotors[i].advance();
+                }
             }
         }
          _myRotors[_myRotors.length - 1].advance();
