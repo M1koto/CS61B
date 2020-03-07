@@ -4,10 +4,7 @@ import org.junit.Test;
 import org.junit.Rule;
 import org.junit.rules.Timeout;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
 
 import static org.junit.Assert.*;
 
@@ -175,7 +172,6 @@ public class PermutationTest {
         Mach.setRotors("AQ");
         assertTrue(M.setting() == 4);
         assertTrue(R2.setting() == 16);
-        Mach.setPlugboard(p);
     }
 
     /* ***** Accumulative TESTS ***** */
@@ -241,7 +237,7 @@ public class PermutationTest {
 
     @Test(expected = EnigmaException.class)
     public void testNotInAlphabet2() throws EnigmaException{
-        Permutation p = getNewPermutation("(BACZ)", getNewAlphabet("ABCD"));
+        Permutation p = getNewPermutation("(BAC) (BD)", getNewAlphabet("ABCD"));
     }
 
     @Test(expected = EnigmaException.class)

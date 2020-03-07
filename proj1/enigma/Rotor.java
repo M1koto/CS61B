@@ -94,8 +94,10 @@ class Rotor {
     /** The permutation implemented by this rotor in its 0 position. */
     private Permutation _permutation;
 
+    /** settings. */
     private int _setting;
 
+    /** Alphabets. */
     private Alphabet _alphabet;
 
 }

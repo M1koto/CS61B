@@ -20,16 +20,18 @@ class MovingRotor extends Rotor {
         _notches = notches;
         _setting = 0;
     }
-    /** True for Moving Rotors */
+    /** True for Moving Rotors. */
     @Override
-    boolean rotates() {return true; }
+    boolean rotates() {
+        return true;
+    }
 
-    /** Has notch */
+    /** Has notch. */
     @Override
     boolean atNotch() {
-        char NowAtChar = _alphabet.toChar(this._setting);
+        char nowAtChar = _alphabet.toChar(this._setting);
         for (int i = 0; i < _notches.length(); i++) {
-            if (NowAtChar == _notches.charAt(i)) {
+            if (nowAtChar == _notches.charAt(i)) {
                 return true;
             }
         }
@@ -46,6 +48,7 @@ class MovingRotor extends Rotor {
         }
     }
 
+    /** Return my current setting. */
     int setting() {
         return this._setting;
     }
@@ -61,27 +64,32 @@ class MovingRotor extends Rotor {
     }
 
     /** Return the conversion of P (an integer in the range 0..size()-1)
-     *  according to my permutation. 這個要換算一整路：完整地從右邊進左邊出*/
+     *  according to my permutation. 這個要換算一整路：完整地從右邊進左邊出.*/
     int convertForward(int p) {
         return _perm.MakePositive(
                 _perm.permute(p + this.setting()) - this.setting());
     }
 
     /** Return the conversion of E (an integer in the range 0..size()-1)
-     *  according to the inverse of my permutation. 這個要換算一整路：完整地從左邊進右邊出*/
+     *  according to the inverse of my permutation. 這個要換算一整路：完整地從左邊進右邊出.*/
     int convertBackward(int e) {
         return _perm.MakePositive(
                 _perm.invert(e + this.setting()) - this.setting());
     }
 
     // FIXME: ADDITIONAL FIELDS HERE, AS NEEDED
+    /** My name. */
     private String _name;
 
+    /** The permutation implemented by this rotor in its 0 position. */
     private Permutation _perm;
 
+    /** Alphabets. */
     private Alphabet _alphabet;
 
+    /** settings. */
     private int _setting;
 
+    /** notches. */
     private String _notches;
 }

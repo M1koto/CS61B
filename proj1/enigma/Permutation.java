@@ -21,6 +21,7 @@ class Permutation {
         container = new ArrayList<String>();
         addCycle(_cycles);
         MakeMapSelf(cycles, alphabet);
+        check_duplicates(container);
     }
     /** Add the cycle c0->c1->...->cm->c0 to the permutation, where CYCLE is
      *  c0c1...cm.
@@ -49,6 +50,20 @@ class Permutation {
             count ++;
         }
         if (_leftParen != _rightParen) {throw new EnigmaException("Wrong format: parenthesis");}
+    }
+
+    /** Throws exception if a single character appears in more than one space in container. */
+    void check_duplicates(ArrayList<String> L) {
+        for (int i = 0; i < L.size() - 1; i++) {
+            for (int j = i + 1; j < L.size(); j++) {
+                for (int k = 0; k < L.get(i).length(); k++) {
+                    char temp = L.get(i).charAt(k);
+                    if (L.get(j).indexOf(temp) != -1) {
+                        throw new EnigmaException("No duplicated chars");
+                    }
+                }
+            }
+        }
     }
 
     /** Return the value of P modulo the size of this permutation. */
