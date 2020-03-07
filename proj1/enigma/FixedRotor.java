@@ -22,7 +22,7 @@ class FixedRotor extends Rotor {
     }
 
     /**
-     * setting.
+     * Return this setting.
      */
     int setting() {
         return this._setting;

@@ -177,10 +177,10 @@ public class PermutationTest {
         Rotor R2 = new MovingRotor("Namba three", p2, "");
         Rotor[] test = {R, M, R2};
         Machine mach =
-                new Machine
-                        (getNewAlphabet("KENYABCD"), 3, 2, Arrays.asList(test));
-        mach.insertRotors
-                (new String[]{"Namba one", "Namba two", "Namba three"});
+                new Machine(getNewAlphabet("KEN"
+                        + "YABCD"), 3, 2, Arrays.asList(test));
+        mach.insertRotors(new String[]{"Namba "
+                + "one", "Namba two", "Namba three"});
         mach.setRotors("AQ");
         assertTrue(M.setting() == 4);
         assertTrue(R2.setting() == 16);

@@ -16,8 +16,7 @@ class Reflector extends FixedRotor {
     Reflector(String name, Permutation perm) {
         super(name, perm);
         if (!perm.derangement()) {
-            throw new EnigmaException
-                    ("Error: reflectors must implement derangements");
+            throw new EnigmaException("Error: reflector must be derangements");
         }
     }
 

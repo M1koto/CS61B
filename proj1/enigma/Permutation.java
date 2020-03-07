@@ -19,8 +19,8 @@ class Permutation {
         _cycles = cycles;
         container = new ArrayList<String>();
         addCycle(_cycles);
-        MakeMapSelf(cycles, alphabet);
-        check_Duplicates(container);
+        makeMapSelf(cycles, alphabet);
+        checkDuplicates(container);
     }
     /** Add the cycle c0->c1->...->cm->c0 to the permutation, where CYCLE is
      *  c0c1...cm.
@@ -41,8 +41,8 @@ class Permutation {
                 _rightParen += 1;
             }
             if (frontindex != -1 && backindex != -1) {
-                _alphabet.checkUnique
-                        (cycle.substring(frontindex + 1, backindex));
+                _alphabet.checkUnique(cycle.substring
+                        (frontindex + 1, backindex));
                 container.add(cycle.substring(frontindex + 1, backindex));
                 addCycle(cycle.substring(backindex + 1));
                 break;
@@ -56,7 +56,7 @@ class Permutation {
 
     /** Throws exception if a single character appears
      * in more than one space in container. L*/
-    void check_Duplicates(ArrayList<String> L) {
+    void checkDuplicates(ArrayList<String> L) {
         for (int i = 0; i < L.size() - 1; i++) {
             for (int j = i + 1; j < L.size(); j++) {
                 for (int k = 0; k < L.get(i).length(); k++) {
@@ -79,8 +79,8 @@ class Permutation {
         return r;
     }
     /** Let non-included alphabets map to themselves. */
-    /** S A */
-    void MakeMapSelf(String s, Alphabet a) {
+    /** S A. */
+    void makeMapSelf(String s, Alphabet a) {
         for (int i = 0; i < a.size(); i++) {
             boolean flag = false;
             for (int j = 0; j < s.length(); j++) {
@@ -95,8 +95,8 @@ class Permutation {
         }
     }
 
-    /** Makes integer positive by adding alphabet lengths to it */
-    /** P*/
+    /** Makes integer positive.*/
+    /** @return P. */
     int makePositive(int p) {
         if (p < 0) {
             return makePositive(p + _alphabet.size());
@@ -105,9 +105,9 @@ class Permutation {
         }
     }
 
-    /** maps straightly to target */
-    /** CYCLE A*/
-    char MapStraight(String cycle, char a) {
+    /** maps straightly to target. */
+    /** CYCLE A @return char. */
+    char mapStraight(String cycle, char a) {
         int index = cycle.indexOf(a);
         if (index == -1) {
             return a;
@@ -118,8 +118,8 @@ class Permutation {
         index += 1;
         return cycle.charAt(index);
     }
-    /** maps inversely to target. */
-    char MapInverse(String cycle, char a) {
+    /** maps A CYCLE inversely to target @return chat. */
+    char mapInverse(String cycle, char a) {
         int index = cycle.indexOf(a);
         if (cycle.length() == 1) {
             return cycle.charAt(0);
@@ -162,7 +162,7 @@ class Permutation {
         for (int i = 0; i < container.size(); i++) {
             String temp = container.get(i);
             if (temp.indexOf(p) != -1) {
-                target = MapStraight(temp, p);
+                target = mapStraight(temp, p);
             }
         }
         if (target == ' ') {
@@ -181,7 +181,7 @@ class Permutation {
         for (int i = 0; i < container.size(); i++) {
             String temp = container.get(i);
             if (temp.indexOf(c) != -1) {
-                target = MapInverse(temp, c);
+                target = mapInverse(temp, c);
             }
         }
         return target;
@@ -214,7 +214,7 @@ class Permutation {
             }
         }
     }
-    /** Applies a. */
+    /** Applies A @return a. */
     int applyPlugboard(int a) {
         return permute(a);
     }

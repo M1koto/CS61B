@@ -1,15 +1,22 @@
 package enigma;
 
-import java.util.*;
+import com.sun.xml.internal.xsom.impl.scd.Iterators;
 
-/** Class that represents a complete enigma machine.
- *  @author kenny liao
+import java.util.Collection;
+import java.util.ArrayList;
+
+/**
+ * Class that represents a complete enigma machine.
+ *
+ * @author kenny liao
  */
 class Machine {
 
-    /** A new Enigma machine with alphabet ALPHA, 1 < NUMROTORS rotor slots,
-     *  and 0 <= PAWLS < NUMROTORS pawls.  ALLROTORS contains all the
-     *  available rotors. */
+    /**
+     * A new Enigma machine with alphabet ALPHA, 1 < NUMROTORS rotor slots,
+     * and 0 <= PAWLS < NUMROTORS pawls.  ALLROTORS contains all the
+     * available rotors.
+     */
     Machine(Alphabet alpha, int numRotors, int pawls,
             Collection<Rotor> allRotors) {
         _alphabet = alpha;
@@ -19,41 +26,53 @@ class Machine {
         _myRotors = new Rotor[numRotors];
     }
 
-    /** Return the number of rotor slots I have. */
+    /**
+     * Return the number of rotor slots I have.
+     */
     int numRotors() {
         return _numRotors;
     }
 
-    /** Return the number pawls (and thus rotating rotors) I have. */
+    /**
+     * Return the number pawls (and thus rotating rotors) I have.
+     */
     int numPawls() {
         return _pawls;
     }
-    /** Throws exception if see reflector not in fat left. */
+
+    /**
+     * Throws exception if see reflector not in fat left.
+     */
     void checkReflector() throws EnigmaException {
         if (!(_myRotors[0] instanceof Reflector)) {
             throw new EnigmaException("Reflector needed in the far left");
         }
         for (int i = 1; i < _myRotors.length; i++) {
             if (_myRotors[i] instanceof Reflector) {
-                throw new EnigmaException
-                        (String.format("Reflector cannot be in the %d", i));
+                throw new EnigmaException(String.format("Reflector at %d", i));
             }
         }
     }
-    /** Function that loops through a rotor array
+
+    /**
+     * Function that loops through a rotor ARRAY
      * and throws exception if any of the elements are null
-     * : targetting insertRotors when rotors not in allRotors is passed in. */
-    void CheckRotorArray(Rotor[] array) throws EnigmaException {
+     * : targetting insertRotors when rotors not in allRotors is passed in.
+     */
+    void checkRotorArray(Rotor[] array) throws EnigmaException {
         for (int i = 0; i < array.length; i++) {
             if (array[i] == null) {
                 throw new EnigmaException(String.format
-                        ("%d th element in the array is null, something must be wrong!", i));
+                        ("%d th element in the array is null", i));
             }
         }
     }
-    /** Set my rotor slots to the rotors named ROTORS from my set of
-     *  available rotors (ROTORS[0] names the reflector).
-     *  Initially, all rotors are set at their 0 setting. */
+
+    /**
+     * Set my rotor slots to the rotors named ROTORS from my set of
+     * available rotors (ROTORS[0] names the reflector).
+     * Initially, all rotors are set at their 0 setting.
+     */
     void insertRotors(String[] rotors) {
         for (int i = 0; i < rotors.length; i++) {
             for (int j = 0; j < _allRotors.size(); j++) {
@@ -63,12 +82,14 @@ class Machine {
             }
         }
         checkReflector();
-        CheckRotorArray(_myRotors);
+        checkRotorArray(_myRotors);
     }
 
-    /** Set my rotors according to SETTING, which must be a string of
-     *  numRotors()-1 characters in my alphabet. The first letter refers
-     *  to the leftmost rotor setting (not counting the reflector).  */
+    /**
+     * Set my rotors according to SETTING, which must be a string of
+     * numRotors()-1 characters in my alphabet. The first letter refers
+     * to the leftmost rotor setting (not counting the reflector).
+     */
     void setRotors(String setting) {
         for (int i = 1; i < _myRotors.length; i++) {
             Rotor target = _myRotors[i];
@@ -76,12 +97,17 @@ class Machine {
         }
     }
 
-    /** Set the plugboard to PLUGBOARD.*/
+    /**
+     * Set the plugboard to PLUGBOARD.
+     */
     void setPlugboard(Permutation plugboard) {
         plugboard.checkPlugboard();
         _plugboard = plugboard;
     }
-    /** convert C forward. */
+
+    /**
+     * convert C forward returns convback.
+     */
     int convFoward(int c) {
         int count = _myRotors.length - 1;
         int memorize = c;
@@ -92,7 +118,10 @@ class Machine {
         }
         return convBack(memorize);
     }
-    /** convert C back. */
+
+    /**
+     * convert C back returns memorize.
+     */
     int convBack(int c) {
         int count = 1;
         int memorize = c;
@@ -104,30 +133,38 @@ class Machine {
         memorize = applyPlugboard(memorize);
         return memorize;
     }
-    /** applyplugboard C. */
+
+    /**
+     * applyplugboard C returns applying.
+     */
     int applyPlugboard(int c) {
         return _plugboard.applyPlugboard(c);
     }
 
-    /** Returns the result of converting the input character C (as an
-     *  index in the range 0..alphabet size - 1), after first advancing
-     *  the machine. */
+    /**
+     * Returns the result of converting the input character C (as an
+     * index in the range 0..alphabet size - 1), after first advancing
+     * the machine.
+     */
     int convert(int c) {
         for (int i = _myRotors.length - 1; i > 0; i--) {
             if (_myRotors[i].atNotch()) {
                 _myRotors[i - 1].advance();
-                if (i != _myRotors.length - 1 && _myRotors[i - 1] instanceof MovingRotor) {
+                if (i != _myRotors.length - 1
+                        && _myRotors[i - 1] instanceof MovingRotor) {
                     _myRotors[i].advance();
                 }
             }
         }
-         _myRotors[_myRotors.length - 1].advance();
+        _myRotors[_myRotors.length - 1].advance();
         c = applyPlugboard(c);
         return convFoward(c);
     }
 
-    /** Returns the encoding/decoding of MSG, updating the state of
-     *  the rotors accordingly. */
+    /**
+     * Returns the encoding/decoding of MSG, updating the state of
+     * the rotors accordingly.
+     */
     String convert(String msg) {
         String ret = "";
         msg = msg.replaceAll("\\s+", "");
@@ -138,16 +175,28 @@ class Machine {
         return ret;
     }
 
-    /** Common alphabet of my rotors. */
+    /**
+     * Common alphabet of my rotors.
+     */
     private final Alphabet _alphabet;
-    /** total num of rotors. */
+    /**
+     * total num of rotors.
+     */
     private int _numRotors;
-    /** total num of pawls. */
+    /**
+     * total num of pawls.
+     */
     private int _pawls;
-    /** plugboard. */
+    /**
+     * plugboard.
+     */
     protected Permutation _plugboard;
-    /** all rotors. */
+    /**
+     * all rotors.
+     */
     private ArrayList<Rotor> _allRotors;
-    /** my rotors. */
+    /**
+     * my rotors.
+     */
     private Rotor[] _myRotors;
 }

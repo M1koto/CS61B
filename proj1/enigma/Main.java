@@ -115,14 +115,13 @@ public final class Main {
             _total = _config.nextInt();
             int movable = _config.nextInt();
             if (movable >= _total) {
-                throw new EnigmaException
-                        ("Movable rotors can't be larger or equal to total");
+                throw new EnigmaException("Movable > total");
             }
-            ArrayList<Rotor> Rotors = new ArrayList<Rotor>();
+            ArrayList<Rotor> rotors = new ArrayList<Rotor>();
             while (_config.hasNext()) {
-                Rotors.add(readRotor());
+                rotors.add(readRotor());
             }
-            return new Machine(_alphabet, _total, movable, Rotors);
+            return new Machine(_alphabet, _total, movable, rotors);
         } catch (NoSuchElementException excp) {
             throw error("configuration file truncated");
         }
@@ -145,8 +144,8 @@ public final class Main {
             } else if (type.charAt(0) == 'R') {
                 return new Reflector(name, perm);
             } else {
-                throw new EnigmaException
-                        (String.format("Wrong Rotor format at %s", name));
+                throw new EnigmaException(String.format("Wrong "
+                        + "format at %s", name));
             }
         } catch (NoSuchElementException excp) {
             throw error("bad rotor description");
@@ -158,6 +157,9 @@ public final class Main {
     private void setUp(Machine M, String settings) {
         settings = settings.trim();
         String[] temp = settings.split("\\s+");
+        if (temp[0].length() != _total - 1) {
+            throw new EnigmaException("Not enough settings");
+        }
         M.setRotors(temp[0]);
         String str = "";
         for (int i = 1; i < temp.length; i++) {
