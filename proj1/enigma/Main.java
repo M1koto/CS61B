@@ -107,16 +107,6 @@ public final class Main {
             }
         }
     }
-    /** Turn rest of scanner to string. */
-    String makeString(Scanner S) {
-        String target = "";
-        while (S.hasNext()) {
-            target += S.nextLine();
-            target += "\n";
-        }
-        return target;
-    }
-
     /** Return an Enigma machine configured from the contents of configuration
      *  file _config. */
     private Machine readConfig() {
@@ -125,7 +115,8 @@ public final class Main {
             _total = _config.nextInt();
             int movable = _config.nextInt();
             if (movable >= _total) {
-                throw  new EnigmaException("Movable rotors can't be larger or equal to total");
+                throw new EnigmaException
+                        ("Movable rotors can't be larger or equal to total");
             }
             ArrayList<Rotor> Rotors = new ArrayList<Rotor>();
             while (_config.hasNext()) {
@@ -154,7 +145,8 @@ public final class Main {
             } else if (type.charAt(0) == 'R') {
                 return new Reflector(name, perm);
             } else {
-                throw new EnigmaException(String.format("Wrong Rotor format at %s", name));
+                throw new EnigmaException
+                        (String.format("Wrong Rotor format at %s", name));
             }
         } catch (NoSuchElementException excp) {
             throw error("bad rotor description");

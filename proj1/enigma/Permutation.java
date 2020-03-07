@@ -118,8 +118,8 @@ class Permutation {
         index += 1;
         return cycle.charAt(index);
     }
-    /** maps inversely to target */
-    char MapInverse(String cycle, char a){
+    /** maps inversely to target. */
+    char MapInverse(String cycle, char a) {
         int index = cycle.indexOf(a);
         if (cycle.length() == 1) {
             return cycle.charAt(0);
@@ -165,7 +165,7 @@ class Permutation {
                 target = MapStraight(temp, p);
             }
         }
-        if (target == ' '){
+        if (target == ' ') {
             return p;
         } else {
             return target;
@@ -202,8 +202,8 @@ class Permutation {
         }
         return true;
     }
-    /** checks format of plugboard */
-    void checkPlugboard() throws EnigmaException{
+    /** checks format of plugboard. */
+    void checkPlugboard() throws EnigmaException {
         int temp = container.size();
         for (int j = temp - 1; j >= _leftParen; j--) {
             container.remove(j);
@@ -214,7 +214,7 @@ class Permutation {
             }
         }
     }
-    /** Applies a*/
+    /** Applies a. */
     int applyPlugboard(int a) {
         return permute(a);
     }

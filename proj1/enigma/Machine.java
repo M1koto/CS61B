@@ -40,7 +40,8 @@ class Machine {
             }
         }
     }
-    /** Function that loops through a rotor array and throws exception if any of the elements are null
+    /** Function that loops through a rotor array
+     * and throws exception if any of the elements are null
      * : targetting insertRotors when rotors not in allRotors is passed in. */
     void CheckRotorArray(Rotor[] array) throws EnigmaException {
         for (int i = 0; i < array.length; i++) {
@@ -80,7 +81,7 @@ class Machine {
         plugboard.checkPlugboard();
         _plugboard = plugboard;
     }
-    /** convert forward. */
+    /** convert C forward. */
     int convFoward(int c) {
         int count = _myRotors.length - 1;
         int memorize = c;
@@ -91,7 +92,7 @@ class Machine {
         }
         return convBack(memorize);
     }
-    /** convert back. */
+    /** convert C back. */
     int convBack(int c) {
         int count = 1;
         int memorize = c;
@@ -103,7 +104,7 @@ class Machine {
         memorize = applyPlugboard(memorize);
         return memorize;
     }
-    /** applyplugboard. */
+    /** applyplugboard C. */
     int applyPlugboard(int c) {
         return _plugboard.applyPlugboard(c);
     }

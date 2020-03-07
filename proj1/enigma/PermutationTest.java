@@ -171,13 +171,16 @@ public class PermutationTest {
         Rotor M = new MovingRotor("Namba two", p, "C");
         Rotor R = new Reflector("Namba one", p);
         Permutation p2 =
-                getNewPermutation("(AELTPHQXRU) (BKNW) (CMOY) (DFG) (IV) (JZ) (S)",
+                getNewPermutation
+                        ("(AELTPHQXRU) (BKNW) (CMOY) (DFG) (IV) (JZ) (S)",
                         getNewAlphabet("ABCDEFGHIJKLMNOPQRSTUVWXYZ"));
         Rotor R2 = new MovingRotor("Namba three", p2, "");
         Rotor[] test = {R, M, R2};
         Machine mach =
-                new Machine(getNewAlphabet("KENYABCD"), 3, 2, Arrays.asList(test));
-        mach.insertRotors(new String[]{"Namba one", "Namba two", "Namba three"});
+                new Machine
+                        (getNewAlphabet("KENYABCD"), 3, 2, Arrays.asList(test));
+        mach.insertRotors
+                (new String[]{"Namba one", "Namba two", "Namba three"});
         mach.setRotors("AQ");
         assertTrue(M.setting() == 4);
         assertTrue(R2.setting() == 16);
@@ -189,7 +192,8 @@ public class PermutationTest {
     public void videoexample() {
         Permutation pr1 =
                 getNewPermutation
-                        ("(AE) (BN) (CK) (DQ) (FU) (GY) (HW) (IJ) (LO) (MP) (RX) (SZ) (TV)",
+                        ("(AE) (BN) (CK) (DQ) (FU) (GY) (HW) "
+                                        + "(IJ) (LO) (MP) (RX) (SZ) (TV)",
                                 getNewAlphabet());
         Rotor R1 = new Reflector("B", pr1);
 
@@ -207,7 +211,8 @@ public class PermutationTest {
 
         Permutation pr4 =
                 getNewPermutation
-                        ("(AEPLIYWCOXMRFZBSTGJQNH) (DV) (KU)", getNewAlphabet());
+                        ("(AEPLIYWCOXMRFZBSTGJQNH) (DV) (KU)",
+                                getNewAlphabet());
         MovingRotor R4 = new MovingRotor("IV", pr4, "J");
 
         Permutation pr5 =
@@ -221,13 +226,13 @@ public class PermutationTest {
 
 
         Rotor[] test = {R1, R2, R3, R4, R5};
-        Machine Mach = new Machine(getNewAlphabet(), 5, 3, Arrays.asList(test));
-        Mach.insertRotors(new String[]{"B", "Beta", "III", "IV", "I"});
-        Mach.setRotors("AXLE");
-        Mach.setPlugboard(plugboard);
-        assertEquals("IAMKENNYLIAO", Mach.convert("GOATUKFWSNXW"));
+        Machine mach = new Machine(getNewAlphabet(), 5, 3, Arrays.asList(test));
+        mach.insertRotors(new String[]{"B", "Beta", "III", "IV", "I"});
+        mach.setRotors("AXLE");
+        mach.setPlugboard(plugboard);
+        assertEquals("IAMKENNYLIAO", mach.convert("GOATUKFWSNXW"));
         assertEquals("EHQFTRJSSRXMRTMOUWPPEK",
-                Mach.convert("PLEASELETTHISBECORRECT"));
+                mach.convert("PLEASELETTHISBECORRECT"));
     }
     /* ***** Main TESTS ***** */
 
