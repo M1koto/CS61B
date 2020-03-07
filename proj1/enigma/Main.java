@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
+
 import static enigma.EnigmaException.*;
 
 /** Enigma simulator.
@@ -90,19 +91,14 @@ public final class Main {
         M.insertRotors(insert);
         String instructions = _input.nextLine();
         setUp(M, instructions);
+
         while (_input.hasNext("[^\\*]+")) {
             String put = "";
             put += _input.nextLine();
             printMessageLine(M.convert(put));
         }
         if (_input.hasNext("[\\*]")) {
-            String args0 = makeString(_config);
-            String args1 = makeString(_input);
-            System.out.println(args0);
-            System.out.println(args1);
-            System.out.println(args2);
-            String[] resend = new String[] {args0, args1, args2};
-            main(resend);
+            _input = getInput(makeString(_input));
         }
     }
     /** Turn rest of scanner to string. */
@@ -110,12 +106,11 @@ public final class Main {
         String target = "";
         while (S.hasNext()) {
             target += S.nextLine();
+            target += "\n";
         }
         return target;
     }
-    PrintStream continuePrint(PrintStream P) {
-        String target =
-    }
+
     /** Return an Enigma machine configured from the contents of configuration
      *  file _config. */
     private Machine readConfig() {
