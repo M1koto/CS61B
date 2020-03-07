@@ -1,9 +1,6 @@
 package enigma;
 
-import javax.crypto.spec.PSource;
 import java.util.*;
-
-import static enigma.EnigmaException.*;
 
 /** Class that represents a complete enigma machine.
  *  @author kenny liao
@@ -31,23 +28,25 @@ class Machine {
     int numPawls() {
         return _pawls;
     }
-    /** Throws exception if see reflector not in fat left */
-    void checkReflector() throws EnigmaException{
+    /** Throws exception if see reflector not in fat left. */
+    void checkReflector() throws EnigmaException {
         if (!(_myRotors[0] instanceof Reflector)) {
             throw new EnigmaException("Reflector needed in the far left");
         }
         for (int i = 1; i < _myRotors.length; i++) {
             if (_myRotors[i] instanceof Reflector) {
-                throw new EnigmaException(String.format("Reflector cannot be in the %d", i));
+                throw new EnigmaException
+                        (String.format("Reflector cannot be in the %d", i));
             }
         }
     }
     /** Function that loops through a rotor array and throws exception if any of the elements are null
-     * : targetting insertRotors when rotors not in allRotors is passed in*/
+     * : targetting insertRotors when rotors not in allRotors is passed in. */
     void CheckRotorArray(Rotor[] array) throws EnigmaException {
         for (int i = 0; i < array.length; i++) {
             if (array[i] == null) {
-                throw new EnigmaException(String.format("%d th element in the array is null, something must be wrong!", i));
+                throw new EnigmaException(String.format
+                        ("%d th element in the array is null, something must be wrong!", i));
             }
         }
     }
@@ -81,7 +80,7 @@ class Machine {
         plugboard.checkPlugboard();
         _plugboard = plugboard;
     }
-
+    /** convert forward. */
     int convFoward(int c) {
         int count = _myRotors.length - 1;
         int memorize = c;
@@ -92,7 +91,7 @@ class Machine {
         }
         return convBack(memorize);
     }
-
+    /** convert back. */
     int convBack(int c) {
         int count = 1;
         int memorize = c;
@@ -104,7 +103,7 @@ class Machine {
         memorize = applyPlugboard(memorize);
         return memorize;
     }
-
+    /** applyplugboard. */
     int applyPlugboard(int c) {
         return _plugboard.applyPlugboard(c);
     }
@@ -140,15 +139,14 @@ class Machine {
 
     /** Common alphabet of my rotors. */
     private final Alphabet _alphabet;
-
+    /** total num of rotors. */
     private int _numRotors;
-
+    /** total num of pawls. */
     private int _pawls;
-
+    /** plugboard. */
     protected Permutation _plugboard;
-
+    /** all rotors. */
     private ArrayList<Rotor> _allRotors;
-    
+    /** my rotors. */
     private Rotor[] _myRotors;
-    // FIXME: ADDITIONAL FIELDS HERE, IF NEEDED.
 }

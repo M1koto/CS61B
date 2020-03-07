@@ -62,14 +62,14 @@ class Rotor {
     /** Return the conversion of P (an integer in the range 0..size()-1)
      *  according to my permutation. 這個要換算一整路：完整地從右邊進左邊出*/
     int convertForward(int p) {
-        return _permutation.MakePositive(
+        return _permutation.makePositive(
                 _permutation.permute(p + setting()) - setting());
     }
 
     /** Return the conversion of E (an integer in the range 0..size()-1)
      *  according to the inverse of my permutation. 這個要換算一整路：完整地從左邊進右邊出*/
     int convertBackward(int e) {
-        return _permutation.MakePositive(
+        return _permutation.makePositive(
                 _permutation.invert(e + setting()) - setting());
     }
 

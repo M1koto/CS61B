@@ -96,9 +96,15 @@ public final class Main {
             String put = "";
             put += _input.nextLine();
             printMessageLine(M.convert(put));
-        }
-        if (_input.hasNext("[\\*]")) {
-            _input = getInput(makeString(_input));
+            if (_input.hasNext("[\\*]")) {
+                _input.next();
+                for (int i = 0; i < _total; i++) {
+                    insert[i] = _input.next();
+                }
+                M.insertRotors(insert);
+                instructions = _input.nextLine();
+                setUp(M, instructions);
+            }
         }
     }
     /** Turn rest of scanner to string. */
@@ -118,6 +124,9 @@ public final class Main {
             _alphabet = new Alphabet(_config.next());
             _total = _config.nextInt();
             int movable = _config.nextInt();
+            if (movable >= _total) {
+                throw  new EnigmaException("Movable rotors can't be larger or equal to total");
+            }
             ArrayList<Rotor> Rotors = new ArrayList<Rotor>();
             while (_config.hasNext()) {
                 Rotors.add(readRotor());

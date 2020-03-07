@@ -10,11 +10,12 @@ class Alphabet {
      *  K (numbering from 0). No character may be duplicated. */
     Alphabet(String chars) {
         _chars = chars;
-        CheckUnique(_chars);
+        checkUnique(_chars);
     }
 
-    /** Throws Exception if not unique */
-    void CheckUnique(String chars) {
+    /** Throws Exception if not unique. */
+    /** CHARS. */
+    void checkUnique(String chars) {
         char[] temp = new char[chars.length()];
         for (int i = 0; i < temp.length; i++) {
             char theChar = chars.charAt(i);
@@ -60,7 +61,7 @@ class Alphabet {
         return _chars.indexOf(ch);
     }
 
-    /** class variable - self work*/
-    public String _chars;
+    /** class variable - self work.*/
+    private String _chars;
 
 }

@@ -2,7 +2,6 @@ package enigma;
 
 import java.util.ArrayList;
 
-import static enigma.EnigmaException.*;
 
 /** Represents a permutation of a range of integers starting at 0 corresponding
  *  to the characters of an alphabet.
@@ -21,7 +20,7 @@ class Permutation {
         container = new ArrayList<String>();
         addCycle(_cycles);
         MakeMapSelf(cycles, alphabet);
-        check_duplicates(container);
+        check_Duplicates(container);
     }
     /** Add the cycle c0->c1->...->cm->c0 to the permutation, where CYCLE is
      *  c0c1...cm.
@@ -42,24 +41,29 @@ class Permutation {
                 _rightParen += 1;
             }
             if (frontindex != -1 && backindex != -1) {
-                _alphabet.CheckUnique(cycle.substring(frontindex + 1, backindex));
+                _alphabet.checkUnique
+                        (cycle.substring(frontindex + 1, backindex));
                 container.add(cycle.substring(frontindex + 1, backindex));
                 addCycle(cycle.substring(backindex + 1));
                 break;
             }
-            count ++;
+            count++;
         }
-        if (_leftParen != _rightParen) {throw new EnigmaException("Wrong format: parenthesis");}
+        if (_leftParen != _rightParen) {
+            throw new EnigmaException("Wrong format: parenthesis");
+        }
     }
 
-    /** Throws exception if a single character appears in more than one space in container. */
-    void check_duplicates(ArrayList<String> L) {
+    /** Throws exception if a single character appears
+     * in more than one space in container. L*/
+    void check_Duplicates(ArrayList<String> L) {
         for (int i = 0; i < L.size() - 1; i++) {
             for (int j = i + 1; j < L.size(); j++) {
                 for (int k = 0; k < L.get(i).length(); k++) {
                     char temp = L.get(i).charAt(k);
                     if (L.get(j).indexOf(temp) != -1) {
-                        throw new EnigmaException("No duplicated chars");
+                        throw new
+                                EnigmaException("No duplicated chars");
                     }
                 }
             }
@@ -74,7 +78,8 @@ class Permutation {
         }
         return r;
     }
-    /** Let non-included alphabets map to themselves */
+    /** Let non-included alphabets map to themselves. */
+    /** S A */
     void MakeMapSelf(String s, Alphabet a) {
         for (int i = 0; i < a.size(); i++) {
             boolean flag = false;
@@ -91,16 +96,18 @@ class Permutation {
     }
 
     /** Makes integer positive by adding alphabet lengths to it */
-    int MakePositive(int p) {
+    /** P*/
+    int makePositive(int p) {
         if (p < 0) {
-            return MakePositive(p + _alphabet.size());
+            return makePositive(p + _alphabet.size());
         } else {
             return p;
         }
     }
 
     /** maps straightly to target */
-    char MapStraight(String cycle, char a){
+    /** CYCLE A*/
+    char MapStraight(String cycle, char a) {
         int index = cycle.indexOf(a);
         if (index == -1) {
             return a;
@@ -132,7 +139,7 @@ class Permutation {
     /** Return the result of applying this permutation to P modulo the
      *  alphabet size. */
     int permute(int p) {
-        p = wrap(MakePositive(p));
+        p = wrap(makePositive(p));
         char letter = _alphabet.toChar(p);
         return _alphabet.toInt(permute(letter));
     }
@@ -140,7 +147,7 @@ class Permutation {
     /** Return the result of applying the inverse of this permutation
      *  to  C modulo the alphabet size. */
     int invert(int c) {
-        c = wrap(MakePositive(c));
+        c = wrap(makePositive(c));
         char letter = _alphabet.toChar(c);
         return _alphabet.toInt(invert(letter));
     }
@@ -195,6 +202,7 @@ class Permutation {
         }
         return true;
     }
+    /** checks format of plugboard */
     void checkPlugboard() throws EnigmaException{
         int temp = container.size();
         for (int j = temp - 1; j >= _leftParen; j--) {
@@ -206,19 +214,19 @@ class Permutation {
             }
         }
     }
+    /** Applies a*/
     int applyPlugboard(int a) {
         return permute(a);
     }
     /** Alphabet of this permutation. */
     private Alphabet _alphabet;
 
-    // FIXME: ADDITIONAL FIELDS HERE, AS NEEDED
-    /** Cycle of permutation */
+    /** Cycle of permutation. */
     private String _cycles;
-
+    /**  container of perms. */
     private ArrayList<String> container;
-
+    /** total num of (. */
     private int _leftParen = 0;
-
+    /** total num of ). */
     private int _rightParen = 0;
 }

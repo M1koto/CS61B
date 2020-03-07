@@ -38,7 +38,7 @@ class MovingRotor extends Rotor {
         return false;
     }
 
-    /** Moves rotor forward */
+    /** Moves rotor forward. */
     @Override
     void advance() {
         if (this._setting == _alphabet.size() - 1) {
@@ -66,18 +66,16 @@ class MovingRotor extends Rotor {
     /** Return the conversion of P (an integer in the range 0..size()-1)
      *  according to my permutation. 這個要換算一整路：完整地從右邊進左邊出.*/
     int convertForward(int p) {
-        return _perm.MakePositive(
+        return _perm.makePositive(
                 _perm.permute(p + this.setting()) - this.setting());
     }
 
     /** Return the conversion of E (an integer in the range 0..size()-1)
      *  according to the inverse of my permutation. 這個要換算一整路：完整地從左邊進右邊出.*/
     int convertBackward(int e) {
-        return _perm.MakePositive(
+        return _perm.makePositive(
                 _perm.invert(e + this.setting()) - this.setting());
     }
-
-    // FIXME: ADDITIONAL FIELDS HERE, AS NEEDED
     /** My name. */
     private String _name;
 
