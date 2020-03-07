@@ -1,7 +1,5 @@
 package enigma;
 
-import com.sun.xml.internal.xsom.impl.scd.Iterators;
-
 import java.util.Collection;
 import java.util.ArrayList;
 
@@ -147,12 +145,19 @@ class Machine {
      * the machine.
      */
     int convert(int c) {
+        boolean[] compare = new boolean[_myRotors.length];
+        for (int k = 0; k < compare.length; k++) {
+            compare[k] = false;
+        }
         for (int i = _myRotors.length - 1; i > 0; i--) {
-            if (_myRotors[i].atNotch()) {
+            if (_myRotors[i].atNotch() && !compare[i - 1] && !compare[i]) {
                 _myRotors[i - 1].advance();
+                compare[i - 1] = true;
                 if (i != _myRotors.length - 1
-                        && _myRotors[i - 1] instanceof MovingRotor) {
+                        && _myRotors[i - 1] instanceof MovingRotor
+                        && !compare[i]) {
                     _myRotors[i].advance();
+                    compare[i] = true;
                 }
             }
         }
