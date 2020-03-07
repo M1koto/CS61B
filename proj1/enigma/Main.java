@@ -157,18 +157,19 @@ public final class Main {
     /** Print MSG in groups of five (except that the last group may
      *  have fewer letters). */
     private void printMessageLine(String msg) {
-        if (msg.length() != 5) {
+        if (msg.length() <= 5) {
             for (int i = 0; i < msg.length(); i++) {
                 //System.out.print(msg.charAt(i));
                 _output.append(msg.charAt(i));
             }
+            _output.append('\n');
         } else {
             for (int i = 0; i < 5; i++) {
                 //System.out.print(msg.charAt(i));
                 _output.append(msg.charAt(i));
             }
             //System.out.print("\t");
-            _output.append(msg.charAt(' '));
+            _output.append(' ');
             printMessageLine(msg.substring(5));
         }
     }
