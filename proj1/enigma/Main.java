@@ -90,13 +90,32 @@ public final class Main {
         M.insertRotors(insert);
         String instructions = _input.nextLine();
         setUp(M, instructions);
-        while (_input.hasNext()) {
+        while (_input.hasNext("[^\\*]+")) {
             String put = "";
             put += _input.nextLine();
             printMessageLine(M.convert(put));
         }
+        if (_input.hasNext("[\\*]")) {
+            String args0 = makeString(_config);
+            String args1 = makeString(_input);
+            System.out.println(args0);
+            System.out.println(args1);
+            System.out.println(args2);
+            String[] resend = new String[] {args0, args1, args2};
+            main(resend);
+        }
     }
-
+    /** Turn rest of scanner to string. */
+    String makeString(Scanner S) {
+        String target = "";
+        while (S.hasNext()) {
+            target += S.nextLine();
+        }
+        return target;
+    }
+    PrintStream continuePrint(PrintStream P) {
+        String target =
+    }
     /** Return an Enigma machine configured from the contents of configuration
      *  file _config. */
     private Machine readConfig() {
@@ -109,8 +128,6 @@ public final class Main {
                 Rotors.add(readRotor());
             }
             return new Machine(_alphabet, _total, movable, Rotors);
-            //_alphabet = new Alphabet();
-            //return new Machine(_alphabet, 2, 1, null);
         } catch (NoSuchElementException excp) {
             throw error("configuration file truncated");
         }
@@ -159,16 +176,13 @@ public final class Main {
     private void printMessageLine(String msg) {
         if (msg.length() <= 5) {
             for (int i = 0; i < msg.length(); i++) {
-                //System.out.print(msg.charAt(i));
                 _output.append(msg.charAt(i));
             }
             _output.append('\n');
         } else {
             for (int i = 0; i < 5; i++) {
-                //System.out.print(msg.charAt(i));
                 _output.append(msg.charAt(i));
             }
-            //System.out.print("\t");
             _output.append(' ');
             printMessageLine(msg.substring(5));
         }
@@ -186,5 +200,6 @@ public final class Main {
     /** File for encoded/decoded messages. */
     private PrintStream _output;
 
+    /** total number of rotors. */
     private int _total;
 }

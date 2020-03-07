@@ -149,7 +149,7 @@ public class PermutationTest {
         System.out.println(R.setting());
     }
     /* ***** Reflectors PARTIAL TESTS ***** */
-    @Test
+    @Test (expected = EnigmaException.class)
     public void Reflector1() {
         Permutation p = getNewPermutation("(AELTPHQXRU) (BKNW) (CMOY) (DFG) (IV) (JZ) (S)", getNewAlphabet("ABCDEFGHIJKLMNOPQRSTUVWXYZ"));
         Rotor R = new Reflector("Namba one", p);
@@ -161,7 +161,7 @@ public class PermutationTest {
 
     @Test
     public void Machine1() {
-        Permutation p = getNewPermutation("(YKNEACB) (D)", getNewAlphabet("KENYABCD"));
+        Permutation p = getNewPermutation("(YKNEACB) (DX)", getNewAlphabet("KENYABCDX"));
         Rotor M = new MovingRotor("Namba two", p, "C");
         Rotor R = new Reflector("Namba one", p);
         Permutation p2 = getNewPermutation("(AELTPHQXRU) (BKNW) (CMOY) (DFG) (IV) (JZ) (S)", getNewAlphabet("ABCDEFGHIJKLMNOPQRSTUVWXYZ"));
