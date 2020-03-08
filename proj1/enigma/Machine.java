@@ -72,12 +72,19 @@ class Machine {
      * Initially, all rotors are set at their 0 setting.
      */
     void insertRotors(String[] rotors) {
+        int actual = 0;
         for (int i = 0; i < rotors.length; i++) {
             for (int j = 0; j < _allRotors.size(); j++) {
                 if (rotors[i].equals(_allRotors.get(j).name())) {
                     _myRotors[i] = _allRotors.get(j);
+                    if (_allRotors.get(j) instanceof MovingRotor) {
+                        actual += 1;
+                    }
                 }
             }
+        }
+        if (actual != _pawls) {
+            throw new EnigmaException("Movable rotors wrong num");
         }
         checkReflector();
         checkRotorArray(_myRotors);
@@ -145,23 +152,27 @@ class Machine {
      * the machine.
      */
     int convert(int c) {
-        boolean[] compare = new boolean[_myRotors.length];
-        for (int k = 0; k < compare.length; k++) {
-            compare[k] = false;
-        }
-        for (int i = _myRotors.length - 1; i > 0; i--) {
-            if (_myRotors[i].atNotch() && !compare[i - 1] && !compare[i]) {
-                _myRotors[i - 1].advance();
-                compare[i - 1] = true;
-                if (i != _myRotors.length - 1
-                        && _myRotors[i - 1] instanceof MovingRotor
-                        && !compare[i]) {
-                    _myRotors[i].advance();
-                    compare[i] = true;
-                }
+        boolean[] flag = new boolean[_myRotors.length];
+        ArrayList<Integer> position = new ArrayList<Integer>();
+        for (int i = 0; i < _myRotors.length; i++) {
+            if (_myRotors[i].atNotch()) {
+                position.add(i);
             }
         }
-        _myRotors[_myRotors.length - 1].advance();
+        for (int k = 0; k < position.size(); k++) {
+            _myRotors[position.get(k) - 1].advance();
+            flag[position.get(k) - 1] = true;
+        }
+        for (int j = 0; j < position.size(); j++) {
+            if (_myRotors[position.get(j) - 1]
+                    instanceof MovingRotor && !flag[position.get(j)]) {
+                _myRotors[position.get(j)].advance();
+                flag[position.get(j)] = true;
+            }
+        }
+        if (!flag[_myRotors.length - 1]) {
+            _myRotors[_myRotors.length - 1].advance();
+        }
         c = applyPlugboard(c);
         return convFoward(c);
     }
