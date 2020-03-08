@@ -104,6 +104,7 @@ public final class Main {
                 M.insertRotors(insert);
                 instructions = _input.nextLine();
                 setUp(M, instructions);
+                _output.append('\n');
             }
         }
     }
