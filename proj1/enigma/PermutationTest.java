@@ -20,7 +20,6 @@ import static enigma.TestUtils.*;
  * @author kenny liao
  */
 public class PermutationTest {
-
     /**
      * Perm.
      */
