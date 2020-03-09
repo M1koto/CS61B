@@ -114,6 +114,7 @@ public final class Main {
             while (_input.hasNext()) {
                 printMessageLine(_input.nextLine().replaceAll("\\s+", ""));
             }
+            printMessageLine("");
             buffer = buffer.replaceAll("( )+", "");
             while (buffer.length() != 0) {
                 if (buffer.indexOf("\n") == -1) {
@@ -126,7 +127,10 @@ public final class Main {
             return;
         }
 
-        while (_input.hasNext("[^\\*]+")) {
+        while (_input.hasNext("[^\\*]+") || _input.hasNext("\n")) {
+            while (_input.hasNext("\n")) {
+                printMessageLine("");
+            }
             String put = "";
             put += _input.nextLine();
             printMessageLine(M.convert(put));
@@ -138,7 +142,6 @@ public final class Main {
                 M.insertRotors(insert);
                 instructions = _input.nextLine();
                 setUp(M, instructions);
-                _output.append('\n');
             }
         }
     }
