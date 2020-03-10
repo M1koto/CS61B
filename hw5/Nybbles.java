@@ -35,7 +35,16 @@ public class Nybbles {
         if (k < 0 || k >= _n) {
             throw new IndexOutOfBoundsException();
         } else {
-            return (_data[Math.floorDiv(k, 8)] >>> 4* (7- (k % 8)) & 15);
+            int position = k/8;
+            int index = k%8;
+
+            int elem = _data[position] >>> index * 4;
+            elem &= 0b1111;
+
+            if(elem >= 8)
+                return  elem-16;
+            else
+                return elem;
         }
     }
 
@@ -49,8 +58,31 @@ public class Nybbles {
         } else if (val < (-MAX_VALUE - 1) || val > MAX_VALUE) {
             throw new IllegalArgumentException();
         } else {
-            _data[Math.floorDiv(k, 8)] = (_data[Math.floorDiv(k, 8)] << 4 | val);
+            int position = k/8;
+            int index = k%8;
+
+            _data[position] = unsetByte(_data[position], index);
+
+            int elem = val;
+            if(elem < 0)
+                elem += 16;
+
+            _data[position] = setByte(_data[position], index, elem);
+
+            int b = 5;
         }
+    }
+
+    private int setByte(int store, int pos, int val){
+        int elem = val & 0b1111;
+        elem <<= pos*4;
+        return store |= elem;
+    }
+
+    private int unsetByte(int store, int pos){
+        int unsetter = ~(0b1111 << pos*4);
+        return store &= unsetter;
+
     }
 
     /** DON'T CHANGE OR ADD TO THESE.*/
