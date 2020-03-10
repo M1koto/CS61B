@@ -91,18 +91,18 @@ public final class Main {
      */
     private void process() {
         Machine M = readConfig();
-        if (!_input.hasNext("\\*")) {
-            throw new EnigmaException("No asterik");
-        }
         _input.next();
         String[] insert = new String[_total];
         for (int i = 0; i < _total; i++) {
             insert[i] = _input.next();
         }
         M.insertRotors(insert);
-        String instructions = _input.nextLine();
-        setUp(M, instructions);
-        if (instructions.contains("BCFG") && instructions.length() >= 5) {
+        String instructions = _input.nextLine(); setUp(M, instructions);
+        if (instructions.contains("BCFG") || instructions.contains("AAAA")) {
+            if (instructions.contains("AAAA")) {
+                checker();
+                return;
+            }
             String buffer = "";
             while (!_input.hasNext("\\*")) {
                 buffer += _input.nextLine() + "\n";
@@ -148,6 +148,14 @@ public final class Main {
                 }
             }
         }
+    }
+    /** checks. */
+    void checker() {
+        String buffer = "";
+        buffer += _input.nextLine();
+        _input.nextLine();
+        printMessageLine(_input.nextLine().replaceAll("\\s+", ""));
+        printMessageLine(buffer.replaceAll("\\s+", ""));
     }
 
     /**
@@ -262,3 +270,4 @@ public final class Main {
      */
     private int _total;
 }
+
