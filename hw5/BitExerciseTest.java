@@ -18,6 +18,9 @@ public class BitExerciseTest {
         assertTrue(powOfTwo);
         boolean notPower = BitExercise.powerOfTwo(7);
         assertFalse(notPower);
+
+        boolean powOf0 = BitExercise.powerOfTwo(1);
+        assertTrue(powOf0);
     }
 
     @Test
