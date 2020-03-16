@@ -6,7 +6,7 @@ import java.util.Stack;
 
 /**
  * Implementation of a BST based String Set.
- * @author
+ * @author kenny liao
  */
 public class BSTStringSet implements StringSet, Iterable<String> {
     /** Creates a new empty set. */
@@ -16,12 +16,35 @@ public class BSTStringSet implements StringSet, Iterable<String> {
 
     @Override
     public void put(String s) {
-        // FIXME: PART A
+        if (!contains(s)) {
+            Node target = new Node(s);
+            helperP(target, _root);
+        }
+    }
+    private void helperP(Node s, Node _root) {
+        if (_root == null) {
+            _root = s;
+        } else {
+            if (_root.left != null) {
+                helperP(s, _root.left);
+            } else {
+                helperP(s, _root.right);
+            }
+        }
     }
 
     @Override
     public boolean contains(String s) {
-        return false; // FIXME: PART A
+        return helperC(s, _root);
+    }
+    private boolean helperC(String s, Node _root) {
+        if (_root == null) {
+            return false;
+        } else if (_root.s.equals(s)) {
+            return true;
+        } else {
+            return helperC(s, _root.left) || helperC(s, _root.right);
+        }
     }
 
     @Override
