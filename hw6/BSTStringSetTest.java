@@ -4,10 +4,18 @@ import java.util.List;
 
 /**
  * Test of a BST-based String Set.
- * @author
+ * @author kenny liao
  */
 public class BSTStringSetTest  {
-    // FIXME: Add your own tests for your BST StringSet
+    @Test
+    public void test1() {
+        BSTStringSet tester = new BSTStringSet();
+        tester.put("a");
+        tester.put("b");
+        tester.put("b");
+        tester.put("c");
+        System.out.println(tester.printer(tester.get_root()));
+    }
 
     @Test
     public void testNothing() {
