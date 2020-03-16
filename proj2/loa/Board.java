@@ -14,7 +14,7 @@ import static loa.Piece.*;
 import static loa.Square.*;
 
 /** Represents the state of a game of Lines of Action.
- *  @author
+ *  @author kenny liao
  */
 class Board {
 
@@ -52,6 +52,11 @@ class Board {
     /** Set my state to CONTENTS with SIDE to move. */
     void initialize(Piece[][] contents, Piece side) {
         // FIXME
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            for (int j = 0; j < BOARD_SIZE; j++) {
+                _board[i + j] = contents[i][j];
+            }
+        }
         _turn = side;
         _moveLimit = DEFAULT_MOVE_LIMIT;
     }
