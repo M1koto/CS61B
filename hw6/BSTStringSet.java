@@ -162,10 +162,42 @@ public class BSTStringSet implements StringSet, Iterable<String> {
         return new BSTIterator(_root);
     }
 
-    // FIXME: UNCOMMENT THE NEXT LINE FOR PART B
-    // @Override
+
     public Iterator<String> iterator(String low, String high) {
-        return null;  // FIXME: PART B
+        Inorder inorder_tree = new Inorder(_root, low, high);
+        return inorder_tree;
+    }
+
+    private static class Inorder extends BSTIterator {
+        /**
+         * A new iterator over the labels in NODE.
+         *
+         * @param low high
+         */
+        Inorder(Node node, String low, String high) {
+            super(node);
+            _low = low;
+            _high = high;
+        }
+        @Override
+        public boolean hasNext() {
+            return _root.s.compareTo(_high) < 0;
+        }
+        @Override
+        public String next() {
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
+            String ans = "";
+            while (ans.isEmpty() || super.next().compareTo(_low) < 0) {
+                ans = super.next();
+            }
+            return ans;
+        }
+
+        private String _low;
+        private String  _high;
+        private Node _root;
     }
 
 

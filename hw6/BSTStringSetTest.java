@@ -1,5 +1,7 @@
 import org.junit.Test;
 import static org.junit.Assert.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,11 +16,12 @@ public class BSTStringSetTest  {
         tester.put("b");
         tester.put("b");
         tester.put("c");
-        System.out.println(tester.printer(tester.get_root()));
-    }
-
-    @Test
-    public void testNothing() {
-        // FIXME: Delete this function and add your own tests
+        List<String> Tester2 = tester.asList();
+        ArrayList ans = new ArrayList<String>();
+        ans.add("a");
+        ans.add("b");
+        ans.add("c");
+        assertEquals(ans, Tester2);
+        assertFalse(tester.contains("x"));
     }
 }
