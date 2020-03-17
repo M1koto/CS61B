@@ -64,6 +64,11 @@ public class BoardTest {
         + "Next move: black\n"
         + "===";
 
+    @Test
+    public void selfTest1() {
+        Board tester = new Board(BOARD1, BP);
+    }
+
     /** Test display */
     @Test
     public void toStringTest() {
