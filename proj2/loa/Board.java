@@ -132,7 +132,30 @@ class Board {
      */
     void makeMove(Move move) {
         assert isLegal(move);
-        // FIXME
+        Boolean capture = isCapture(move);
+        Square from = move.getFrom();
+        Square to = move.getTo();
+        int temp = from.index();
+        if (capture) {
+            _board[to.index()] = EMP;
+            _board[to.index()] = get(from);
+            _board[temp] = EMP;
+            _moves.add(move);
+        }
+        else {
+            _board[to.index()] = get(from);
+            _board[temp] = EMP;
+            _moves.add(move);
+        }
+    }
+
+
+    /** Returns true if the move is a capture move. */
+    private Boolean isCapture(Move move) {
+        Square from = move.getFrom();
+        Square to = move.getTo();
+        return !get(from).abbrev().equals(get(to).abbrev())
+                && !get(to).abbrev().equals("-");
     }
 
     /**
@@ -141,6 +164,7 @@ class Board {
      */
     void retract() {
         assert movesMade() > 0;
+        //remember this piece location, and this piece previous location
         // FIXME
     }
 
@@ -162,12 +186,16 @@ class Board {
         int dir = from.direction(to); int dist = from.distance(to);
         int required = countPieces(from, to);
         String fromName = get(from).abbrev();
+        if (fromName.equals("-")) {
+            return false;
+        }
         String toName = get(to).abbrev();
         if (fromName.equals(toName)) {
             return false;
         }
         while (from != to) {
-            if (get(from).abbrev().equals(toName)) {
+            if (!get(from).abbrev().equals(fromName)
+                    && !get(from).abbrev().equals("-") ) {
                 return false;
             }
             from = from.moveDest(dir, 1);
@@ -326,6 +354,8 @@ class Board {
 
     // FIXME: Other methods, variables?
 
+    /** Cache of board for retract */
+    private final Piece[] _cacheBoard = new Piece[BOARD_SIZE * BOARD_SIZE];
     /**
      * The standard initial configuration for Lines of Action (bottom row
      * first).
