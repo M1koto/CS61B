@@ -137,20 +137,20 @@ class Board {
         Square to = move.getTo();
         int temp = from.index();
         if (capture) {
-            _board[to.index()] = EMP;
-            _board[to.index()] = get(from);
-            _board[temp] = EMP;
-            _moves.add(move);
+            _prev.add(to);
+            _koma.add(get(to));
+        } else {
+            _prev.add(null);
         }
-        else {
-            _board[to.index()] = get(from);
-            _board[temp] = EMP;
-            _moves.add(move);
-        }
+        _moves.add(move);
+        _board[to.index()] = get(from);
+        _board[temp] = EMP;
     }
 
 
-    /** Returns true if the move is a capture move. */
+    /**
+     * Returns true if the move is a capture move.
+     */
     private Boolean isCapture(Move move) {
         Square from = move.getFrom();
         Square to = move.getTo();
@@ -164,8 +164,16 @@ class Board {
      */
     void retract() {
         assert movesMade() > 0;
-        //remember this piece location, and this piece previous location
-        // FIXME
+        Move move = _moves.get(_moves.size() - 1);
+        Square loc = _prev.get(_prev.size() - 1);
+        _moves.remove(_moves.size() - 1);
+        _prev.remove(_prev.size() - 1);
+        move = Move.mv(move.getTo(), move.getFrom());
+        makeMove(move);
+        if (loc != null) {
+            _board[loc.index()] = _koma.get(_koma.size() - 1);
+            _koma.remove(_koma.size() - 1);
+        }
     }
 
     /**
@@ -183,7 +191,8 @@ class Board {
         if (!from.isValidMove(to)) {
             return false;
         }
-        int dir = from.direction(to); int dist = from.distance(to);
+        int dir = from.direction(to);
+        int dist = from.distance(to);
         int required = countPieces(from, to);
         String fromName = get(from).abbrev();
         if (fromName.equals("-")) {
@@ -195,7 +204,7 @@ class Board {
         }
         while (from != to) {
             if (!get(from).abbrev().equals(fromName)
-                    && !get(from).abbrev().equals("-") ) {
+                    && !get(from).abbrev().equals("-")) {
                 return false;
             }
             from = from.moveDest(dir, 1);
@@ -203,11 +212,15 @@ class Board {
         return required == dist;
     }
 
-    /** Count the total amount of pieces on the LOA of from - to. */
+    /**
+     * Count the total amount of pieces on the LOA of from - to.
+     */
     public int countPieces(Square from, Square to) {
         int dir = from.direction(to);
         int dirBack = to.direction(from);
-        int count1 = 1; int count2 = 1; int ans = 0;
+        int count1 = 1;
+        int count2 = 1;
+        int ans = 0;
         while (from.moveDest(dir, count1) != null) {
             count1 += 1;
         }
@@ -354,7 +367,9 @@ class Board {
 
     // FIXME: Other methods, variables?
 
-    /** Cache of board for retract */
+    /**
+     * Cache of board for retract
+     */
     private final Piece[] _cacheBoard = new Piece[BOARD_SIZE * BOARD_SIZE];
     /**
      * The standard initial configuration for Lines of Action (bottom row
@@ -375,6 +390,16 @@ class Board {
      * Current contents of the board.  Square S is at _board[S.index()].
      */
     private final Piece[] _board = new Piece[BOARD_SIZE * BOARD_SIZE];
+
+    /**
+     * List of all captured piece.
+     */
+    private ArrayList<Piece> _koma = new ArrayList<>();
+
+    /**
+     * List of all captured piece's original place, or null if is not a capture move.
+     */
+    private ArrayList<Square> _prev = new ArrayList<>();
 
     /**
      * List of all unretracted moves on this board, in order.

@@ -3,6 +3,9 @@
 package loa;
 
 import org.junit.Test;
+
+import java.util.ArrayList;
+
 import static org.junit.Assert.*;
 
 import static loa.Piece.*;
@@ -66,7 +69,6 @@ public class BoardTest {
 
     @Test
     public void selfTest1() {
-        Board tester = new Board(BOARD1, BP);
     }
 
     /** Test display */
