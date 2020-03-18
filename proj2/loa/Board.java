@@ -350,7 +350,7 @@ class Board {
      */
     public int numContig(Square sq, boolean[][] visited, Piece p) {
         int count = 0;
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < BOARD_SIZE; i++) {
             Square target = sq.moveDest(i, 1);
             if (target != null) {
                 int first = Math.floorDiv(target.index(), BOARD_SIZE);
@@ -386,10 +386,31 @@ class Board {
                 blackPiece += 1;
             }
         }
+        int countW = 0; int countB = 0;
+        while (sum(_whiteRegionSizes) != whitePiece) {
+            _whiteRegionSizes.add(numContig(ALL_SQUARES[countW], whiteVis, WP));
+            countW += 1;
+            whiteVis = update(ALL_SQUARES[countW], whiteVis, WP);
+        }
         Collections.sort(_whiteRegionSizes, Collections.reverseOrder());
         Collections.sort(_blackRegionSizes, Collections.reverseOrder());
         _subsetsInitialized = true;
     }
+
+    /** Update visited for piece p starting from square. */
+    private boolean[][] update(Square square, boolean[][] visited, Piece p) {
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            Square target = square.moveDest(i, 1);
+            if (target != null) {
+                int first = Math.floorDiv(target.index(), BOARD_SIZE);
+                int sec = target.index() % BOARD_SIZE;
+                if (!visited[first][sec]) {
+                    visited[first][sec] = true;  //FIXME
+                }
+            }
+        }
+    }
+
     /** Returns the Sum of element in array a. */
     private int sum(ArrayList<Integer> a) {
         int ans = 0;
