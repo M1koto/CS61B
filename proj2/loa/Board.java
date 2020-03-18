@@ -294,8 +294,7 @@ class Board {
      */
     Piece winner() {
         if (!_winnerKnown) {
-            // FIXME
-            _winnerKnown = true;
+            return null;
         }
         return _winner;
     }
@@ -340,7 +339,7 @@ class Board {
      * piece or by a friendly piece on the target square.
      */
     private boolean blocked(Square from, Square to) {
-        return false; // FALSE
+        return false;
     }
 
     /**
@@ -349,8 +348,22 @@ class Board {
      * have already been processed or are in different clusters.  Update
      * VISITED to reflect squares counted.
      */
-    private int numContig(Square sq, boolean[][] visited, Piece p) {
-        return 0;  // FIXME
+    public int numContig(Square sq, boolean[][] visited, Piece p) {
+        int count = 0;
+        for (int i = 0; i < 8; i++) {
+            Square target = sq.moveDest(i, 1);
+            if (target != null) {
+                int first = Math.floorDiv(target.index(), BOARD_SIZE);
+                int sec = target.index() % BOARD_SIZE;
+                if (!visited[first][sec]) {
+                    visited[first][sec] = true;
+                    if (get(target) == p) {
+                        count = count + 1 + numContig(target, visited, p);
+                    }
+                }
+            }
+        }
+        return count;
     }
 
     /**
@@ -381,12 +394,13 @@ class Board {
         }
     }
 
+    /** Returns desired square for test. */
+    public Square forTest() {
+        return ALL_SQUARES[56];
+    }
+
     // FIXME: Other methods, variables?
 
-    /**
-     * Cache of board for retract
-     */
-    private final Piece[] _cacheBoard = new Piece[BOARD_SIZE * BOARD_SIZE];
     /**
      * The standard initial configuration for Lines of Action (bottom row
      * first).

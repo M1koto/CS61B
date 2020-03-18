@@ -62,7 +62,7 @@ public class BoardTest {
             { EMP,  WP,  EMP,  WP,  WP, EMP, EMP, EMP },
             { EMP, EMP,  EMP,  EMP,  WP,  WP,  WP, EMP },
             { EMP,  WP,  WP,  WP, EMP, EMP, EMP, EMP },
-            { EMP, EMP, EMP, EMP, EMP, EMP, EMP, EMP },
+            { WP, EMP, EMP, EMP, EMP, EMP, EMP, EMP },
     };
 
     static final String BOARD1_STRING =
@@ -79,10 +79,12 @@ public class BoardTest {
         + "===";
 
     @Test
-    public void selfTest1() {
+    public void testCont() {
         Board b = new Board(BOARDBlack, BP);
+        boolean[][] visited = new boolean[8][8];
+        Square s = b.forTest();
+        assertEquals(12, b.numContig(s, visited, WP));
         System.out.println(b);
-        System.out.println(b.legalMoves());
     }
 
     /** Test display */
