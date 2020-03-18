@@ -135,7 +135,6 @@ class Board {
         Boolean capture = isCapture(move);
         Square from = move.getFrom();
         Square to = move.getTo();
-        int temp = from.index();
         if (capture) {
             _prev.add(to);
             _koma.add(get(to));
@@ -143,9 +142,14 @@ class Board {
             _prev.add(null);
         }
         _moves.add(move);
-        _board[to.index()] = get(from);
-        _board[temp] = EMP;
+        actualMove(from, to);
     }
+    /** Actually move piece from - to. */
+     void actualMove(Square from, Square to) {
+         int temp = from.index();
+         _board[to.index()] = get(from);
+         _board[temp] = EMP;
+     }
 
 
     /**
@@ -168,8 +172,7 @@ class Board {
         Square loc = _prev.get(_prev.size() - 1);
         _moves.remove(_moves.size() - 1);
         _prev.remove(_prev.size() - 1);
-        move = Move.mv(move.getTo(), move.getFrom());
-        makeMove(move);
+        actualMove(move.getTo(), move.getFrom());
         if (loc != null) {
             _board[loc.index()] = _koma.get(_koma.size() - 1);
             _koma.remove(_koma.size() - 1);
