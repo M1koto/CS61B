@@ -375,10 +375,28 @@ class Board {
         }
         _whiteRegionSizes.clear();
         _blackRegionSizes.clear();
-        // FIXME
+        boolean[][] whiteVis = new boolean[BOARD_SIZE][BOARD_SIZE];
+        boolean[][] blackVis = new boolean[BOARD_SIZE][BOARD_SIZE];
+        int whitePiece = 0; int blackPiece = 0;
+        for (int i = 0; i < _board.length; i++) {
+            if (_board[i] == WP) {
+                whitePiece += 1;
+            }
+            if (_board[i] == BP) {
+                blackPiece += 1;
+            }
+        }
         Collections.sort(_whiteRegionSizes, Collections.reverseOrder());
         Collections.sort(_blackRegionSizes, Collections.reverseOrder());
         _subsetsInitialized = true;
+    }
+    /** Returns the Sum of element in array a. */
+    private int sum(ArrayList<Integer> a) {
+        int ans = 0;
+        for (int i : a) {
+            ans += i;
+        }
+        return ans;
     }
 
     /**
