@@ -144,12 +144,15 @@ class Board {
         _moves.add(move);
         actualMove(from, to);
     }
-    /** Actually move piece from - to. */
-     void actualMove(Square from, Square to) {
-         int temp = from.index();
-         _board[to.index()] = get(from);
-         _board[temp] = EMP;
-     }
+
+    /**
+     * Actually move piece from - to.
+     */
+    void actualMove(Square from, Square to) {
+        int temp = from.index();
+        _board[to.index()] = get(from);
+        _board[temp] = EMP;
+    }
 
 
     /**
@@ -257,7 +260,17 @@ class Board {
      * Return a sequence of all legal moves from this position.
      */
     List<Move> legalMoves() {
-        return null;  // FIXME
+        ArrayList<Move> ans = new ArrayList<>();
+        for (int i = 0; i < _board.length; i++) {
+            if (get(ALL_SQUARES[i]).fullName().equals(_turn.fullName())) {
+                for (int j = 0; j < ALL_SQUARES.length; j++) {
+                    if (isLegal(ALL_SQUARES[i], ALL_SQUARES[j])) {
+                        ans.add(Move.mv(ALL_SQUARES[i], ALL_SQUARES[j]));
+                    }
+                }
+            }
+        }
+        return ans;
     }
 
     /**

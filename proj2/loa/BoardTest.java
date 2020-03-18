@@ -53,6 +53,17 @@ public class BoardTest {
         { EMP, EMP, EMP, EMP, EMP, EMP, EMP, EMP },
     };
 
+    /** A position with only one black. */
+    static final Piece[][] BOARDBlack = {
+            { EMP, EMP, EMP, EMP, EMP, EMP, EMP, EMP },
+            { EMP, EMP, EMP, EMP, EMP, EMP, EMP, EMP },
+            { EMP, EMP, EMP, EMP, EMP, EMP, EMP, EMP },
+            { EMP,  EMP,  WP,  BP,  WP, EMP, EMP, EMP },
+            { EMP,  WP,  EMP,  WP,  WP, EMP, EMP, EMP },
+            { EMP, EMP,  EMP,  EMP,  WP,  WP,  WP, EMP },
+            { EMP,  WP,  WP,  WP, EMP, EMP, EMP, EMP },
+            { EMP, EMP, EMP, EMP, EMP, EMP, EMP, EMP },
+    };
 
     static final String BOARD1_STRING =
         "===\n"
@@ -69,6 +80,9 @@ public class BoardTest {
 
     @Test
     public void selfTest1() {
+        Board b = new Board(BOARDBlack, BP);
+        System.out.println(b);
+        System.out.println(b.legalMoves());
     }
 
     /** Test display */
