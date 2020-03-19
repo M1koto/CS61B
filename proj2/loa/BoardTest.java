@@ -5,6 +5,7 @@ package loa;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import static org.junit.Assert.*;
 
@@ -80,11 +81,14 @@ public class BoardTest {
 
     @Test
     public void testCont() {
-        Board b = new Board(BOARDBlack, BP);
+        Board b = new Board(BOARD2, BP);
         boolean[][] visited = new boolean[8][8];
-        Square s = b.forTest();
-        assertEquals(12, b.numContig(s, visited, WP));
+        int a = b.numContig(b.forTest(), visited, WP, true);
+        System.out.println(b.forTest().row());
+        System.out.println(b.forTest().col());
+        System.out.println(a);
         System.out.println(b);
+        ArrayList<Integer> g = new ArrayList<>();
     }
 
     /** Test display */

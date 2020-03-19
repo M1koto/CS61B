@@ -348,18 +348,21 @@ class Board {
      * have already been processed or are in different clusters.  Update
      * VISITED to reflect squares counted.
      */
-    public int numContig(Square sq, boolean[][] visited, Piece p) {
+    public int numContig(Square sq, boolean[][] visited, Piece p, boolean orig) {
         int count = 0;
+        if (orig && get(sq) == p) {
+            visited[sq.row()][sq.col()] = true;
+            count++;
+        }
         for (int i = 0; i < BOARD_SIZE; i++) {
             Square target = sq.moveDest(i, 1);
             if (target != null) {
                 int first = Math.floorDiv(target.index(), BOARD_SIZE);
                 int sec = target.index() % BOARD_SIZE;
-                if (!visited[first][sec]) {
+                if (!visited[first][sec] && get(target) == p) {
                     visited[first][sec] = true;
-                    if (get(target) == p) {
-                        count = count + 1 + numContig(target, visited, p);
-                    }
+                    count = count + 1 + numContig(target, visited, p, false);
+                    connected.add(target);
                 }
             }
         }
@@ -377,41 +380,53 @@ class Board {
         _blackRegionSizes.clear();
         boolean[][] whiteVis = new boolean[BOARD_SIZE][BOARD_SIZE];
         boolean[][] blackVis = new boolean[BOARD_SIZE][BOARD_SIZE];
-        int whitePiece = 0; int blackPiece = 0;
-        for (int i = 0; i < _board.length; i++) {
-            if (_board[i] == WP) {
+        int whitePiece = 0;
+        int blackPiece = 0;
+        for (Piece piece : _board) {
+            if (piece == WP) {
                 whitePiece += 1;
             }
-            if (_board[i] == BP) {
+            if (piece == BP) {
                 blackPiece += 1;
             }
         }
-        int countW = 0; int countB = 0;
+        int countW = 0;
+        int countB = 0;
         while (sum(_whiteRegionSizes) != whitePiece) {
-            _whiteRegionSizes.add(numContig(ALL_SQUARES[countW], whiteVis, WP));
+            _whiteRegionSizes.add(numContig(ALL_SQUARES[countW], whiteVis, WP, true));
+            int a = _whiteRegionSizes.get(countW);
             countW += 1;
-            whiteVis = update(ALL_SQUARES[countW], whiteVis, WP);
+            update(whiteVis);
         }
+        while (sum(_blackRegionSizes) != blackPiece) {
+            _blackRegionSizes.add(numContig(ALL_SQUARES[countB], blackVis, BP, true));
+            countB += 1;
+            update(blackVis);
+        }
+        _whiteRegionSizes.removeAll(Collections.singleton(0));
+        _blackRegionSizes.removeAll(Collections.singleton(0));
         Collections.sort(_whiteRegionSizes, Collections.reverseOrder());
         Collections.sort(_blackRegionSizes, Collections.reverseOrder());
         _subsetsInitialized = true;
     }
 
-    /** Update visited for piece p starting from square. */
-    private boolean[][] update(Square square, boolean[][] visited, Piece p) {
-        for (int i = 0; i < BOARD_SIZE; i++) {
-            Square target = square.moveDest(i, 1);
+    /**
+     * Update visited for piece p starting from square.
+     */
+    private void update(boolean[][] visited) {
+        for (Square target : connected) {
             if (target != null) {
                 int first = Math.floorDiv(target.index(), BOARD_SIZE);
                 int sec = target.index() % BOARD_SIZE;
-                if (!visited[first][sec]) {
-                    visited[first][sec] = true;  //FIXME
-                }
+                visited[first][sec] = true;
             }
         }
+        connected.clear();
     }
 
-    /** Returns the Sum of element in array a. */
+    /**
+     * Returns the Sum of element in array a.
+     */
     private int sum(ArrayList<Integer> a) {
         int ans = 0;
         for (int i : a) {
@@ -433,9 +448,11 @@ class Board {
         }
     }
 
-    /** Returns desired square for test. */
+    /**
+     * Returns desired square for test.
+     */
     public Square forTest() {
-        return ALL_SQUARES[56];
+        return ALL_SQUARES[47];
     }
 
     // FIXME: Other methods, variables?
@@ -454,6 +471,11 @@ class Board {
             {WP, EMP, EMP, EMP, EMP, EMP, EMP, WP},
             {EMP, BP, BP, BP, BP, BP, BP, EMP}
     };
+
+    /**
+     * Caches square with pieces connected with each other
+     */
+    private ArrayList<Square> connected = new ArrayList<>();
 
     /**
      * Current contents of the board.  Square S is at _board[S.index()].
