@@ -81,12 +81,10 @@ public class BoardTest {
 
     @Test
     public void testCont() {
-        Board b = new Board(BOARD2, BP);
+        Board b = new Board(BOARD3, BP);
         boolean[][] visited = new boolean[8][8];
-        int a = b.numContig(b.forTest(), visited, WP, true);
         System.out.println(b.forTest().row());
         System.out.println(b.forTest().col());
-        System.out.println(a);
         System.out.println(b);
         ArrayList<Integer> g = new ArrayList<>();
     }
@@ -126,7 +124,7 @@ public class BoardTest {
         Board b3 = new Board(BOARD3, BP);
         assertTrue("Board 3 white contiguous?", b3.piecesContiguous(WP));
         assertTrue("Board 3 black contiguous?", b3.piecesContiguous(WP));
-        assertTrue("Board 3 game over", b2.gameOver());
+        assertTrue("Board 3 game over", b3.gameOver());
     }
 
     @Test

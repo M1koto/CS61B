@@ -86,10 +86,10 @@ class Board {
      * Set my state to a copy of BOARD.
      */
     void copyFrom(Board board) {
-        if (board == this) {
-            return;
+        if (board != this) {
+            Piece [][] contents = new Piece[board.getSize()][board.getSize()];
+            this = new Board(contents, board.turn()); //FIXME
         }
-        // FIXME
     }
 
     /**
@@ -97,6 +97,11 @@ class Board {
      */
     Piece get(Square sq) {
         return _board[sq.index()];
+    }
+
+    /** Return BOARDSIZE of this board. */
+    int getSize() {
+        return BOARD_SIZE;
     }
 
     /**
@@ -293,8 +298,22 @@ class Board {
      * null.  If the game has ended in a tie, returns EMP.
      */
     Piece winner() {
+        if (_moves.size() > _moveLimit) {
+            return EMP;
+        }
         if (!_winnerKnown) {
             return null;
+        }
+        if (piecesContiguous(WP) && piecesContiguous(BP)) {
+            if (movesMade() % 2 == 0) {
+                _winner = WP;
+            } else {
+                _winner = BP;
+            }
+        } else if (piecesContiguous(WP)) {
+            _winner = WP;
+        } else if (piecesContiguous(BP)) {
+            _winner = BP;
         }
         return _winner;
     }
@@ -348,7 +367,7 @@ class Board {
      * have already been processed or are in different clusters.  Update
      * VISITED to reflect squares counted.
      */
-    public int numContig(Square sq, boolean[][] visited, Piece p, boolean orig) {
+    private int numContig(Square sq, boolean[][] visited, Piece p, boolean orig) {
         int count = 0;
         if (orig && get(sq) == p) {
             visited[sq.row()][sq.col()] = true;
@@ -380,8 +399,7 @@ class Board {
         _blackRegionSizes.clear();
         boolean[][] whiteVis = new boolean[BOARD_SIZE][BOARD_SIZE];
         boolean[][] blackVis = new boolean[BOARD_SIZE][BOARD_SIZE];
-        int whitePiece = 0;
-        int blackPiece = 0;
+        int whitePiece = 0; int blackPiece = 0;
         for (Piece piece : _board) {
             if (piece == WP) {
                 whitePiece += 1;
@@ -390,8 +408,7 @@ class Board {
                 blackPiece += 1;
             }
         }
-        int countW = 0;
-        int countB = 0;
+        int countW = 0; int countB = 0;
         while (sum(_whiteRegionSizes) != whitePiece) {
             _whiteRegionSizes.add(numContig(ALL_SQUARES[countW], whiteVis, WP, true));
             int a = _whiteRegionSizes.get(countW);
@@ -407,6 +424,9 @@ class Board {
         _blackRegionSizes.removeAll(Collections.singleton(0));
         Collections.sort(_whiteRegionSizes, Collections.reverseOrder());
         Collections.sort(_blackRegionSizes, Collections.reverseOrder());
+        if (_blackRegionSizes.size() == 1 || _whiteRegionSizes.size() == 1) {
+            _winnerKnown = true;
+        }
         _subsetsInitialized = true;
     }
 
