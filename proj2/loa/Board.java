@@ -87,9 +87,20 @@ class Board {
      */
     void copyFrom(Board board) {
         if (board != this) {
-            Piece [][] contents = new Piece[board.getSize()][board.getSize()];
-            this = new Board(contents, board.turn()); //FIXME
+            int count = 0;
+            Piece[][] contents = new Piece[board.getSize()][board.getSize()];
+            for (int i = 0; i < board.getSize(); i++) {
+                for (int j = 0; j < board.getSize(); j++) {
+                    contents[i][j] = board.get(board.getSq(count));
+                    count += 1;
+                }
+            }
+            initialize(contents, board.turn());
         }
+    }
+    /** Return the square from ALLSQUARES in board at index i. */
+    Square getSq(int i) {
+        return ALL_SQUARES[i];
     }
 
     /**
@@ -99,7 +110,9 @@ class Board {
         return _board[sq.index()];
     }
 
-    /** Return BOARDSIZE of this board. */
+    /**
+     * Return BOARDSIZE of this board.
+     */
     int getSize() {
         return BOARD_SIZE;
     }
@@ -399,7 +412,8 @@ class Board {
         _blackRegionSizes.clear();
         boolean[][] whiteVis = new boolean[BOARD_SIZE][BOARD_SIZE];
         boolean[][] blackVis = new boolean[BOARD_SIZE][BOARD_SIZE];
-        int whitePiece = 0; int blackPiece = 0;
+        int whitePiece = 0;
+        int blackPiece = 0;
         for (Piece piece : _board) {
             if (piece == WP) {
                 whitePiece += 1;
@@ -408,7 +422,8 @@ class Board {
                 blackPiece += 1;
             }
         }
-        int countW = 0; int countB = 0;
+        int countW = 0;
+        int countB = 0;
         while (sum(_whiteRegionSizes) != whitePiece) {
             _whiteRegionSizes.add(numContig(ALL_SQUARES[countW], whiteVis, WP, true));
             int a = _whiteRegionSizes.get(countW);
