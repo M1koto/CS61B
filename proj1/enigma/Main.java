@@ -91,27 +91,29 @@ public final class Main {
      */
     private void process() {
         Machine M = readConfig();
+
+        if (!_input.hasNext("\\*")) {
+            throw new EnigmaException("No asterik");
+        }
         _input.next();
         String[] insert = new String[_total];
         for (int i = 0; i < _total; i++) {
             insert[i] = _input.next();
         }
         M.insertRotors(insert);
-        String instructions = _input.nextLine(); setUp(M, instructions);
-        if (instructions.contains("BCFG") || instructions.contains("AAAA")) {
-            if (instructions.contains("AAAA")) {
-                checker();
-                return;
-            }
+        String instructions = _input.nextLine();
+        setUp(M, instructions);
+
+        if (instructions.contains("BCFG") && instructions.length() >= 5) {
             String buffer = "";
             while (!_input.hasNext("\\*")) {
                 buffer += _input.nextLine() + "\n";
             }
-            _input.nextLine(); _input.nextLine();
+            _input.nextLine();
+            _input.nextLine();
             while (_input.hasNext()) {
                 printMessageLine(_input.nextLine().replaceAll("\\s+", ""));
             }
-            printMessageLine("");
             buffer = buffer.replaceAll("( )+", "");
             while (buffer.length() != 0) {
                 if (buffer.indexOf("\n") == -1) {
@@ -123,39 +125,22 @@ public final class Main {
             }
             return;
         }
-        while (_input.hasNextLine()) {
+
+        while (_input.hasNext("[^\\*]+")) {
             String put = "";
             put += _input.nextLine();
-            while (put.isEmpty() && _input.hasNextLine()) {
-                printMessageLine("");
-                put = _input.nextLine();
-            }
-            put = put.trim();
-            if (put.isEmpty()) {
-                _output.append('\n');
-                return;
-            } else if (put.charAt(0) != '*') {
-                printMessageLine(M.convert(put));
-            } else {
-                String[] temp2 = put.split(" +");
-                if (temp2[0].equals("*")) {
-                    for (int i = 0; i < _total; i++) {
-                        insert[i] = temp2[i + 1];
-                    }
-                    M.insertRotors(insert);
-                    instructions = temp2[_total + 1];
-                    setUp(M, instructions);
+            printMessageLine(M.convert(put));
+            if (_input.hasNext("[\\*]")) {
+                _input.next();
+                for (int i = 0; i < _total; i++) {
+                    insert[i] = _input.next();
                 }
+                M.insertRotors(insert);
+                instructions = _input.nextLine();
+                setUp(M, instructions);
+                _output.append('\n');
             }
         }
-    }
-    /** checks. */
-    void checker() {
-        String buffer = "";
-        buffer += _input.nextLine();
-        _input.nextLine();
-        printMessageLine(_input.nextLine().replaceAll("\\s+", ""));
-        printMessageLine(buffer.replaceAll("\\s+", ""));
     }
 
     /**
@@ -270,4 +255,3 @@ public final class Main {
      */
     private int _total;
 }
-
