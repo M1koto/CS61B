@@ -161,6 +161,11 @@ class Board {
         }
         _moves.add(move);
         actualMove(from, to);
+        if (_turn == BP) {
+            _turn = WP;
+        } else {
+            _turn = BP;
+        }
     }
 
     /**
@@ -490,7 +495,6 @@ class Board {
         return ALL_SQUARES[47];
     }
 
-    // FIXME: Other methods, variables?
 
     /**
      * The standard initial configuration for Lines of Action (bottom row

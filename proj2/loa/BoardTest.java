@@ -82,11 +82,10 @@ public class BoardTest {
     @Test
     public void testCont() {
         Board b = new Board(BOARD3, BP);
+        Board c = new Board(BOARDBlack, BP);
         boolean[][] visited = new boolean[8][8];
-        System.out.println(b.forTest().row());
-        System.out.println(b.forTest().col());
-        System.out.println(b);
-        ArrayList<Integer> g = new ArrayList<>();
+        b.copyFrom(c);
+        assertEquals(b, c);
     }
 
     /** Test display */
