@@ -51,7 +51,6 @@ public class BSTStringSetRangeTest {
              it.hasNext(); ) {
             found.add(it.next());
         }
-
         assertEquals(WORDS2, found);
     }
 

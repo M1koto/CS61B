@@ -13,6 +13,8 @@ public class ECHashStringSetTest  {
 
     @Test
     public void testNothing() {
-
+        int a = 40;
+        int b = a & 2;
+        System.out.println(b);
     }
 }

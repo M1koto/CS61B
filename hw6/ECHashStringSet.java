@@ -8,21 +8,38 @@ import java.util.List;
  * @author KENNY LIAO
  */
 class ECHashStringSet implements StringSet {
-    int n = 0;
-    Object[] ans = new Object[5];
+    public ECHashStringSet() {
+        ans = new LinkedList[(int)(1/0.2)];
+        size = 0;
+    }
 
     public void put(String s) {
         check();
-        int temp = s.hashCode();
-        if (ans[temp % ans.length] == null) {
-            ans[temp % ans.length] = new ArrayList<>();
+        int temp = get_pos(s.hashCode());
+        if (ans[temp] == null) {
+            ans[temp] = new LinkedList<String>();
         }
+        ans[temp].add(s);
+        size += 1;
+    }
+
+    private int get_pos(int hashCode) {
+        int last = hashCode & 1;
+        return 1;
     }
 
     private void check() {
-        if (n / ans.length > 5) {
-            int[] temp = new int[ans.length * 2];
-            System.arraycopy(ans, 0, temp, 0, ans.length + 1);
+        if (((double)size / (double)ans.length) > 5) {
+            LinkedList<String>[] temp = ans;
+            ans = new LinkedList[temp.length * 2];
+            size = 0;
+            for (LinkedList<String> target : temp) {
+                if (target != null) {
+                    for (String s : target) {
+                        this.put(s);
+                    }
+                }
+            }
         }
     }
 
@@ -35,4 +52,7 @@ class ECHashStringSet implements StringSet {
     public List<String> asList() {
         return null; // FIXME
     }
+
+    private int size;
+    private LinkedList<String>[] ans;
 }
