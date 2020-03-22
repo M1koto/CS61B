@@ -164,8 +164,7 @@ public class BSTStringSet implements StringSet, Iterable<String> {
 
 
     public Iterator<String> iterator(String low, String high) {
-        Inorder inorder_tree = new Inorder(_root, low, high);
-        return inorder_tree;
+        return new Inorder(_root, low, high);
     }
 
     private static class Inorder extends BSTIterator {
@@ -178,26 +177,32 @@ public class BSTStringSet implements StringSet, Iterable<String> {
             super(node);
             _low = low;
             _high = high;
+            _position = new Stack<Node>();
+            _now = node;
         }
         @Override
         public boolean hasNext() {
-            return _root.s.compareTo(_high) < 0;
+            return !_position.isEmpty() || (_now != null && _now.s.compareTo(_high) <= 0);
         }
         @Override
         public String next() {
             if (!hasNext()) {
                 throw new NoSuchElementException();
             }
-            String ans = "";
-            while (ans.isEmpty() || super.next().compareTo(_low) < 0) {
-                ans = super.next();
+            while (_now != null && _now.s.compareTo(_low) >= 0) {
+                _position.push(_now);
+                _now = _now.left;
             }
-            return ans;
+            Node temp = _position.pop();
+            _now = temp.right;
+
+            return temp.s;
         }
 
         private String _low;
         private String  _high;
-        private Node _root;
+        private Node _now;
+        private Stack<Node> _position;
     }
 
 

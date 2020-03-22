@@ -22,6 +22,7 @@ public class BSTStringSetTest  {
         ans.add("b");
         ans.add("c");
         assertEquals(ans, Tester2);
+        assertTrue(tester.contains("b"));
         assertFalse(tester.contains("x"));
     }
 }
