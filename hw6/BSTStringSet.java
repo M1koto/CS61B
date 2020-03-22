@@ -47,11 +47,14 @@ public class BSTStringSet implements StringSet, Iterable<String> {
     private boolean helperC(String s, Node root) {
         if (root == null) {
             return false;
-        } else if (root.s.equals(s)) {
-            return true;
-        } else {
-            return helperC(s, root.left) || helperC(s, root.right);
         }
+        int temp = s.compareTo(root.s);
+        if (temp > 0) {
+            return helperC(s, root.right);
+        } else if (temp < 0) {
+            return helperC(s, root.left);
+        }
+        return true;
     }
 
     @Override
