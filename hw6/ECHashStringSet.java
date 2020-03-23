@@ -44,14 +44,7 @@ class ECHashStringSet implements StringSet {
         if (((double)size / (double)ans.length) > 5) {
             LinkedList<String>[] temp = ans;
             ans = new LinkedList[temp.length * 2];
-            size = 0;
-            for (LinkedList<String> target : temp) {
-                if (target != null) {
-                    for (String s : target) {
-                        this.put(s);
-                    }
-                }
-            }
+            java.lang.System.arraycopy(temp, 0, ans, 0, temp.length);
         }
     }
 

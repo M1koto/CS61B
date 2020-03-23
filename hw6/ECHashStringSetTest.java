@@ -7,7 +7,7 @@ import java.util.List;
 import java.lang.Integer;
 /**
  * Test of a BST-based String Set.
- * @author
+ * @author KENNY LIAO
  */
 public class ECHashStringSetTest  {
 
@@ -19,4 +19,12 @@ public class ECHashStringSetTest  {
         test.put("c");
         System.out.println(test.asList());
     }
+
+    //for (LinkedList<String> target : temp) {
+        //if (target != null) {
+            //for (String s : target) {
+                //this.put(s);
+            //}
+        //}
+    //}
 }
