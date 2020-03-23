@@ -18,13 +18,8 @@ public class ECHashStringSetTest  {
         test.put("b");
         test.put("c");
         System.out.println(test.asList());
+        String s1 = "Irit";
+        String s2 = "hi";
+        System.out.println(s1.compareTo(s2));
     }
-
-    //for (LinkedList<String> target : temp) {
-        //if (target != null) {
-            //for (String s : target) {
-                //this.put(s);
-            //}
-        //}
-    //}
 }

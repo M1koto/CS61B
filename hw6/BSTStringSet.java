@@ -167,21 +167,21 @@ public class BSTStringSet implements StringSet, Iterable<String> {
 
 
     public Iterator<String> iterator(String low, String high) {
-        return new Inorder(_root, low, high);
+        return new Inorder(low, high);
     }
 
-    private static class Inorder extends BSTIterator {
+    private class Inorder extends BSTIterator {
         /**
          * A new iterator over the labels in NODE.
          *
          * @param low high
          */
-        Inorder(Node node, String low, String high) {
-            super(node);
+        public Inorder(String low, String high) {
+            super(_root);
             _low = low;
             _high = high;
             _position = new Stack<Node>();
-            _now = node;
+            _now = _root;
         }
         @Override
         public boolean hasNext() {

@@ -19,6 +19,8 @@ class ECHashStringSet implements StringSet {
         for (LinkedList<String> an : ans) {
             if (an != null) {
                 temp.add(an.toString());
+            } else {
+                temp.add(null);
             }
         }
         return temp;
