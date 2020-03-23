@@ -12,9 +12,11 @@ import java.lang.Integer;
 public class ECHashStringSetTest  {
 
     @Test
-    public void testNothing() {
-        int a = 40;
-        int b = a & 2;
-        System.out.println(b);
+    public void test1() {
+        ECHashStringSet test = new ECHashStringSet();
+        test.put("a");
+        test.put("b");
+        test.put("c");
+        System.out.println(test.asList());
     }
 }

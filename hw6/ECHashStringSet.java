@@ -13,6 +13,17 @@ class ECHashStringSet implements StringSet {
         size = 0;
     }
 
+    @Override
+    public List<String> asList() {
+        ArrayList<String> temp = new ArrayList<>();
+        for (LinkedList<String> an : ans) {
+            if (an != null) {
+                temp.add(an.toString());
+            }
+        }
+        return temp;
+    }
+
     public void put(String s) {
         check();
         int temp = get_pos(s.hashCode());
@@ -25,7 +36,8 @@ class ECHashStringSet implements StringSet {
 
     private int get_pos(int hashCode) {
         int last = hashCode & 1;
-        return 1;
+        int change = (hashCode & 0x7fffffff) | last;
+        return change % ans.length;
     }
 
     private void check() {
@@ -45,13 +57,13 @@ class ECHashStringSet implements StringSet {
 
     @Override
     public boolean contains(String s) {
-        return true;
+        int position = get_pos(s.hashCode());
+        if (ans[position] == null) {
+            return false;
+        }
+        return ans[position].contains(s);
     }
 
-    @Override
-    public List<String> asList() {
-        return null; // FIXME
-    }
 
     private int size;
     private LinkedList<String>[] ans;
