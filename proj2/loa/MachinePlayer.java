@@ -2,26 +2,39 @@
  * University of California.  All rights reserved. */
 package loa;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static loa.Piece.*;
 
-/** An automated Player.
- *  @author kenny liao
+/**
+ * An automated Player.
+ *
+ * @author kenny liao
  */
 class MachinePlayer extends Player {
 
-    /** A position-score magnitude indicating a win (for white if positive,
-     *  black if negative). */
+    /**
+     * A position-score magnitude indicating a win (for white if positive,
+     * black if negative).
+     */
     private static final int WINNING_VALUE = Integer.MAX_VALUE - 20;
-    /** A magnitude greater than a normal value. */
+    /**
+     * A magnitude greater than a normal value.
+     */
     private static final int INFTY = Integer.MAX_VALUE;
 
-    /** A new MachinePlayer with no piece or controller (intended to produce
-     *  a template). */
+    /**
+     * A new MachinePlayer with no piece or controller (intended to produce
+     * a template).
+     */
     MachinePlayer() {
         this(null, null);
     }
 
-    /** A MachinePlayer that plays the SIDE pieces in GAME. */
+    /**
+     * A MachinePlayer that plays the SIDE pieces in GAME.
+     */
     MachinePlayer(Piece side, Game game) {
         super(side, game);
     }
@@ -47,8 +60,10 @@ class MachinePlayer extends Player {
         return false;
     }
 
-    /** Return a move after searching the game tree to DEPTH>0 moves
-     *  from the current position. Assumes the game is not over. */
+    /**
+     * Return a move after searching the game tree to DEPTH>0 moves
+     * from the current position. Assumes the game is not over.
+     */
     private Move searchForMove() {
         Board work = new Board(getBoard());
         int value;
@@ -62,30 +77,53 @@ class MachinePlayer extends Player {
         return _foundMove;
     }
 
-    /** Find a move from position BOARD and return its value, recording
-     *  the move found in _foundMove iff SAVEMOVE. The move
-     *  should have maximal value or have value > BETA if SENSE==1,
-     *  and minimal value or value < ALPHA if SENSE==-1. Searches up to
-     *  DEPTH levels.  Searching at level 0 simply returns a static estimate
-     *  of the board value and does not set _foundMove. If the game is over
-     *  on BOARD, does not set _foundMove. */
+    /**
+     * Find a move from position BOARD and return its value, recording
+     * the move found in _foundMove iff SAVEMOVE. The move
+     * should have maximal value or have value > BETA if SENSE==1,
+     * and minimal value or value < ALPHA if SENSE==-1. Searches up to
+     * DEPTH levels.  Searching at level 0 simply returns a static estimate
+     * of the board value and does not set _foundMove. If the game is over
+     * on BOARD, does not set _foundMove.
+     */
     private int findMove(Board board, int depth, boolean saveMove,
                          int sense, int alpha, int beta) {
-        // FIXME
-        if (saveMove) {
-            _foundMove = null; // FIXME
-        }
-        return 0; // FIXME
+        List<Move> legal = board.legalMoves();
+        return 0;
     }
 
-    /** Return a search depth for the current position. */
+    /**
+     * Return a search depth for the current position.
+     */
     private int chooseDepth() {
-        return 1;  // FIXME
+        return getBoard().getLimit() - getBoard().movesMade();
     }
 
     // FIXME: Other methods, variables here.
 
-    /** Used to convey moves discovered by findMove. */
+    /**
+     * Check if Piece p improved in terms of quantity
+     * after making Move m on Board board.
+     */
+    private int pieceBetter(Move m, Board board, Piece p) {
+        int Mgroup = board.getRegionSizes(p).size();
+        int Ogroup = board.getRegionSizes(board.getOpp(p)).size();
+        board.makeMove(m);
+        int Mafter = board.getRegionSizes(p).size();
+        if (board.piecesContiguous(p)) {
+            Mafter = INFTY;
+        }
+        int Oafter = board.getRegionSizes(board.getOpp(p)).size();
+        if (board.piecesContiguous(board.getOpp(p))) {
+            Oafter = INFTY;
+        }
+        board.retract();
+        return (Mafter - Mgroup) - (Oafter - Ogroup);
+    }
+
+    /**
+     * Used to convey moves discovered by findMove.
+     */
     private Move _foundMove;
 
 }

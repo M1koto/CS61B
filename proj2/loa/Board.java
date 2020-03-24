@@ -500,6 +500,20 @@ class Board {
         return ALL_SQUARES[47];
     }
 
+    /** Get the movelimit. */
+    public int getLimit() {
+        return _moveLimit;
+    }
+
+    /** Get opponent considering Piece p. */
+    public Piece getOpp(Piece p) {
+        if (p == WP) {
+            return BP;
+        } else {
+            return WP;
+        }
+    }
+
 
     /**
      * The standard initial configuration for Lines of Action (bottom row
