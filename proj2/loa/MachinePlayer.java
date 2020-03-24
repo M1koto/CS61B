@@ -116,28 +116,36 @@ class MachinePlayer extends Player {
         board.makeMove(m);
         int Mafter = board.getRegionSizes(p).size();
         if (board.piecesContiguous(p)) {
-            Mgroup = INFTY;
+            return WINNING_VALUE;
         }
         int Oafter = board.getRegionSizes(board.getOpp(p)).size();
         if (board.piecesContiguous(board.getOpp(p))) {
-            Ogroup = INFTY;
+            return -WINNING_VALUE;
         }
         board.retract();
         return (Mgroup - Mafter) - (Ogroup - Oafter);
     }
-    private Move simpleFind(Board board, double alpha, double beta) {
+    private Move simpleFind(Board board) {
+        if (board.winner() == board.getOpp(side())) {
+            return null;
+        }
+        ArrayList<Move> legal = board.legalMoves();
+        int ans
+        for (Move m : legal) {
 
+        }
     }
 
-    private Move findMax(Board board) {
-        if (depth == 0 || board.gameOver()) {
-            simpleFind()
+    private Move findMax(Board board, int depth, double alpha, double beta) {
+        if (depth == 1 || board.gameOver()) {
+            return simpleFind(board);
         }
         Move best = null;
         ArrayList<Move> legal = board.legalMoves();
         for (Move m : legal) {
             int next = heuristic(m);
-            Move response = findMin(board.makeMove(m), depth, alpha, beta);
+            board.makeMove(m);
+            Move response = findMin(board, depth, alpha, beta);
             if (heuristic(response) >= heuristic(best)) {
                 best = m;
                 next = heuristic(response);
@@ -146,11 +154,12 @@ class MachinePlayer extends Player {
                     break;
                 }
             }
+            board.retract();
         }
         return best;
     }
 
-    private Move findMin() {
+    private Move findMin(Board board, int depth, double alpha, double beta) {
 
     }
     /**
