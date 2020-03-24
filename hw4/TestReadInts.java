@@ -13,7 +13,8 @@ public class TestReadInts {
     @Test
     /* For human evaluation. No automated testing here. */
     public void testPrintInts() {
-        String inp = "5   12   6   2 3";
+        String inp = "(AELTPHQXRU) (BKNW) (CMOY) (DFG) (IV) (JZ) (S)" +
+                "   6\n   2 3";
         System.out.println("Calling printInts(\"5   12   6   2 3\")");
         ReadInts.printInts(inp);
     }

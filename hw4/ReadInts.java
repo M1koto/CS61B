@@ -17,9 +17,13 @@ public class ReadInts {
      */
     public static void printInts(String input) {
         Scanner s = new Scanner(input);
-        while (s.hasNext()) {
-            System.out.println(s.nextInt());
-        }
+        System.out.println(s.hasNext("(.+)"));
+        System.out.print(s.nextLine());
+        test(s);
+    }
+
+    public static void test(Scanner s) {
+        System.out.print(s.next());
     }
 
     /**
