@@ -287,7 +287,7 @@ class Board {
     /**
      * Return a sequence of all legal moves from this position.
      */
-    List<Move> legalMoves() {
+    ArrayList<Move> legalMoves() {
         ArrayList<Move> ans = new ArrayList<>();
         for (int i = 0; i < _board.length; i++) {
             if (get(ALL_SQUARES[i]).fullName().equals(_turn.fullName())) {

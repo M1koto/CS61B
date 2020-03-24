@@ -88,7 +88,7 @@ class MachinePlayer extends Player {
      */
     private int findMove(Board board, int depth, boolean saveMove,
                          int sense, int alpha, int beta) {
-        List<Move> legal = board.legalMoves();
+        findMax(board)
         return 0;
     }
 
@@ -105,22 +105,54 @@ class MachinePlayer extends Player {
      * Check if Piece p improved in terms of quantity
      * after making Move m on Board board.
      */
-    private int pieceBetter(Move m, Board board, Piece p) {
+    private int heuristic(Move m) {
+        if (m == null) {
+            return -INFTY;
+        }
+        Piece p = side();
+        Board board = getBoard();
         int Mgroup = board.getRegionSizes(p).size();
         int Ogroup = board.getRegionSizes(board.getOpp(p)).size();
         board.makeMove(m);
         int Mafter = board.getRegionSizes(p).size();
         if (board.piecesContiguous(p)) {
-            Mafter = INFTY;
+            Mgroup = INFTY;
         }
         int Oafter = board.getRegionSizes(board.getOpp(p)).size();
         if (board.piecesContiguous(board.getOpp(p))) {
-            Oafter = INFTY;
+            Ogroup = INFTY;
         }
         board.retract();
-        return (Mafter - Mgroup) - (Oafter - Ogroup);
+        return (Mgroup - Mafter) - (Ogroup - Oafter);
+    }
+    private Move simpleFind(Board board, double alpha, double beta) {
+
     }
 
+    private Move findMax(Board board) {
+        if (depth == 0 || board.gameOver()) {
+            simpleFind()
+        }
+        Move best = null;
+        ArrayList<Move> legal = board.legalMoves();
+        for (Move m : legal) {
+            int next = heuristic(m);
+            Move response = findMin(board.makeMove(m), depth, alpha, beta);
+            if (heuristic(response) >= heuristic(best)) {
+                best = m;
+                next = heuristic(response);
+                alpha = Double.max(alpha, next);
+                if (alpha >= beta) {
+                    break;
+                }
+            }
+        }
+        return best;
+    }
+
+    private Move findMin() {
+
+    }
     /**
      * Used to convey moves discovered by findMove.
      */
