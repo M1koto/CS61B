@@ -1,16 +1,25 @@
 import org.junit.Test;
 import static org.junit.Assert.*;
+
+import java.util.LinkedList;
 import java.util.List;
 
+import java.lang.Integer;
 /**
  * Test of a BST-based String Set.
- * @author
+ * @author KENNY LIAO
  */
 public class ECHashStringSetTest  {
-    // FIXME: Add your own tests for your ECHashStringSetTest
 
     @Test
-    public void testNothing() {
-        // FIXME: Delete this function and add your own tests
+    public void test1() {
+        ECHashStringSet test = new ECHashStringSet();
+        test.put("a");
+        test.put("b");
+        test.put("c");
+        System.out.println(test.asList());
+        String s1 = "Irit";
+        String s2 = "hi";
+        System.out.println(s1.compareTo(s2));
     }
 }

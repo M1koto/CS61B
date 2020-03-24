@@ -47,11 +47,14 @@ public class BSTStringSet implements StringSet, Iterable<String> {
     private boolean helperC(String s, Node root) {
         if (root == null) {
             return false;
-        } else if (root.s.equals(s)) {
-            return true;
-        } else {
-            return helperC(s, root.left) || helperC(s, root.right);
         }
+        int temp = s.compareTo(root.s);
+        if (temp > 0) {
+            return helperC(s, root.right);
+        } else if (temp < 0) {
+            return helperC(s, root.left);
+        }
+        return true;
     }
 
     @Override
@@ -164,40 +167,45 @@ public class BSTStringSet implements StringSet, Iterable<String> {
 
 
     public Iterator<String> iterator(String low, String high) {
-        Inorder inorder_tree = new Inorder(_root, low, high);
-        return inorder_tree;
+        return new Inorder(low, high);
     }
 
-    private static class Inorder extends BSTIterator {
+    private class Inorder extends BSTIterator {
         /**
          * A new iterator over the labels in NODE.
          *
          * @param low high
          */
-        Inorder(Node node, String low, String high) {
-            super(node);
+        public Inorder(String low, String high) {
+            super(_root);
             _low = low;
             _high = high;
+            _position = new Stack<Node>();
+            _now = _root;
         }
         @Override
         public boolean hasNext() {
-            return _root.s.compareTo(_high) < 0;
+            return !_position.isEmpty() || (_now != null && _now.s.compareTo(_high) <= 0);
         }
         @Override
         public String next() {
             if (!hasNext()) {
                 throw new NoSuchElementException();
             }
-            String ans = "";
-            while (ans.isEmpty() || super.next().compareTo(_low) < 0) {
-                ans = super.next();
+            while (_now != null && _now.s.compareTo(_low) >= 0) {
+                _position.push(_now);
+                _now = _now.left;
             }
-            return ans;
+            Node temp = _position.pop();
+            _now = temp.right;
+
+            return temp.s;
         }
 
         private String _low;
         private String  _high;
-        private Node _root;
+        private Node _now;
+        private Stack<Node> _position;
     }
 
 
