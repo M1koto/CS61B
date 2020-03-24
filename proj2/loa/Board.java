@@ -203,6 +203,11 @@ class Board {
             _board[loc.index()] = _koma.get(_koma.size() - 1);
             _koma.remove(_koma.size() - 1);
         }
+        if (_turn == BP) {
+            _turn = WP;
+        } else {
+            _turn = BP;
+        }
     }
 
     /**
@@ -391,7 +396,7 @@ class Board {
             visited[sq.row()][sq.col()] = true;
             count++;
         }
-        for (int i = 0; i < BOARD_SIZE; i++) {
+        for (int i = 0; i < 8; i++) {
             Square target = sq.moveDest(i, 1);
             if (target != null) {
                 int first = Math.floorDiv(target.index(), BOARD_SIZE);
