@@ -88,8 +88,9 @@ class MachinePlayer extends Player {
      */
     private int findMove(Board board, int depth, boolean saveMove,
                          int sense, int alpha, int beta) {
-        findMax(board)
-        return 0;
+        if (board.gameOver()) {
+            return 0;
+        }
     }
 
     /**
@@ -102,38 +103,49 @@ class MachinePlayer extends Player {
     // FIXME: Other methods, variables here.
 
     /**
-     * Check if Piece p improved in terms of quantity
-     * after making Move m on Board board.
+     * Assigns estimated values to the each board considering
+     * all possible moves.
      */
-    private int heuristic(Move m) {
-        if (m == null) {
-            return -INFTY;
-        }
+    private int heuristic(Board board) {
+        ArrayList<Move> legal = board.legalMoves();
+        ArrayList<Integer> ans = new ArrayList<>();
         Piece p = side();
-        Board board = getBoard();
         int Mgroup = board.getRegionSizes(p).size();
         int Ogroup = board.getRegionSizes(board.getOpp(p)).size();
-        board.makeMove(m);
-        int Mafter = board.getRegionSizes(p).size();
-        if (board.piecesContiguous(p)) {
-            return WINNING_VALUE;
-        }
-        int Oafter = board.getRegionSizes(board.getOpp(p)).size();
-        if (board.piecesContiguous(board.getOpp(p))) {
-            return -WINNING_VALUE;
-        }
-        board.retract();
-        return (Mgroup - Mafter) - (Ogroup - Oafter);
-    }
-    private Move simpleFind(Board board) {
-        if (board.winner() == board.getOpp(side())) {
-            return null;
-        }
-        ArrayList<Move> legal = board.legalMoves();
-        int ans
         for (Move m : legal) {
-
+            int Mafter = board.getRegionSizes(p).size();
+            if (board.piecesContiguous(p)) {
+                return WINNING_VALUE;
+            }
+            int Oafter = board.getRegionSizes(board.getOpp(p)).size();
+            board.retract();
+            ans.add((Mgroup - Mafter) - (Ogroup - Oafter));   // gives board score here
         }
+        return java.util.Collections.max(ans);
+    }
+
+    private Move simpleFindMax(Board board, double alpha, double beta) {
+        ArrayList<Move> legal = board.legalMoves();
+        if (board.winner() != side()) {
+            return board.lastmove();
+        }
+        Move best = legal.get(0);
+        Board temp = new Board(board); // to not mess up board
+        temp.makeMove(best);
+
+        for(Move m : legal) {
+            board.makeMove(m);
+            board.setValue(heuristic(board));
+            if (board.getValue() >= temp.getValue()) {
+                best = m;
+                alpha = Double.max(alpha, (double) board.getValue());
+                board.retract();
+                if (alpha >= beta) {
+                    break;
+                }
+            }
+        }
+
     }
 
     private Move findMax(Board board, int depth, double alpha, double beta) {

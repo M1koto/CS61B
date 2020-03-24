@@ -98,7 +98,10 @@ class Board {
             initialize(contents, board.turn());
         }
     }
-    /** Return the square from ALLSQUARES in board at index i. */
+
+    /**
+     * Return the square from ALLSQUARES in board at index i.
+     */
     Square getSq(int i) {
         return ALL_SQUARES[i];
     }
@@ -342,6 +345,15 @@ class Board {
     }
 
     /**
+     * Return and remove last move made in _moves.
+     */
+    public Move lastmove() {
+        Move temp = _moves.get(_moves.size() - 1);
+        _moves.remove(_moves.size() - 1);
+        return temp;
+    }
+
+    /**
      * Return the total number of moves that have been made (and not
      * retracted).  Each valid call to makeMove with a normal move increases
      * this number by 1.
@@ -500,12 +512,16 @@ class Board {
         return ALL_SQUARES[47];
     }
 
-    /** Get the movelimit. */
+    /**
+     * Get the movelimit.
+     */
     public int getLimit() {
         return _moveLimit;
     }
 
-    /** Get opponent considering Piece p. */
+    /**
+     * Get opponent considering Piece p.
+     */
     public Piece getOpp(Piece p) {
         if (p == WP) {
             return BP;
@@ -514,6 +530,15 @@ class Board {
         }
     }
 
+    /** Set estimated value of board. */
+    public void setValue(int n) {
+        _estimate = n;
+    }
+
+    /** Get estimated of board. */
+    public int getValue() {
+        return _estimate;
+    }
 
     /**
      * The standard initial configuration for Lines of Action (bottom row
@@ -583,4 +608,7 @@ class Board {
     private final ArrayList<Integer>
             _whiteRegionSizes = new ArrayList<>(),
             _blackRegionSizes = new ArrayList<>();
+
+    /** Value for heuristic value. */
+    private int _estimate;
 }
