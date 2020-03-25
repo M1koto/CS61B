@@ -349,7 +349,7 @@ class Board {
      */
     public Move lastmove() {
         Move temp = _moves.get(_moves.size() - 1);
-        _moves.remove(_moves.size() - 1);
+        //_moves.remove(_moves.size() - 1);
         return temp;
     }
 

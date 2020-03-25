@@ -135,9 +135,19 @@ class MachinePlayer extends Player {
             board.retract();
             ans.add((Mgroup - Mafter) - (Ogroup - Oafter));   // gives board score here
         }
-        return java.util.Collections.max(ans);
+        return largest(ans);
     }
 
+    /** Returns largest Integer in Arraylist a. */
+    private int largest(ArrayList<Integer> a) {
+        int ans = -INFTY;
+        for (int i: a) {
+            if (i > ans) {
+                ans = i;
+            }
+        }
+        return ans;
+    }
     /**
      * Find a single layer of move in board where alpha < beta and returns best move.
      */
@@ -163,6 +173,7 @@ class MachinePlayer extends Player {
                     break;
                 }
             }
+            board.retract();
         }
         return best;
     }
@@ -185,6 +196,7 @@ class MachinePlayer extends Player {
 
             board.makeMove(m);
             board.setValue(heuristic(board));
+
             if (board.getValue() <= temp.getValue()) {
                 best = m;
                 beta = Double.min(beta, (double) board.getValue());
@@ -192,6 +204,7 @@ class MachinePlayer extends Player {
                     break;
                 }
             }
+            board.retract();
         }
         return best;
     }
@@ -210,17 +223,22 @@ class MachinePlayer extends Player {
             temp.makeMove(best);
             temp.setValue(heuristic(temp));
 
+
             board.makeMove(m);
             Move response = findMin(board, depth - 1, alpha, beta);
             board.makeMove(response);
             board.setValue(heuristic(board));
+
             if (board.getValue() >= temp.getValue()) {
                 best = m;
+                board.retract();
+                board.setValue(heuristic(board));
                 alpha = Double.max(alpha, (double) board.getValue());
                 if (alpha >= beta) {
                     break;
                 }
             }
+            board.retract();
         }
         return best;
     }
@@ -243,13 +261,17 @@ class MachinePlayer extends Player {
             Move response = findMax(board, depth - 1, alpha, beta);
             board.makeMove(response);
             board.setValue(heuristic(board));
+
             if (board.getValue() <= temp.getValue()) {
                 best = m;
+                board.retract();
+                board.setValue(heuristic(board));
                 beta = Double.min(beta, (double) board.getValue());
                 if (alpha >= beta) {
                     break;
                 }
             }
+            board.retract();
         }
         return best;
     }

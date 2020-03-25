@@ -92,7 +92,7 @@ public class BoardTest {
 
     @Test
     public void testMachine() {
-        Board test = new Board(IP, BP);
+        Board test = new Board(BOARD1, BP);
         System.out.println(test.getRegionSizes(BP));
     }
 
