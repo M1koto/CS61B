@@ -18,6 +18,17 @@ import static loa.Move.mv;
  */
 public class BoardTest {
 
+    static final Piece[][] IP = {
+            {EMP, WP, BP, BP, BP, BP, BP, BP},
+            {EMP, EMP, EMP, EMP, EMP, EMP, EMP, WP},
+            {WP, EMP, EMP, EMP, EMP, EMP, EMP, WP},
+            {WP, EMP, EMP, EMP, EMP, EMP, EMP, WP},
+            {WP, EMP, EMP, EMP, EMP, EMP, EMP, WP},
+            {WP, EMP, EMP, EMP, EMP, EMP, EMP, WP},
+            {WP, EMP, EMP, EMP, EMP, EMP, EMP, WP},
+            {EMP, BP, BP, BP, BP, BP, BP, EMP}
+    };
+
     /** A "general" position. */
     static final Piece[][] BOARD1 = {
         { EMP, BP,  EMP,  BP,  BP, EMP, EMP, EMP },
@@ -80,12 +91,9 @@ public class BoardTest {
         + "===";
 
     @Test
-    public void testCont() {
-        Board b = new Board(BOARD3, BP);
-        Board c = new Board(BOARDBlack, BP);
-        boolean[][] visited = new boolean[8][8];
-        b.copyFrom(c);
-        assertEquals(b, c);
+    public void testMachine() {
+        Board test = new Board(IP, BP);
+        System.out.println(test.getRegionSizes(BP));
     }
 
     /** Test display */

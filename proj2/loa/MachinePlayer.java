@@ -126,6 +126,7 @@ class MachinePlayer extends Player {
         int Mgroup = board.getRegionSizes(p).size();
         int Ogroup = board.getRegionSizes(board.getOpp(p)).size();
         for (Move m : legal) {
+            board.makeMove(m);
             int Mafter = board.getRegionSizes(p).size();
             if (board.piecesContiguous(p)) {
                 return WINNING_VALUE;

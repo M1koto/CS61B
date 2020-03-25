@@ -403,8 +403,11 @@ class Board {
      * VISITED to reflect squares counted.
      */
     private int numContig(Square sq, boolean[][] visited, Piece p, boolean orig) {
+        if (orig && get(sq) == EMP) {
+            return 0;
+        }
         int count = 0;
-        if (orig && get(sq) == p) {
+        if (orig && get(sq) == p && !visited[sq.row()][sq.col()]) {
             visited[sq.row()][sq.col()] = true;
             count++;
         }
@@ -413,7 +416,7 @@ class Board {
             if (target != null) {
                 int first = Math.floorDiv(target.index(), BOARD_SIZE);
                 int sec = target.index() % BOARD_SIZE;
-                if (!visited[first][sec] && get(target) == p) {
+                if (!visited[first][sec] && get(target) == p && get(sq) == p) {
                     visited[first][sec] = true;
                     count = count + 1 + numContig(target, visited, p, false);
                     connected.add(target);
@@ -448,12 +451,13 @@ class Board {
         int countB = 0;
         while (sum(_whiteRegionSizes) != whitePiece) {
             _whiteRegionSizes.add(numContig(ALL_SQUARES[countW], whiteVis, WP, true));
-            int a = _whiteRegionSizes.get(countW);
             countW += 1;
             update(whiteVis);
         }
         while (sum(_blackRegionSizes) != blackPiece) {
             _blackRegionSizes.add(numContig(ALL_SQUARES[countB], blackVis, BP, true));
+            int a = _blackRegionSizes.get(countB);
+            boolean b = blackVis[0][3];
             countB += 1;
             update(blackVis);
         }
