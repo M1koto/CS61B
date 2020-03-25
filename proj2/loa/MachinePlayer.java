@@ -110,7 +110,8 @@ class MachinePlayer extends Player {
      * Return a search depth for the current position.
      */
     private int chooseDepth() {
-        return getBoard().getLimit() - getBoard().movesMade();
+        return 3;
+        //return getBoard().getLimit() - getBoard().movesMade();
     }
 
     // FIXME: Other methods, variables here.
@@ -133,7 +134,7 @@ class MachinePlayer extends Player {
             }
             int Oafter = board.getRegionSizes(board.getOpp(p)).size();
             board.retract();
-            ans.add((Mgroup - Mafter) - (Ogroup - Oafter));   // gives board score here
+            ans.add(((Mgroup - Mafter) - (Ogroup - Oafter))^ 2);  // gives board score here
         }
         return largest(ans);
     }
@@ -153,7 +154,7 @@ class MachinePlayer extends Player {
      */
     private Move simpleFindMax(Board board, double alpha, double beta) {
         ArrayList<Move> legal = board.legalMoves();
-        if (board.winner() != side()) {
+        if (board.winner() != null) {
             return board.lastmove();
         }
         Move best = legal.get(0);
@@ -170,6 +171,7 @@ class MachinePlayer extends Player {
                 best = m;
                 alpha = Double.max(alpha, (double) board.getValue());
                 if (alpha >= beta) {
+                    board.retract();
                     break;
                 }
             }
@@ -183,7 +185,7 @@ class MachinePlayer extends Player {
      */
     private Move simpleFindMin(Board board, double alpha, double beta) {
         ArrayList<Move> legal = board.legalMoves();
-        if (board.winner() != side()) {
+        if (board.winner() != null) {
             return board.lastmove();
         }
 
@@ -201,6 +203,7 @@ class MachinePlayer extends Player {
                 best = m;
                 beta = Double.min(beta, (double) board.getValue());
                 if (alpha >= beta) {
+                    board.retract();
                     break;
                 }
             }
@@ -235,6 +238,7 @@ class MachinePlayer extends Player {
                 board.setValue(heuristic(board));
                 alpha = Double.max(alpha, (double) board.getValue());
                 if (alpha >= beta) {
+                    board.retract();
                     break;
                 }
             }
@@ -268,6 +272,7 @@ class MachinePlayer extends Player {
                 board.setValue(heuristic(board));
                 beta = Double.min(beta, (double) board.getValue());
                 if (alpha >= beta) {
+                    board.retract();
                     break;
                 }
             }
