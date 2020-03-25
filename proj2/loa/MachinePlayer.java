@@ -89,8 +89,21 @@ class MachinePlayer extends Player {
     private int findMove(Board board, int depth, boolean saveMove,
                          int sense, int alpha, int beta) {
         if (board.gameOver()) {
-            return 0;
+            return INFTY;
+        } else if (depth == 0) {
+            return heuristic(board);
+        } else if (saveMove) {
+            if (sense == 1) {
+                _foundMove = findMax(board, depth, alpha, beta);
+            } else if (sense == -1) {
+                _foundMove = findMin(board, depth, alpha, beta);
+            }
+            board.makeMove(_foundMove);
+            int ans = heuristic(board);
+            board.retract();
+            return ans;
         }
+        return 0;
     }
 
     /**
@@ -124,56 +137,122 @@ class MachinePlayer extends Player {
         return java.util.Collections.max(ans);
     }
 
+    /**
+     * Find a single layer of move in board where alpha < beta and returns best move.
+     */
     private Move simpleFindMax(Board board, double alpha, double beta) {
         ArrayList<Move> legal = board.legalMoves();
         if (board.winner() != side()) {
             return board.lastmove();
         }
         Move best = legal.get(0);
-        Board temp = new Board(board); // to not mess up board
-        temp.makeMove(best);
+        for (Move m : legal) {
 
-        for(Move m : legal) {
+            Board temp = new Board(board); // to not mess up board
+            temp.makeMove(best);
+            temp.setValue(heuristic(temp));
+
             board.makeMove(m);
+            board.setValue(heuristic(board));
+
+            if (board.getValue() >= temp.getValue()) {
+                best = m;
+                alpha = Double.max(alpha, (double) board.getValue());
+                if (alpha >= beta) {
+                    break;
+                }
+            }
+        }
+        return best;
+    }
+
+    /**
+     * Find a single layer of move in board where alpha > beta and returns best move.
+     */
+    private Move simpleFindMin(Board board, double alpha, double beta) {
+        ArrayList<Move> legal = board.legalMoves();
+        if (board.winner() != side()) {
+            return board.lastmove();
+        }
+
+        Move best = legal.get(0);
+        for (Move m : legal) {
+
+            Board temp = new Board(board); // to not mess up board
+            temp.makeMove(best);
+            temp.setValue(heuristic(temp));
+
+            board.makeMove(m);
+            board.setValue(heuristic(board));
+            if (board.getValue() <= temp.getValue()) {
+                best = m;
+                beta = Double.min(beta, (double) board.getValue());
+                if (alpha >= beta) {
+                    break;
+                }
+            }
+        }
+        return best;
+    }
+
+    private Move findMax(Board board, int depth, double alpha, double beta) {
+        if (depth == 0 || board.gameOver()) {
+            return simpleFindMax(board, alpha, beta);
+        }
+        ArrayList<Move> legal = board.legalMoves();
+
+        Move best = legal.get(0);
+
+        for (Move m : legal) {
+
+            Board temp = new Board(board);
+            temp.makeMove(best);
+            temp.setValue(heuristic(temp));
+
+            board.makeMove(m);
+            Move response = findMin(board, depth - 1, alpha, beta);
+            board.makeMove(response);
             board.setValue(heuristic(board));
             if (board.getValue() >= temp.getValue()) {
                 best = m;
                 alpha = Double.max(alpha, (double) board.getValue());
-                board.retract();
                 if (alpha >= beta) {
                     break;
                 }
             }
-        }
-
-    }
-
-    private Move findMax(Board board, int depth, double alpha, double beta) {
-        if (depth == 1 || board.gameOver()) {
-            return simpleFind(board);
-        }
-        Move best = null;
-        ArrayList<Move> legal = board.legalMoves();
-        for (Move m : legal) {
-            int next = heuristic(m);
-            board.makeMove(m);
-            Move response = findMin(board, depth, alpha, beta);
-            if (heuristic(response) >= heuristic(best)) {
-                best = m;
-                next = heuristic(response);
-                alpha = Double.max(alpha, next);
-                if (alpha >= beta) {
-                    break;
-                }
-            }
-            board.retract();
         }
         return best;
     }
 
     private Move findMin(Board board, int depth, double alpha, double beta) {
+        if (depth == 0 || board.gameOver()) {
+            return simpleFindMin(board, alpha, beta);
+        }
+        ArrayList<Move> legal = board.legalMoves();
 
+        Move best = legal.get(0);
+
+        for (Move m : legal) {
+
+            Board temp = new Board(board);
+            temp.makeMove(best);
+            temp.setValue(heuristic(temp));
+
+            board.makeMove(m);
+            Move response = findMax(board, depth - 1, alpha, beta);
+            board.makeMove(response);
+            board.setValue(heuristic(board));
+            if (board.getValue() <= temp.getValue()) {
+                best = m;
+                beta = Double.min(beta, (double) board.getValue());
+                if (alpha >= beta) {
+                    break;
+                }
+            }
+        }
+        return best;
     }
+
     /**
      * Used to convey moves discovered by findMove.
      */
