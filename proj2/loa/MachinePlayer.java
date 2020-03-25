@@ -111,7 +111,6 @@ class MachinePlayer extends Player {
      */
     private int chooseDepth() {
         return 3;
-        //return getBoard().getLimit() - getBoard().movesMade();
     }
 
     // FIXME: Other methods, variables here.
@@ -134,22 +133,26 @@ class MachinePlayer extends Player {
             }
             int Oafter = board.getRegionSizes(board.getOpp(p)).size();
             board.retract();
-            ans.add(((Mgroup - Mafter) - (Ogroup - Oafter))^ 2);  // gives board score here
+            ans.add(((Mgroup - Mafter) - (Ogroup - Oafter)) * 20);  // gives board score here
         }
         return largest(ans);
     }
 
-    /** Returns largest Integer in Arraylist a. */
+    /**
+     * Returns largest Integer in Arraylist a.
+     */
     private int largest(ArrayList<Integer> a) {
         int ans = -INFTY;
-        for (int i: a) {
+        for (int i : a) {
             if (i > ans) {
                 ans = i;
             }
         }
         return ans;
     }
+
     /**
+     * Static evaluation.
      * Find a single layer of move in board where alpha < beta and returns best move.
      */
     private Move simpleFindMax(Board board, double alpha, double beta) {
@@ -160,14 +163,14 @@ class MachinePlayer extends Player {
         Move best = legal.get(0);
         for (Move m : legal) {
 
-            Board temp = new Board(board); // to not mess up board
+            Board temp = new Board(board);
             temp.makeMove(best);
-            temp.setValue(heuristic(temp));
+            int compare = heuristic(temp);
 
             board.makeMove(m);
             board.setValue(heuristic(board));
 
-            if (board.getValue() >= temp.getValue()) {
+            if (board.getValue() >= compare) {
                 best = m;
                 alpha = Double.max(alpha, (double) board.getValue());
                 if (alpha >= beta) {
@@ -181,6 +184,7 @@ class MachinePlayer extends Player {
     }
 
     /**
+     * Static evaluation.
      * Find a single layer of move in board where alpha > beta and returns best move.
      */
     private Move simpleFindMin(Board board, double alpha, double beta) {
@@ -192,14 +196,14 @@ class MachinePlayer extends Player {
         Move best = legal.get(0);
         for (Move m : legal) {
 
-            Board temp = new Board(board); // to not mess up board
+            Board temp = new Board(board);
             temp.makeMove(best);
-            temp.setValue(heuristic(temp));
+            int compare = heuristic(temp);
 
             board.makeMove(m);
             board.setValue(heuristic(board));
 
-            if (board.getValue() <= temp.getValue()) {
+            if (board.getValue() <= compare) {
                 best = m;
                 beta = Double.min(beta, (double) board.getValue());
                 if (alpha >= beta) {
@@ -224,7 +228,7 @@ class MachinePlayer extends Player {
 
             Board temp = new Board(board);
             temp.makeMove(best);
-            temp.setValue(heuristic(temp));
+            int compare = heuristic(temp);
 
 
             board.makeMove(m);
@@ -232,7 +236,7 @@ class MachinePlayer extends Player {
             board.makeMove(response);
             board.setValue(heuristic(board));
 
-            if (board.getValue() >= temp.getValue()) {
+            if (board.getValue() >= compare) {
                 best = m;
                 board.retract();
                 board.setValue(heuristic(board));
@@ -240,9 +244,13 @@ class MachinePlayer extends Player {
                 if (alpha >= beta) {
                     board.retract();
                     break;
+                } else {
+                    board.retract();
                 }
+            } else {
+                board.retract();
+                board.retract();
             }
-            board.retract();
         }
         return best;
     }
@@ -259,14 +267,14 @@ class MachinePlayer extends Player {
 
             Board temp = new Board(board);
             temp.makeMove(best);
-            temp.setValue(heuristic(temp));
+            int compare = heuristic(temp);
 
             board.makeMove(m);
             Move response = findMax(board, depth - 1, alpha, beta);
             board.makeMove(response);
             board.setValue(heuristic(board));
 
-            if (board.getValue() <= temp.getValue()) {
+            if (board.getValue() <= compare) {
                 best = m;
                 board.retract();
                 board.setValue(heuristic(board));
@@ -274,9 +282,13 @@ class MachinePlayer extends Player {
                 if (alpha >= beta) {
                     board.retract();
                     break;
+                } else {
+                    board.retract();
                 }
+            } else {
+                board.retract();
+                board.retract();
             }
-            board.retract();
         }
         return best;
     }
