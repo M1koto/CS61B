@@ -234,13 +234,12 @@ class MachinePlayer extends Player {
             board.makeMove(m);
             Move response = findMin(board, depth - 1, alpha, beta);
             board.makeMove(response);
-            board.setValue(heuristic(board));
+            int responseVal = heuristic(board);
 
-            if (board.getValue() >= compare) {
+            if (responseVal >= compare) {
                 best = m;
                 board.retract();
-                board.setValue(heuristic(board));
-                alpha = Double.max(alpha, (double) board.getValue());
+                alpha = Double.max(alpha, (double) responseVal);
                 if (alpha >= beta) {
                     board.retract();
                     break;
@@ -272,13 +271,12 @@ class MachinePlayer extends Player {
             board.makeMove(m);
             Move response = findMax(board, depth - 1, alpha, beta);
             board.makeMove(response);
-            board.setValue(heuristic(board));
+            int responseVal = heuristic(board);
 
-            if (board.getValue() <= compare) {
+            if (responseVal <= compare) {
                 best = m;
                 board.retract();
-                board.setValue(heuristic(board));
-                beta = Double.min(beta, (double) board.getValue());
+                beta = Double.min(beta, (double) responseVal);
                 if (alpha >= beta) {
                     board.retract();
                     break;
