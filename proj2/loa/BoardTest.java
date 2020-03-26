@@ -65,10 +65,10 @@ public class BoardTest {
 
     /** A position with only one black. */
     static final Piece[][] BOARDBLACK = {
+            { EMP, EMP, EMP, BP, EMP, EMP, EMP, EMP },
             { EMP, EMP, EMP, EMP, EMP, EMP, EMP, EMP },
             { EMP, EMP, EMP, EMP, EMP, EMP, EMP, EMP },
-            { EMP, EMP, EMP, EMP, EMP, EMP, EMP, EMP },
-            { EMP,  EMP,  WP,  BP,  WP, EMP, EMP, EMP },
+            { EMP,  EMP,  EMP,  BP,  WP, EMP, EMP, EMP },
             { EMP,  WP,  EMP,  WP,  WP, EMP, EMP, EMP },
             { EMP, EMP,  EMP,  EMP,  WP,  WP,  WP, EMP },
             { EMP,  WP,  WP,  WP, EMP, EMP, EMP, EMP },
@@ -90,8 +90,12 @@ public class BoardTest {
 
     @Test
     public void testMachine() {
-        Board test = new Board(BOARD1, BP);
-        System.out.println(test.getRegionSizes(BP));
+        Board test = new Board(BOARDBLACK, BP);
+        System.out.println(test);
+        System.out.println(test.gameOver());
+        test.makeMove(mv("d1-d5"));
+        System.out.println(test.gameOver());
+        System.out.println(test);
     }
 
     /** Test display */

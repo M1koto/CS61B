@@ -325,6 +325,8 @@ class Board {
      */
     Piece winner() {
         _subsetsInitialized = false;
+        computeRegions();
+        _subsetsInitialized = true;
         if (_moves.size() >= _moveLimit) {
             return EMP;
         }
