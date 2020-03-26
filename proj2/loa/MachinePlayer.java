@@ -173,12 +173,13 @@ class MachinePlayer extends Player {
             if (board.getValue() >= compare) {
                 best = m;
                 alpha = Double.max(alpha, (double) board.getValue());
+                board.retract();
                 if (alpha >= beta) {
-                    board.retract();
                     break;
                 }
+            } else {
+                board.retract();
             }
-            board.retract();
         }
         return best;
     }
@@ -207,12 +208,14 @@ class MachinePlayer extends Player {
             if (board.getValue() <= compare) {
                 best = m;
                 beta = Double.min(beta, (double) board.getValue());
+                board.retract();
                 if (alpha >= beta) {
                     board.retract();
                     break;
                 }
+            } else {
+                board.retract();
             }
-            board.retract();
         }
         return best;
     }
