@@ -459,8 +459,6 @@ class Board {
         while (sum(_blackRegionSizes) != blackPiece) {
             _blackRegionSizes.add
                     (numContig(ALL_SQUARES[countB], blackVis, BP, true));
-            int a = _blackRegionSizes.get(countB);
-            boolean b = blackVis[0][3];
             countB += 1;
             update(blackVis);
         }

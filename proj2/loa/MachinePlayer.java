@@ -109,7 +109,7 @@ class MachinePlayer extends Player {
      * Return a search depth for the current position.
      */
     private int chooseDepth() {
-        return 4;
+        return 3;
     }
 
     // FIXME: Other methods, variables here.
