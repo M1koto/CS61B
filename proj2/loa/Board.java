@@ -309,6 +309,7 @@ class Board {
      * pieces continguous or there is a tie).
      */
     boolean gameOver() {
+        _subsetsInitialized = false;
         return winner() != null;
     }
 
@@ -430,10 +431,6 @@ class Board {
      * Set the values of _whiteRegionSizes and _blackRegionSizes.
      */
     private void computeRegions() {
-        if (_blackRegionSizes.size() == 1 || _whiteRegionSizes.size() == 1
-                || movesMade() >= _moveLimit) {
-            _winnerKnown = true;
-        }
         if (_subsetsInitialized) {
             return;
         }
