@@ -309,7 +309,6 @@ class Board {
      * pieces continguous or there is a tie).
      */
     boolean gameOver() {
-        _subsetsInitialized = false;
         return winner() != null;
     }
 
@@ -325,6 +324,7 @@ class Board {
      * null.  If the game has ended in a tie, returns EMP.
      */
     Piece winner() {
+        _subsetsInitialized = false;
         if (_moves.size() >= _moveLimit) {
             return EMP;
         }
