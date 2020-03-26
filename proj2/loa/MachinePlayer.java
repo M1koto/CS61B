@@ -109,7 +109,7 @@ class MachinePlayer extends Player {
      * Return a search depth for the current position.
      */
     private int chooseDepth() {
-        return 4;
+        return 3;
     }
 
 
@@ -125,13 +125,16 @@ class MachinePlayer extends Player {
         int oGroup = board.getRegionSizes(board.getOpp(p)).size();
         for (Move m : legal) {
             board.makeMove(m);
-            int mAfter = board.getRegionSizes(p).size();
-            if (board.piecesContiguous(p)) {
+            ArrayList<Integer> my = board.getRegionSizes(p);
+            int mAfter = my.size();
+            if (mAfter == 1) {
                 return WINNING_VALUE;
             }
-            int oAfter = board.getRegionSizes(board.getOpp(p)).size();
+            ArrayList<Integer> opp = board.getRegionSizes(board.getOpp(p));
+            int oAfter = opp.size();
             board.retract();
-            ans.add(((mGroup - mAfter) - (oGroup - oAfter)) * 20);
+            ans.add(((mGroup - mAfter) - (oGroup - oAfter)
+                    - board.sum(my) + board.sum(opp)) * 20);
         }
         return largest(ans);
     }
@@ -161,7 +164,7 @@ class MachinePlayer extends Player {
         }
         Move best = legal.get(0);
         for (Move m : legal) {
-
+            System.out.println(m);
             Board temp = new Board(board);
             temp.makeMove(best);
             int compare = heuristic(temp);
@@ -173,7 +176,7 @@ class MachinePlayer extends Player {
                 best = m;
                 alpha = Double.max(alpha, (double) board.getValue());
                 if (!me) {
-                    alpha += 2;
+                    alpha += 10;
                 }
                 board.retract();
                 if (alpha >= beta) {
@@ -199,7 +202,6 @@ class MachinePlayer extends Player {
 
         Move best = legal.get(0);
         for (Move m : legal) {
-
             Board temp = new Board(board);
             temp.makeMove(best);
             int compare = heuristic(temp);
@@ -211,7 +213,7 @@ class MachinePlayer extends Player {
                 best = m;
                 beta = Double.min(beta, (double) board.getValue());
                 if (!me) {
-                    beta -= 2;
+                    beta -= 10;
                 }
                 board.retract();
                 if (alpha >= beta) {
@@ -253,7 +255,7 @@ class MachinePlayer extends Player {
                 board.retract();
                 alpha = Double.max(alpha, (double) responseVal);
                 if (!me) {
-                    alpha += 2;
+                    alpha += 10;
                 }
                 if (alpha >= beta) {
                     board.retract();
@@ -288,7 +290,9 @@ class MachinePlayer extends Player {
             int compare = heuristic(temp);
 
             board.makeMove(m);
+            System.out.println(board.toString());
             Move response = findMax(board, depth - 1, alpha, beta, !me);
+            System.out.println(response);
             board.makeMove(response);
             int responseVal = heuristic(board);
 
@@ -297,7 +301,7 @@ class MachinePlayer extends Player {
                 board.retract();
                 beta = Double.min(beta, (double) responseVal);
                 if (!me) {
-                    beta -= 2;
+                    beta -= 10;
                 }
                 if (alpha >= beta) {
                     board.retract();

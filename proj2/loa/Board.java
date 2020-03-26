@@ -492,7 +492,7 @@ class Board {
     /**
      * Returns the Sum of element in array A.
      */
-    private int sum(ArrayList<Integer> a) {
+    public int sum(ArrayList<Integer> a) {
         int ans = 0;
         for (int i : a) {
             ans += i;
@@ -504,7 +504,7 @@ class Board {
      * Return the sizes of all the regions in the current union-find
      * structure for side S.
      */
-    List<Integer> getRegionSizes(Piece s) {
+    ArrayList<Integer> getRegionSizes(Piece s) {
         computeRegions();
         if (s == WP) {
             return _whiteRegionSizes;
