@@ -4,8 +4,6 @@ package loa;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Collections;
 
 import static org.junit.Assert.*;
 
@@ -66,7 +64,7 @@ public class BoardTest {
     };
 
     /** A position with only one black. */
-    static final Piece[][] BOARDBlack = {
+    static final Piece[][] BOARDBLACK = {
             { EMP, EMP, EMP, EMP, EMP, EMP, EMP, EMP },
             { EMP, EMP, EMP, EMP, EMP, EMP, EMP, EMP },
             { EMP, EMP, EMP, EMP, EMP, EMP, EMP, EMP },

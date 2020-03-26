@@ -100,7 +100,7 @@ class Board {
     }
 
     /**
-     * Return the square from ALLSQUARES in board at index i.
+     * Return the square from ALLSQUARES in board at index I.
      */
     Square getSq(int i) {
         return ALL_SQUARES[i];
@@ -169,10 +169,11 @@ class Board {
         } else {
             _turn = BP;
         }
+        _subsetsInitialized = false;
     }
 
     /**
-     * Actually move piece from - to.
+     * Actually move piece FROM - TO.
      */
     void actualMove(Square from, Square to) {
         int temp = from.index();
@@ -182,7 +183,7 @@ class Board {
 
 
     /**
-     * Returns true if the move is a capture move.
+     * Returns true if the MOVE is a capture move.
      */
     private Boolean isCapture(Move move) {
         Square from = move.getFrom();
@@ -250,7 +251,7 @@ class Board {
     }
 
     /**
-     * Count the total amount of pieces on the LOA of from - to.
+     * Return the total amount of pieces on the LOA of FROM - TO.
      */
     public int countPieces(Square from, Square to) {
         int dir = from.direction(to);
@@ -324,7 +325,7 @@ class Board {
      * null.  If the game has ended in a tie, returns EMP.
      */
     Piece winner() {
-        if (_moves.size() > _moveLimit) {
+        if (_moves.size() >= _moveLimit) {
             return EMP;
         }
         if (!_winnerKnown) {
@@ -349,7 +350,6 @@ class Board {
      */
     public Move lastmove() {
         Move temp = _moves.get(_moves.size() - 1);
-        //_moves.remove(_moves.size() - 1);
         return temp;
     }
 
@@ -400,9 +400,10 @@ class Board {
      * Return the size of the as-yet unvisited cluster of squares
      * containing P at and adjacent to SQ.  VISITED indicates squares that
      * have already been processed or are in different clusters.  Update
-     * VISITED to reflect squares counted.
+     * VISITED to reflect squares counted. Counts ORIG if sq is origin.
      */
-    private int numContig(Square sq, boolean[][] visited, Piece p, boolean orig) {
+    private int numContig(Square sq, boolean[][] visited,
+                          Piece p, boolean orig) {
         if (orig && get(sq) == EMP) {
             return 0;
         }
@@ -450,12 +451,14 @@ class Board {
         int countW = 0;
         int countB = 0;
         while (sum(_whiteRegionSizes) != whitePiece) {
-            _whiteRegionSizes.add(numContig(ALL_SQUARES[countW], whiteVis, WP, true));
+            _whiteRegionSizes.add
+                    (numContig(ALL_SQUARES[countW], whiteVis, WP, true));
             countW += 1;
             update(whiteVis);
         }
         while (sum(_blackRegionSizes) != blackPiece) {
-            _blackRegionSizes.add(numContig(ALL_SQUARES[countB], blackVis, BP, true));
+            _blackRegionSizes.add
+                    (numContig(ALL_SQUARES[countB], blackVis, BP, true));
             int a = _blackRegionSizes.get(countB);
             boolean b = blackVis[0][3];
             countB += 1;
@@ -465,14 +468,15 @@ class Board {
         _blackRegionSizes.removeAll(Collections.singleton(0));
         Collections.sort(_whiteRegionSizes, Collections.reverseOrder());
         Collections.sort(_blackRegionSizes, Collections.reverseOrder());
-        if (_blackRegionSizes.size() == 1 || _whiteRegionSizes.size() == 1) {
+        if (_blackRegionSizes.size() == 1 || _whiteRegionSizes.size() == 1
+                || movesMade() >= _moveLimit) {
             _winnerKnown = true;
         }
         _subsetsInitialized = true;
     }
 
     /**
-     * Update visited for piece p starting from square.
+     * Update VISITED for piece p starting from square.
      */
     private void update(boolean[][] visited) {
         for (Square target : connected) {
@@ -486,7 +490,7 @@ class Board {
     }
 
     /**
-     * Returns the Sum of element in array a.
+     * Returns the Sum of element in array A.
      */
     private int sum(ArrayList<Integer> a) {
         int ans = 0;
@@ -515,16 +519,15 @@ class Board {
     public Square forTest() {
         return ALL_SQUARES[47];
     }
-
     /**
-     * Get the movelimit.
+     * Return the movelimit.
      */
     public int getLimit() {
         return _moveLimit;
     }
 
     /**
-     * Get opponent considering Piece p.
+     * Return opponent considering Piece P.
      */
     public Piece getOpp(Piece p) {
         if (p == WP) {
@@ -534,12 +537,12 @@ class Board {
         }
     }
 
-    /** Set estimated value of board. */
+    /** Set estimated value of board to N. */
     public void setValue(int n) {
         _estimate = n;
     }
 
-    /** Get estimated of board. */
+    /** Return the estimated of board. */
     public int getValue() {
         return _estimate;
     }
@@ -560,7 +563,7 @@ class Board {
     };
 
     /**
-     * Caches square with pieces connected with each other
+     * Caches square with pieces connected with each other.
      */
     private ArrayList<Square> connected = new ArrayList<>();
 
@@ -575,7 +578,8 @@ class Board {
     private ArrayList<Piece> _koma = new ArrayList<>();
 
     /**
-     * List of all captured piece's original place, or null if is not a capture move.
+     * List of all captured piece's original place,
+     * or null if is not a capture move.
      */
     private ArrayList<Square> _prev = new ArrayList<>();
 

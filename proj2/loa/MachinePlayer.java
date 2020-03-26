@@ -3,7 +3,6 @@
 package loa;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static loa.Piece.*;
 
@@ -110,36 +109,36 @@ class MachinePlayer extends Player {
      * Return a search depth for the current position.
      */
     private int chooseDepth() {
-        return 3;
+        return 4;
     }
 
     // FIXME: Other methods, variables here.
 
     /**
-     * Assigns estimated values to the each board considering
-     * all possible moves.
+     * Assigns estimated values to the each BOARD considering
+     * all possible moves Returns largest value.
      */
     private int heuristic(Board board) {
         ArrayList<Move> legal = board.legalMoves();
         ArrayList<Integer> ans = new ArrayList<>();
         Piece p = side();
-        int Mgroup = board.getRegionSizes(p).size();
-        int Ogroup = board.getRegionSizes(board.getOpp(p)).size();
+        int mGroup = board.getRegionSizes(p).size();
+        int oGroup = board.getRegionSizes(board.getOpp(p)).size();
         for (Move m : legal) {
             board.makeMove(m);
-            int Mafter = board.getRegionSizes(p).size();
+            int mAfter = board.getRegionSizes(p).size();
             if (board.piecesContiguous(p)) {
                 return WINNING_VALUE;
             }
-            int Oafter = board.getRegionSizes(board.getOpp(p)).size();
+            int oAfter = board.getRegionSizes(board.getOpp(p)).size();
             board.retract();
-            ans.add(((Mgroup - Mafter) - (Ogroup - Oafter)) * 20);  // gives board score here
+            ans.add(((mGroup - mAfter) - (oGroup - oAfter)) * 20);
         }
         return largest(ans);
     }
 
     /**
-     * Returns largest Integer in Arraylist a.
+     * Returns largest Integer in Arraylist A.
      */
     private int largest(ArrayList<Integer> a) {
         int ans = -INFTY;
@@ -153,7 +152,8 @@ class MachinePlayer extends Player {
 
     /**
      * Static evaluation.
-     * Find a single layer of move in board where alpha < beta and returns best move.
+     * Find a single layer of move in BOARD
+     * where ALPHA < BETA and returns best move.
      */
     private Move simpleFindMax(Board board, double alpha, double beta) {
         ArrayList<Move> legal = board.legalMoves();
@@ -185,7 +185,8 @@ class MachinePlayer extends Player {
 
     /**
      * Static evaluation.
-     * Find a single layer of move in board where alpha > beta and returns best move.
+     * Find a single layer of move in BOARD
+     * where ALPHA > BETA and returns best move.
      */
     private Move simpleFindMin(Board board, double alpha, double beta) {
         ArrayList<Move> legal = board.legalMoves();
@@ -216,6 +217,10 @@ class MachinePlayer extends Player {
         return best;
     }
 
+    /**
+     * Return the next move in BOARD considering DEPTH and
+     * ALPHA BETA to prune from maximizing player's perspective.
+     */
     private Move findMax(Board board, int depth, double alpha, double beta) {
         if (depth == 0 || board.gameOver()) {
             return simpleFindMax(board, alpha, beta);
@@ -254,6 +259,10 @@ class MachinePlayer extends Player {
         return best;
     }
 
+    /**
+     * Return the next move in BOARD considering DEPTH and
+     * ALPHA BETA to prune from minimizing player's perspective.
+     */
     private Move findMin(Board board, int depth, double alpha, double beta) {
         if (depth == 0 || board.gameOver()) {
             return simpleFindMin(board, alpha, beta);
