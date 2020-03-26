@@ -169,7 +169,6 @@ class Board {
         } else {
             _turn = BP;
         }
-        _subsetsInitialized = false;
     }
 
     /**
