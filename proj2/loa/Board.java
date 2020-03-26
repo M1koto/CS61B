@@ -542,6 +542,35 @@ class Board {
         _estimate = n;
     }
 
+    /** Return Sq 4. */
+    public Square four() {
+        return ALL_SQUARES[4];
+    }
+    /** Return Sq 22. */
+    public Square twoTwo() {
+        return ALL_SQUARES[22];
+    }
+
+    /** Return Sq 27. */
+    public Piece twoSev() {
+        return get(ALL_SQUARES[27]);
+    }
+
+    /** Return Sq 28. */
+    public Piece twoEight() {
+        return get(ALL_SQUARES[28]);
+    }
+
+    /** Return Sq 35. */
+    public Piece thrFive() {
+        return get(ALL_SQUARES[35]);
+    }
+
+    /** Return Sq 36. */
+    public Piece thrSix() {
+        return get(ALL_SQUARES[36]);
+    }
+
     /** Return the estimated of board. */
     public int getValue() {
         return _estimate;

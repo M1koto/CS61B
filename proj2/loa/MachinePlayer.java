@@ -71,7 +71,11 @@ class MachinePlayer extends Player {
         if (side() == WP) {
             value = findMove(work, chooseDepth(), true, 1, -INFTY, INFTY);
         } else {
-            value = findMove(work, chooseDepth(), true, -1, -INFTY, INFTY);
+            if (getBoard().movesMade() == 0) {
+                _foundMove = Move.mv(work.four(), work.twoTwo());
+            } else {
+                value = findMove(work, chooseDepth(), true, -1, -INFTY, INFTY);
+            }
         }
         return _foundMove;
     }
@@ -90,7 +94,7 @@ class MachinePlayer extends Player {
         if (board.gameOver()) {
             return INFTY;
         } else if (depth == 0) {
-            return heuristic(board);
+            return heuristic(board, side());
         } else if (saveMove) {
             if (sense == 1) {
                 _foundMove = findMax(board, depth, alpha, beta, true);
@@ -98,7 +102,7 @@ class MachinePlayer extends Player {
                 _foundMove = findMin(board, depth, alpha, beta, true);
             }
             board.makeMove(_foundMove);
-            int ans = heuristic(board);
+            int ans = heuristic(board, side());
             board.retract();
             return ans;
         }
@@ -109,7 +113,7 @@ class MachinePlayer extends Player {
      * Return a search depth for the current position.
      */
     private int chooseDepth() {
-        return 3;
+        return 4;
     }
 
 
@@ -117,26 +121,43 @@ class MachinePlayer extends Player {
      * Assigns estimated values to the each BOARD considering
      * all possible moves Returns largest value.
      */
-    private int heuristic(Board board) {
-        ArrayList<Move> legal = board.legalMoves();
-        ArrayList<Integer> ans = new ArrayList<>();
-        Piece p = side();
-        int mGroup = board.getRegionSizes(p).size();
-        int oGroup = board.getRegionSizes(board.getOpp(p)).size();
-        for (Move m : legal) {
-            board.makeMove(m);
-            ArrayList<Integer> my = board.getRegionSizes(p);
-            int mAfter = my.size();
-            if (mAfter == 1) {
-                return WINNING_VALUE;
-            }
-            ArrayList<Integer> opp = board.getRegionSizes(board.getOpp(p));
-            int oAfter = opp.size();
-            board.retract();
-            ans.add(((mGroup - mAfter) - (oGroup - oAfter)
-                    - board.sum(my) + board.sum(opp)) * 20);
+    private int heuristic(Board board, Piece p) {
+        ArrayList<Integer> mGroup = board.getRegionSizes(p);
+        ArrayList<Integer> oGroup = board.getRegionSizes(board.getOpp(p));
+        if (board.gameOver() && board.winner() == p) {
+            return INFTY;
+        } else if (board.winner() == board.getOpp(p)) {
+            return -INFTY;
+        } else {
+            return ((oGroup.size() - mGroup.size()) * 5
+                    - board.sum(mGroup) + board.sum(oGroup) +
+                    middle(board, p, board.getOpp(p))) * 10;
         }
-        return largest(ans);
+    }
+    /** Return weights for mid square in BOARD considering P and OPP. */
+    private int middle(Board board, Piece p, Piece opp) {
+        int ans = 0;
+        if (board.twoEight() == p) {
+            ans += 1;
+        } else if (board.twoEight() == opp) {
+            ans -= 1;
+        }
+        if (board.twoSev() == p) {
+            ans += 1;
+        } else if (board.twoSev() == opp) {
+            ans -= 1;
+        }
+        if (board.thrFive() == p) {
+            ans += 1;
+        } else if (board.thrFive() == opp) {
+            ans -= 1;
+        }
+        if (board.thrSix() == p) {
+            ans += 1;
+        } else if (board.thrSix() == opp) {
+            ans -= 1;
+        }
+        return ans * 20;
     }
 
     /**
@@ -160,23 +181,24 @@ class MachinePlayer extends Player {
     private Move simpleFindMax(Board board, double alpha, double beta, boolean me) {
         ArrayList<Move> legal = board.legalMoves();
         if (board.winner() != null) {
-            return board.lastmove();
+            //System.out.println(board.toString());
+            //System.out.println("from max");
+            return null;
         }
         Move best = legal.get(0);
         for (Move m : legal) {
-            System.out.println(m);
             Board temp = new Board(board);
             temp.makeMove(best);
-            int compare = heuristic(temp);
+            int compare = heuristic(temp, WP);
 
             board.makeMove(m);
-            board.setValue(heuristic(board));
+            board.setValue(heuristic(board, WP));
 
             if (board.getValue() >= compare) {
                 best = m;
                 alpha = Double.max(alpha, (double) board.getValue());
                 if (!me) {
-                    alpha += 10;
+                    alpha += 100;
                 }
                 board.retract();
                 if (alpha >= beta) {
@@ -197,23 +219,25 @@ class MachinePlayer extends Player {
     private Move simpleFindMin(Board board, double alpha, double beta, boolean me) {
         ArrayList<Move> legal = board.legalMoves();
         if (board.winner() != null) {
-            return board.lastmove();
+            //System.out.println(board.toString());
+            //System.out.println("from min");
+            return null;
         }
 
         Move best = legal.get(0);
         for (Move m : legal) {
             Board temp = new Board(board);
             temp.makeMove(best);
-            int compare = heuristic(temp);
+            int compare = heuristic(temp, BP);
 
             board.makeMove(m);
-            board.setValue(heuristic(board));
+            board.setValue(heuristic(board, BP));
 
             if (board.getValue() <= compare) {
                 best = m;
                 beta = Double.min(beta, (double) board.getValue());
                 if (!me) {
-                    beta -= 10;
+                    beta -= 100;
                 }
                 board.retract();
                 if (alpha >= beta) {
@@ -228,7 +252,7 @@ class MachinePlayer extends Player {
 
     /**
      * Return the next move in BOARD considering DEPTH and
-     * ALPHA BETA to prune from maximizing player's perspective.
+     * ALPHA BETA to prune from maximizing player's perspective. White.
      */
     private Move findMax(Board board, int depth, double alpha, double beta, boolean me) {
         if (depth == 0 || board.gameOver()) {
@@ -242,20 +266,30 @@ class MachinePlayer extends Player {
 
             Board temp = new Board(board);
             temp.makeMove(best);
-            int compare = heuristic(temp);
-
+            int compare = heuristic(temp, WP);
 
             board.makeMove(m);
+
             Move response = findMin(board, depth - 1, alpha, beta, !me);
-            board.makeMove(response);
-            int responseVal = heuristic(board);
+
+            int responseVal = heuristic(board, WP);
+            //System.out.println(responseVal);
+            if (response != null) {
+                board.makeMove(response);
+                responseVal = heuristic(board, WP);
+                board.retract();
+            }
 
             if (responseVal >= compare) {
+                if (response == null) {
+                    Move ret = board.lastmove();
+                    board.retract();
+                    return ret;
+                }
                 best = m;
-                board.retract();
                 alpha = Double.max(alpha, (double) responseVal);
                 if (!me) {
-                    alpha += 10;
+                    alpha += 100;
                 }
                 if (alpha >= beta) {
                     board.retract();
@@ -265,7 +299,6 @@ class MachinePlayer extends Player {
                 }
             } else {
                 board.retract();
-                board.retract();
             }
         }
         return best;
@@ -273,7 +306,7 @@ class MachinePlayer extends Player {
 
     /**
      * Return the next move in BOARD considering DEPTH and
-     * ALPHA BETA to prune from minimizing player's perspective.
+     * ALPHA BETA to prune from minimizing player's perspective. Black.
      */
     private Move findMin(Board board, int depth, double alpha, double beta, boolean me) {
         if (depth == 0 || board.gameOver()) {
@@ -287,21 +320,30 @@ class MachinePlayer extends Player {
 
             Board temp = new Board(board);
             temp.makeMove(best);
-            int compare = heuristic(temp);
+            int compare = heuristic(temp, BP);
 
             board.makeMove(m);
-            System.out.println(board.toString());
+
             Move response = findMax(board, depth - 1, alpha, beta, !me);
-            System.out.println(response);
-            board.makeMove(response);
-            int responseVal = heuristic(board);
+
+            int responseVal = heuristic(board, BP);
+            //System.out.println(responseVal);
+            if (response != null) {
+                board.makeMove(response);
+                responseVal = heuristic(board, BP);
+                board.retract();
+            }
 
             if (responseVal <= compare) {
+                if (response == null) {
+                    Move ret = board.lastmove();
+                    board.retract();
+                    return ret;
+                }
                 best = m;
-                board.retract();
                 beta = Double.min(beta, (double) responseVal);
                 if (!me) {
-                    beta -= 10;
+                    beta -= 100;
                 }
                 if (alpha >= beta) {
                     board.retract();
@@ -310,7 +352,6 @@ class MachinePlayer extends Player {
                     board.retract();
                 }
             } else {
-                board.retract();
                 board.retract();
             }
         }
