@@ -65,6 +65,7 @@ class MachinePlayer extends Player {
      */
     private Move searchForMove() {
         Board work = new Board(getBoard());
+        System.out.println(work.toString());
         int value;
         assert side() == work.turn();
         _foundMove = null;
@@ -112,7 +113,6 @@ class MachinePlayer extends Player {
         return 3;
     }
 
-    // FIXME: Other methods, variables here.
 
     /**
      * Assigns estimated values to the each BOARD considering
