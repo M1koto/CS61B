@@ -210,7 +210,6 @@ class MachinePlayer extends Player {
                 beta = Double.min(beta, (double) board.getValue());
                 board.retract();
                 if (alpha >= beta) {
-                    board.retract();
                     break;
                 }
             } else {
