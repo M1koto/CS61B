@@ -95,7 +95,7 @@ public class BoardTest {
         System.out.println(test.gameOver());
         test.makeMove(mv("d1-d5"));
         System.out.println(test.gameOver());
-        System.out.println(test);
+        System.out.println(2 ^ 2);
     }
 
     /** Test display */

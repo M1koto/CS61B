@@ -110,7 +110,7 @@ class MachinePlayer extends Player {
      * Return a search depth for the current position.
      */
     private int chooseDepth() {
-        return 3;
+        return 2;
     }
 
 
@@ -126,26 +126,37 @@ class MachinePlayer extends Player {
         } else if (board.winner() == board.getOpp(p)) {
             return -INFTY;
         } else {
-            return ((oGroup.size() - mGroup.size()) * 20
+            return ((oGroup.size() - mGroup.size()) * 5
                     - board.sum(mGroup) + board.sum(oGroup) +
-                    middle(board, p, board.getOpp(p)) * late(board)) * 10
-                    + lategame(board, mGroup);
+                    middle(board, p, board.getOpp(p))) * 10
+                    + midGame(board, mGroup) + lateGame(board, mGroup);
         }
     }
-
-    private int late(Board board) {
+    /**
+     * Return weight for BOARD considering A for early game.
+     */
+    private boolean early(Board board) {
         if (board.movesMade() * 4 >= board.getLimit()) {
-            return 0;
+            return false;
         }
-        return 1;
+        return true;
     }
 
     /**
-     * Return weight for BOARD considering A for lategame.
+     * Return weight for BOARD considering A for mid-game.
      */
-    private int lategame(Board board, ArrayList<Integer> a) {
+    private int midGame(Board board, ArrayList<Integer> a) {
         if (board.movesMade() * 2 >= board.getLimit()) {
             return (10 - board.sum(a)) * 100;
+        }
+        return 0;
+    }
+    /**
+     * Return weight for BOARD considering A for lategame.
+     */
+    private int lateGame(Board board, ArrayList<Integer> a) {
+        if (board.movesMade() * 3 >= board.getLimit() * 2) {
+            return largest(a) * 100;
         }
         return 0;
     }
@@ -154,6 +165,9 @@ class MachinePlayer extends Player {
      * Return weights for mid square in BOARD considering P and OPP.
      */
     private int middle(Board board, Piece p, Piece opp) {
+        if (!early(board)) {
+            return 0;
+        }
         int ans = 0;
         if (board.twoEight() == p) {
             ans += 1;
@@ -175,7 +189,7 @@ class MachinePlayer extends Player {
         } else if (board.thrSix() == opp) {
             ans -= 1;
         }
-        return ans * 200 - (board.movesMade() ^ 2);
+        return ans * 200 - (board.movesMade() * board.movesMade());
     }
 
     /**
@@ -216,7 +230,7 @@ class MachinePlayer extends Player {
                 best = m;
                 alpha = Double.max(alpha, (double) board.getValue());
                 if (!me) {
-                    alpha += 100;
+                    alpha += 30;
                 }
                 board.retract();
                 if (alpha >= beta) {
@@ -255,7 +269,7 @@ class MachinePlayer extends Player {
                 best = m;
                 beta = Double.min(beta, (double) board.getValue());
                 if (!me) {
-                    beta -= 100;
+                    beta -= 30;
                 }
                 board.retract();
                 if (alpha >= beta) {
@@ -307,7 +321,7 @@ class MachinePlayer extends Player {
                 best = m;
                 alpha = Double.max(alpha, (double) responseVal);
                 if (!me) {
-                    alpha += 100;
+                    alpha += 30;
                 }
                 if (alpha >= beta) {
                     board.retract();
@@ -361,7 +375,7 @@ class MachinePlayer extends Player {
                 best = m;
                 beta = Double.min(beta, (double) responseVal);
                 if (!me) {
-                    beta -= 100;
+                    beta -= 30;
                 }
                 if (alpha >= beta) {
                     board.retract();
