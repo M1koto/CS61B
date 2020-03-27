@@ -71,11 +71,8 @@ class MachinePlayer extends Player {
         if (side() == WP) {
             value = findMove(work, chooseDepth(), true, 1, -INFTY, INFTY);
         } else {
-            if (getBoard().movesMade() == 0) {
-                _foundMove = Move.mv(work.four(), work.twoTwo());
-            } else {
-                value = findMove(work, chooseDepth(), true, -1, -INFTY, INFTY);
-            }
+            value = findMove(work, chooseDepth(), true, -1, -INFTY, INFTY);
+
         }
         return _foundMove;
     }
@@ -143,7 +140,9 @@ class MachinePlayer extends Player {
         return 1;
     }
 
-    /** Return weight for BOARD considering A for lategame. */
+    /**
+     * Return weight for BOARD considering A for lategame.
+     */
     private int lategame(Board board, ArrayList<Integer> a) {
         if (board.movesMade() * 2 >= board.getLimit()) {
             return (10 - board.sum(a)) * 200;
@@ -151,7 +150,9 @@ class MachinePlayer extends Player {
         return 0;
     }
 
-    /** Return weights for mid square in BOARD considering P and OPP. */
+    /**
+     * Return weights for mid square in BOARD considering P and OPP.
+     */
     private int middle(Board board, Piece p, Piece opp) {
         int ans = 0;
         if (board.twoEight() == p) {
