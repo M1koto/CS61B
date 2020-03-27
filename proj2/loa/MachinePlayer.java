@@ -129,7 +129,7 @@ class MachinePlayer extends Player {
         } else if (board.winner() == board.getOpp(p)) {
             return -INFTY;
         } else {
-            return ((oGroup.size() - mGroup.size()) * 5
+            return ((oGroup.size() - mGroup.size()) * 20
                     - board.sum(mGroup) + board.sum(oGroup) +
                     middle(board, p, board.getOpp(p)) * earlygame(board)) * 10
                     + lategame(board, mGroup);
@@ -137,8 +137,8 @@ class MachinePlayer extends Player {
     }
 
     private int earlygame(Board board) {
-        if (board.movesMade() * 3 <= board.getLimit()) {
-            return 20;
+        if (board.movesMade() * 5 <= board.getLimit()) {
+            return 200;
         }
         return 1;
     }
@@ -146,7 +146,7 @@ class MachinePlayer extends Player {
     /** Return weight for BOARD considering A for lategame. */
     private int lategame(Board board, ArrayList<Integer> a) {
         if (board.movesMade() * 2 >= board.getLimit()) {
-            return (board.sum(a) - 8) * 200;
+            return (10 - board.sum(a)) * 200;
         }
         return 0;
     }
@@ -174,7 +174,7 @@ class MachinePlayer extends Player {
         } else if (board.thrSix() == opp) {
             ans -= 1;
         }
-        return ans * 20 - (board.movesMade() ^ 2);
+        return ans * 200 - (board.movesMade() ^ 2);
     }
 
     /**
