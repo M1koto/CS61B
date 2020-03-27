@@ -110,7 +110,7 @@ class MachinePlayer extends Player {
      * Return a search depth for the current position.
      */
     private int chooseDepth() {
-        return 2;
+        return 3;
     }
 
 
@@ -126,27 +126,25 @@ class MachinePlayer extends Player {
         } else if (board.winner() == board.getOpp(p)) {
             return -INFTY;
         } else {
-            return ((oGroup.size() - mGroup.size()) * 5
-                    - board.sum(mGroup) + board.sum(oGroup)) + middle(board, p, board.getOpp(p))
-                    + midGame(board, mGroup) + lateGame(board, mGroup);
+            return (oGroup.size() - mGroup.size()) * board.movesMade() * 5
+                    + middle(board, p, board.getOpp(p))
+                    + midGame(board, mGroup, oGroup) + lateGame(board, mGroup);
         }
     }
+
     /**
      * Return weight for BOARD considering A for early game.
      */
     private boolean early(Board board) {
-        if (board.movesMade() * 4 >= board.getLimit()) {
-            return false;
-        }
-        return true;
+        return board.movesMade() * 4 < board.getLimit();
     }
 
     /**
      * Return weight for BOARD considering A for mid-game.
      */
-    private int midGame(Board board, ArrayList<Integer> a) {
+    private int midGame(Board board, ArrayList<Integer> a, ArrayList<Integer> o) {
         if (board.movesMade() * 3 >= board.getLimit()) {
-            return (10 - board.sum(a)) * 100;
+            return (board.sum(o) -  board.sum(a)) * 100;
         }
         return 0;
     }
@@ -155,7 +153,7 @@ class MachinePlayer extends Player {
      */
     private int lateGame(Board board, ArrayList<Integer> a) {
         if (board.movesMade() * 2 >= board.getLimit()) {
-            return largest(a) * 100;
+            return largest(a) * 50;
         }
         return 0;
     }
@@ -188,7 +186,7 @@ class MachinePlayer extends Player {
         } else if (board.thrSix() == opp) {
             ans -= 1;
         }
-        return ans * 200 - (board.movesMade() * board.movesMade());
+        return ans * 100;
     }
 
     /**

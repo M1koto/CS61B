@@ -542,14 +542,6 @@ class Board {
         _estimate = n;
     }
 
-    /** Return Sq 4. */
-    public Square four() {
-        return ALL_SQUARES[4];
-    }
-    /** Return Sq 22. */
-    public Square twoTwo() {
-        return ALL_SQUARES[22];
-    }
 
     /** Return Sq 27. */
     public Piece twoSev() {
