@@ -122,6 +122,7 @@ class BoardWidget extends Pad {
     /** Handle a mouse-button push on S. */
     private void mousePressed(Square s) {
         // FIXME
+
         repaint();
     }
 
