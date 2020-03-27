@@ -126,7 +126,7 @@ class MachinePlayer extends Player {
         } else if (board.winner() == board.getOpp(p)) {
             return -INFTY;
         } else {
-            return (oGroup.size() - mGroup.size()) * board.movesMade() * 5
+            return (oGroup.size() - mGroup.size()) * 10
                     + middle(board, p, board.getOpp(p))
                     + midGame(board, mGroup, oGroup) + lateGame(board, mGroup);
         }
@@ -145,7 +145,7 @@ class MachinePlayer extends Player {
     private int midGame(Board board, ArrayList<Integer> a, ArrayList<Integer> o) {
         if (board.movesMade() * 4 >= board.getLimit()
                 && board.movesMade() * 2 <= board.getLimit() * 3) { // >15
-            return (board.sum(o) -  board.sum(a)) * 50;
+            return (board.sum(o) -  board.sum(a)) * 10;
         }
         return 0;
     }
@@ -154,7 +154,7 @@ class MachinePlayer extends Player {
      */
     private int lateGame(Board board, ArrayList<Integer> a) {
         if (board.movesMade() * 3 >= board.getLimit() * 2) { //45
-            return largest(a) * 20 + ((10 - a.size()) * 50);
+            return largest(a) * 10 + ((10 - a.size()) * 10);
         }
         return 0;
     }
@@ -187,7 +187,7 @@ class MachinePlayer extends Player {
         } else if (board.thrSix() == opp) {
             ans -= 1;
         }
-        return ans * 100;
+        return ans * 50;
     }
 
     /**
