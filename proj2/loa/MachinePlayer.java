@@ -144,7 +144,7 @@ class MachinePlayer extends Player {
      */
     private int midGame(Board board, ArrayList<Integer> a, ArrayList<Integer> o) {
         if (board.movesMade() * 3 >= board.getLimit()) {
-            return (board.sum(o) -  board.sum(a)) * 100;
+            return (board.sum(o) -  board.sum(a)) * 80;
         }
         return 0;
     }
@@ -152,7 +152,7 @@ class MachinePlayer extends Player {
      * Return weight for BOARD considering A for lategame.
      */
     private int lateGame(Board board, ArrayList<Integer> a) {
-        if (board.movesMade() * 2 >= board.getLimit()) {
+        if (board.movesMade() * 3 >= board.getLimit() * 2) {
             return largest(a) * 50;
         }
         return 0;
