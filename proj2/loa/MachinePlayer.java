@@ -136,15 +136,16 @@ class MachinePlayer extends Player {
      * Return weight for BOARD considering A for early game.
      */
     private boolean early(Board board) {
-        return board.movesMade() * 4 < board.getLimit();
+        return board.movesMade() * 4 < board.getLimit(); // <15
     }
 
     /**
      * Return weight for BOARD considering A for mid-game.
      */
     private int midGame(Board board, ArrayList<Integer> a, ArrayList<Integer> o) {
-        if (board.movesMade() * 3 >= board.getLimit()) {
-            return (board.sum(o) -  board.sum(a)) * 80;
+        if (board.movesMade() * 4 >= board.getLimit()
+                && board.movesMade() * 2 <= board.getLimit() * 3) { // >15
+            return (board.sum(o) -  board.sum(a)) * 50;
         }
         return 0;
     }
@@ -152,8 +153,8 @@ class MachinePlayer extends Player {
      * Return weight for BOARD considering A for lategame.
      */
     private int lateGame(Board board, ArrayList<Integer> a) {
-        if (board.movesMade() * 3 >= board.getLimit() * 2) {
-            return largest(a) * 50;
+        if (board.movesMade() * 3 >= board.getLimit() * 2) { //45
+            return largest(a) * 20 + ((10 - a.size()) * 50);
         }
         return 0;
     }
