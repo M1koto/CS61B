@@ -112,7 +112,7 @@ class MachinePlayer extends Player {
      * Return a search depth for the current position.
      */
     private int chooseDepth() {
-        return 4;
+        return 3;
     }
 
 
@@ -127,7 +127,7 @@ class MachinePlayer extends Player {
         } else if (board.winner() == board.getOpp(p)) {
             return -INFTY;
         } else {
-            return (oGroup.size() - mGroup.size()) * 3
+            return (oGroup.size() - mGroup.size()) * 2
                     + board.sum(oGroup) - board.sum(mGroup)
                     + quad(board, p) + lateGame(board, mGroup, oGroup);
             //+ middle(board, p, board.getOpp(p))
@@ -136,7 +136,7 @@ class MachinePlayer extends Player {
     }
 
     private int quad(Board board, Piece p) {
-        if (!early(board) || p != _me) {
+        if (!middle(board) || p != _me) {
             return 0;
         }
         int count = 0;
@@ -151,14 +151,15 @@ class MachinePlayer extends Player {
                 }
             }
         }
-        return count * 3;
+        return count * 5;
     }
 
     /**
      * Return weight for BOARD considering A for early game.
      */
-    private boolean early(Board board) {
-        return board.movesMade() * 3 < board.getLimit(); // <15
+    private boolean middle(Board board) {
+        return board.movesMade() * 4 >= board.getLimit()
+                && board.movesMade() * 3 <= board.getLimit() * 2; // <15
     }
 
     /**
@@ -186,7 +187,7 @@ class MachinePlayer extends Player {
      * Return weights for mid square in BOARD considering P and OPP.
      */
     private int middle(Board board, Piece p, Piece opp) {
-        if (!early(board)) {
+        if (!middle(board)) {
             return 0;
         }
         int ans = 0;
@@ -251,7 +252,7 @@ class MachinePlayer extends Player {
                 best = m;
                 alpha = Double.max(alpha, (double) board.getValue());
                 if (!me) {
-                    alpha += 5;
+                    alpha += 2;
                 }
                 board.retract();
                 if (alpha >= beta) {
@@ -290,7 +291,7 @@ class MachinePlayer extends Player {
                 best = m;
                 beta = Double.min(beta, (double) board.getValue());
                 if (!me) {
-                    beta -= 5;
+                    beta -= 2;
                 }
                 board.retract();
                 if (alpha >= beta) {
@@ -342,7 +343,7 @@ class MachinePlayer extends Player {
                 best = m;
                 alpha = Double.max(alpha, (double) responseVal);
                 if (!me) {
-                    alpha += 5;
+                    alpha += 2;
                 }
                 if (alpha >= beta) {
                     board.retract();
@@ -396,7 +397,7 @@ class MachinePlayer extends Player {
                 best = m;
                 beta = Double.min(beta, (double) responseVal);
                 if (!me) {
-                    beta -= 5;
+                    beta -= 2;
                 }
                 if (alpha >= beta) {
                     board.retract();
