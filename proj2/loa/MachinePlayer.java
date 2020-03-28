@@ -128,16 +128,14 @@ class MachinePlayer extends Player {
             return -INFTY;
         } else {
             return (oGroup.size() - mGroup.size()) * 3
-                    + board.sum(oGroup) - board.sum(mGroup) + quad(board, p);
+                    + board.sum(oGroup) - board.sum(mGroup)
+                    + quad(board, p) + lateGame(board, mGroup, oGroup);
             //+ middle(board, p, board.getOpp(p))
             //+ midGame(board, mGroup, oGroup) + lateGame(board, mGroup);
         }
     }
 
     private int quad(Board board, Piece p) {
-        if (p != _me) {
-            return 0;
-        }
         int count = 0;
         for (int i = 0; i < board.getSize() * board.getSize(); i++) {
             Square sq = board.getSq(i);
