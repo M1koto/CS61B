@@ -148,7 +148,7 @@ class MachinePlayer extends Player {
                 }
             }
         }
-        return count / 4;
+        return count * 3;
     }
 
     /**
