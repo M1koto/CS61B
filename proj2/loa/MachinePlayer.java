@@ -127,8 +127,7 @@ class MachinePlayer extends Player {
         } else if (board.winner() == board.getOpp(p)) {
             return -INFTY;
         } else {
-            return (oGroup.size() - mGroup.size()) * 3
-                    + board.sum(oGroup) - board.sum(mGroup)
+            return board.sum(oGroup) - board.sum(mGroup)
                     + quad(board, p) + lateGame(board, mGroup, oGroup);
             //+ middle(board, p, board.getOpp(p))
             //+ midGame(board, mGroup, oGroup) + lateGame(board, mGroup);
