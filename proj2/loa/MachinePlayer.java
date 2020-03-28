@@ -251,7 +251,7 @@ class MachinePlayer extends Player {
                 best = m;
                 alpha = Double.max(alpha, (double) board.getValue());
                 if (!me) {
-                    alpha += 2;
+                    alpha += 5;
                 }
                 board.retract();
                 if (alpha >= beta) {
@@ -290,7 +290,7 @@ class MachinePlayer extends Player {
                 best = m;
                 beta = Double.min(beta, (double) board.getValue());
                 if (!me) {
-                    beta -= 2;
+                    beta -= 5;
                 }
                 board.retract();
                 if (alpha >= beta) {
@@ -342,7 +342,7 @@ class MachinePlayer extends Player {
                 best = m;
                 alpha = Double.max(alpha, (double) responseVal);
                 if (!me) {
-                    alpha += 2;
+                    alpha += 5;
                 }
                 if (alpha >= beta) {
                     board.retract();
@@ -396,7 +396,7 @@ class MachinePlayer extends Player {
                 best = m;
                 beta = Double.min(beta, (double) responseVal);
                 if (!me) {
-                    beta -= 2;
+                    beta -= 5;
                 }
                 if (alpha >= beta) {
                     board.retract();
