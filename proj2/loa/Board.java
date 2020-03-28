@@ -543,6 +543,10 @@ class Board {
     }
 
 
+    /** Return Sq i. */
+    public Piece square(int i) {
+        return get(ALL_SQUARES[i]);
+    }
     /** Return Sq 27. */
     public Piece twoSev() {
         return get(ALL_SQUARES[27]);

@@ -69,8 +69,10 @@ class MachinePlayer extends Player {
         assert side() == work.turn();
         _foundMove = null;
         if (side() == WP) {
+            _me = WP;
             value = findMove(work, chooseDepth(), true, 1, -INFTY, INFTY);
         } else {
+            _me = BP;
             value = findMove(work, chooseDepth(), true, -1, -INFTY, INFTY);
 
         }
@@ -115,8 +117,7 @@ class MachinePlayer extends Player {
 
 
     /**
-     * Assigns estimated values to the each BOARD considering
-     * all possible moves Returns largest value.
+     * Assigns estimated values to the each BOARD considering P.
      */
     private int heuristic(Board board, Piece p) {
         ArrayList<Integer> mGroup = board.getRegionSizes(p);
@@ -127,10 +128,29 @@ class MachinePlayer extends Player {
             return -INFTY;
         } else {
             return (oGroup.size() - mGroup.size()) * 3
-                    + board.sum(oGroup) - board.sum(mGroup) + lateGame(board, mGroup, oGroup);
-                    //+ middle(board, p, board.getOpp(p))
-                    //+ midGame(board, mGroup, oGroup) + lateGame(board, mGroup);
+                    + board.sum(oGroup) - board.sum(mGroup) + quad(board, p);
+            //+ middle(board, p, board.getOpp(p))
+            //+ midGame(board, mGroup, oGroup) + lateGame(board, mGroup);
         }
+    }
+
+    private int quad(Board board, Piece p) {
+        if (p != _me) {
+            return 0;
+        }
+        int count = 0;
+        for (int i = 0; i < board.getSize() * board.getSize(); i++) {
+            Square sq = board.getSq(i);
+            if (board.get(sq) == p) {
+                for (int j = 1; j < 8; j += 2) {
+                    Square target = sq.moveDest(j, 1);
+                    if (target != null && board.get(target) == p) {
+                        count ++;
+                    }
+                }
+            }
+        }
+        return count / 4;
     }
 
     /**
@@ -146,10 +166,11 @@ class MachinePlayer extends Player {
     private int midGame(Board board, ArrayList<Integer> a, ArrayList<Integer> o) {
         if (board.movesMade() * 4 >= board.getLimit()
                 && board.movesMade() * 2 <= board.getLimit() * 3) { // >15
-            return (board.sum(o) -  board.sum(a)) * 10;
+            return (board.sum(o) - board.sum(a)) * 10;
         }
         return 0;
     }
+
     /**
      * Return weight for BOARD considering A for lategame.
      */
@@ -394,4 +415,6 @@ class MachinePlayer extends Player {
      */
     private Move _foundMove;
 
+    /** Store my side. */
+    private Piece _me;
 }
