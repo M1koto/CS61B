@@ -136,7 +136,7 @@ class MachinePlayer extends Player {
     }
 
     private int quad(Board board, Piece p) {
-        if (!middle(board) || p != _me) {
+        if (p != _me) {
             return 0;
         }
         int count = 0;
@@ -151,7 +151,7 @@ class MachinePlayer extends Player {
                 }
             }
         }
-        return count * 5;
+        return count * 3;
     }
 
     /**
@@ -177,7 +177,7 @@ class MachinePlayer extends Player {
      * Return weight for BOARD considering A for lategame.
      */
     private int lateGame(Board board, ArrayList<Integer> a, ArrayList<Integer> o) {
-        if (board.movesMade() * 2 >= board.getLimit()) { //30
+        if (board.movesMade() * 3 >= board.getLimit() * 2) { //45
             return (o.size() - a.size()) * 5;
         }
         return 0;
