@@ -127,7 +127,7 @@ class MachinePlayer extends Player {
             return -INFTY;
         } else {
             return (oGroup.size() - mGroup.size()) * 3
-                    + board.sum(oGroup) - board.sum(mGroup);
+                    + board.sum(oGroup) - board.sum(mGroup) + lateGame(board, mGroup);
                     //+ middle(board, p, board.getOpp(p))
                     //+ midGame(board, mGroup, oGroup) + lateGame(board, mGroup);
         }
@@ -155,7 +155,7 @@ class MachinePlayer extends Player {
      */
     private int lateGame(Board board, ArrayList<Integer> a) {
         if (board.movesMade() * 3 >= board.getLimit() * 2) { //45
-            return largest(a) * 10 + ((10 - a.size()) * 10);
+            return (5 - a.size()) * (5 - a.size());
         }
         return 0;
     }
