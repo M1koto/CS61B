@@ -110,7 +110,7 @@ class MachinePlayer extends Player {
      * Return a search depth for the current position.
      */
     private int chooseDepth() {
-        return 3;
+        return 4;
     }
 
 
@@ -126,9 +126,10 @@ class MachinePlayer extends Player {
         } else if (board.winner() == board.getOpp(p)) {
             return -INFTY;
         } else {
-            return (oGroup.size() - mGroup.size()) * 10
-                    + middle(board, p, board.getOpp(p))
-                    + midGame(board, mGroup, oGroup) + lateGame(board, mGroup);
+            return (oGroup.size() - mGroup.size()) * 3
+                    + board.sum(oGroup) - board.sum(mGroup);
+                    //+ middle(board, p, board.getOpp(p))
+                    //+ midGame(board, mGroup, oGroup) + lateGame(board, mGroup);
         }
     }
 
@@ -228,7 +229,7 @@ class MachinePlayer extends Player {
                 best = m;
                 alpha = Double.max(alpha, (double) board.getValue());
                 if (!me) {
-                    alpha += 10;
+                    alpha += 1;
                 }
                 board.retract();
                 if (alpha >= beta) {
@@ -267,7 +268,7 @@ class MachinePlayer extends Player {
                 best = m;
                 beta = Double.min(beta, (double) board.getValue());
                 if (!me) {
-                    beta -= 10;
+                    beta -= 1;
                 }
                 board.retract();
                 if (alpha >= beta) {
@@ -319,7 +320,7 @@ class MachinePlayer extends Player {
                 best = m;
                 alpha = Double.max(alpha, (double) responseVal);
                 if (!me) {
-                    alpha += 10;
+                    alpha += 1;
                 }
                 if (alpha >= beta) {
                     board.retract();
@@ -373,7 +374,7 @@ class MachinePlayer extends Player {
                 best = m;
                 beta = Double.min(beta, (double) responseVal);
                 if (!me) {
-                    beta -= 10;
+                    beta -= 1;
                 }
                 if (alpha >= beta) {
                     board.retract();
