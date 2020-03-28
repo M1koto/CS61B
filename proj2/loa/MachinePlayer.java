@@ -128,7 +128,8 @@ class MachinePlayer extends Player {
             return -INFTY;
         } else {
             return (oGroup.size() - mGroup.size()) * 2
-                    + board.sum(oGroup) - board.sum(mGroup)
+                    + board.sum(oGroup) - board.sum(mGroup) + middle(board, p, board.getOpp(p))
+
                     + quad(board, p) + lateGame(board, mGroup, oGroup);
             //+ middle(board, p, board.getOpp(p))
             //+ midGame(board, mGroup, oGroup) + lateGame(board, mGroup);
@@ -158,8 +159,7 @@ class MachinePlayer extends Player {
      * Return weight for BOARD considering A for early game.
      */
     private boolean middle(Board board) {
-        return board.movesMade() * 4 >= board.getLimit()
-                && board.movesMade() * 3 <= board.getLimit() * 2; // <15
+        return board.movesMade() * 4 >= board.getLimit(); // <15
     }
 
     /**
