@@ -154,8 +154,8 @@ class MachinePlayer extends Player {
      * Return weight for BOARD considering A for lategame.
      */
     private int lateGame(Board board, ArrayList<Integer> a, ArrayList<Integer> o) {
-        if (board.movesMade() * 3 >= board.getLimit() * 2) { //45
-            return (a.size() - o.size()) * 10;
+        if (board.movesMade() * 2 >= board.getLimit()) { //45
+            return (a.size() - o.size()) * 5;
         }
         return 0;
     }
@@ -229,7 +229,7 @@ class MachinePlayer extends Player {
                 best = m;
                 alpha = Double.max(alpha, (double) board.getValue());
                 if (!me) {
-                    alpha += 1;
+                    alpha += 2;
                 }
                 board.retract();
                 if (alpha >= beta) {
@@ -268,7 +268,7 @@ class MachinePlayer extends Player {
                 best = m;
                 beta = Double.min(beta, (double) board.getValue());
                 if (!me) {
-                    beta -= 1;
+                    beta -= 2;
                 }
                 board.retract();
                 if (alpha >= beta) {
@@ -320,7 +320,7 @@ class MachinePlayer extends Player {
                 best = m;
                 alpha = Double.max(alpha, (double) responseVal);
                 if (!me) {
-                    alpha += 1;
+                    alpha += 2;
                 }
                 if (alpha >= beta) {
                     board.retract();
@@ -374,7 +374,7 @@ class MachinePlayer extends Player {
                 best = m;
                 beta = Double.min(beta, (double) responseVal);
                 if (!me) {
-                    beta -= 1;
+                    beta -= 2;
                 }
                 if (alpha >= beta) {
                     board.retract();
