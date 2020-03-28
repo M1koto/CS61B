@@ -211,7 +211,7 @@ class MachinePlayer extends Player {
         } else if (board.thrSix() == opp) {
             ans -= 1;
         }
-        return ans * 50;
+        return ans * 10;
     }
 
     /**
