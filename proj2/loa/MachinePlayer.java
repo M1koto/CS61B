@@ -136,6 +136,9 @@ class MachinePlayer extends Player {
     }
 
     private int quad(Board board, Piece p) {
+        if (!early(board)) {
+            return 0;
+        }
         int count = 0;
         for (int i = 0; i < board.getSize() * board.getSize(); i++) {
             Square sq = board.getSq(i);
@@ -155,7 +158,7 @@ class MachinePlayer extends Player {
      * Return weight for BOARD considering A for early game.
      */
     private boolean early(Board board) {
-        return board.movesMade() * 4 < board.getLimit(); // <15
+        return board.movesMade() * 3 < board.getLimit(); // <15
     }
 
     /**
@@ -173,7 +176,7 @@ class MachinePlayer extends Player {
      * Return weight for BOARD considering A for lategame.
      */
     private int lateGame(Board board, ArrayList<Integer> a, ArrayList<Integer> o) {
-        if (board.movesMade() * 2 >= board.getLimit()) { //45
+        if (board.movesMade() * 2 >= board.getLimit()) { //30
             return (a.size() - o.size()) * 5;
         }
         return 0;
