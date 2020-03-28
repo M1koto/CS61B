@@ -177,7 +177,7 @@ class MachinePlayer extends Player {
      */
     private int lateGame(Board board, ArrayList<Integer> a, ArrayList<Integer> o) {
         if (board.movesMade() * 2 >= board.getLimit()) { //30
-            return (a.size() - o.size()) * 5;
+            return (o.size() - a.size()) * 5;
         }
         return 0;
     }
