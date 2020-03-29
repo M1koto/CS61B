@@ -84,6 +84,7 @@ class BoardWidget extends Pad {
         setMouseHandler("press", this::mouseAction);
         setMouseHandler("release", this::mouseAction);
         setPreferredSize(BOARD_SIDE, BOARD_SIDE);
+        
         _acceptingMoves = false;
     }
 
