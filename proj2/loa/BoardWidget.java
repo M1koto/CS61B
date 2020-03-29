@@ -167,7 +167,7 @@ class BoardWidget extends Pad {
             if (!_board.isLegal(_from, s)) {
                 return;
             } else {
-                _commands.offer(String.format("* %s-%s", _from.toString(), s.toString()));
+                _commands.offer(String.format("%s-%s", _from.toString(), s.toString()));
             }
         }
         repaint();
