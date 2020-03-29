@@ -348,6 +348,16 @@ class Game {
         return _randomSource.nextInt(n);
     }
 
+    /** Returns the white player. */
+    public Player wh() {
+        return _white;
+    }
+
+    /** Returns the black player. */
+    public Player bl() {
+        return _black;
+    }
+
     /**
      * Print a help message.
      */

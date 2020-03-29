@@ -58,6 +58,10 @@ class GUI extends TopLevel implements View, Reporter {
         addMenuButton("Game->Undo", this::undo);
         addMenuButton("Game->Quit", this::quit);
         addMenuButton("Game->Help", (s) -> displayText("Help", HELP_TEXT));
+        addMenuButton("Game->Switch Black to Human", this::blackManual);
+        addMenuButton("Game->Switch White to Human", this::whiteManual);
+        addMenuButton("Game->Switch Black to AI", this::blackAI);
+        addMenuButton("Game->Switch White to AI", this::whiteAI);
         // FIXME: Other controls?
 
         _widget = new BoardWidget(_pendingCommands);
@@ -89,6 +93,34 @@ class GUI extends TopLevel implements View, Reporter {
     /** Response to "Undo" button click. */
     private void undo(String dummy) {
         _pendingCommands.offer("undo");
+    }
+
+    /**
+     * Response to "Switch whiteManual" button click.
+     */
+    private void whiteManual(String dummy) {
+        _pendingCommands.offer("manual White");
+    }
+
+    /**
+     * Response to "Switch blackManual" button click.
+     */
+    private void blackManual(String dummy) {
+        _pendingCommands.offer("manual Black");
+    }
+
+    /**
+     * Response to "Switch white" button click.
+     */
+    private void whiteAI(String dummy) {
+        _pendingCommands.offer("auto White");
+    }
+
+    /**
+     * Response to "Switch black" button click.
+     */
+    private void blackAI(String dummy) {
+        _pendingCommands.offer("auto Black");
     }
 
     /**
