@@ -151,6 +151,9 @@ class Game {
                     break;
                 case "undo":
                     _board.retract();
+                    if (_board.movesMade() > 0) {
+                        _board.retract();
+                    }
                     break;
                 default: {
                     if (!processMove(line)) {
