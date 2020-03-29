@@ -55,8 +55,9 @@ class GUI extends TopLevel implements View, Reporter {
     GUI(String title) {
         super(title, true);
         addMenuButton("Game->New", this::newGame);
+        addMenuButton("Game->Undo", this::undo);
         addMenuButton("Game->Quit", this::quit);
-        addMenuButton("Game->Help", this::help);
+        addMenuButton("Game->Help", (s) -> displayText("Help", HELP_TEXT));
         // FIXME: Other controls?
 
         _widget = new BoardWidget(_pendingCommands);
@@ -69,7 +70,6 @@ class GUI extends TopLevel implements View, Reporter {
                         "height", 1,
                         "width", 3));
         // FIXME: Other components?
-        File _html = new File(HELP_TEXT);
     }
 
     /**
@@ -86,10 +86,9 @@ class GUI extends TopLevel implements View, Reporter {
         _pendingCommands.offer("new");
     }
 
-    /**
-     * Response to "HELP" button click.
-     */
-    private void help(String dummy) {
+    /** Response to "Undo" button click. */
+    private void undo(String dummy) {
+        _pendingCommands.offer("UNDO");
     }
 
     /**
