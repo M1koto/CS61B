@@ -14,24 +14,33 @@ import static loa.Square.*;
 import static loa.Main.*;
 import static loa.Utils.*;
 
-/** Represents one game of Lines of Action.
- *  @author kenny liao */
+/**
+ * Represents one game of Lines of Action.
+ *
+ * @author kenny liao
+ */
 class Game {
 
-    /** Number of milliseconds in 1 second. */
+    /**
+     * Number of milliseconds in 1 second.
+     */
     static final int MILLISEC = 1000;
-    /** Name of help text resource. */
+    /**
+     * Name of help text resource.
+     */
     static final String HELP_FILE = "loa/HelpText.txt";
 
-    /** Controller for one or more games of LOA, using
-     *  MANUALPLAYERTEMPLATE as an exemplar for manual players
-     *  (see the Player.create method) and AUTOPLAYERTEMPLATE
-     *  as an exemplar for automated players.  Reports
-     *  board changes to VIEW at appropriate points.  Uses REPORTER
-     *  to report moves, wins, and errors to user. If LOGFILE is
-     *  non-null, copies all commands to it. If STRICT, exits the
-     *  program with non-zero code on receiving an erroneous move from a
-     *  player. */
+    /**
+     * Controller for one or more games of LOA, using
+     * MANUALPLAYERTEMPLATE as an exemplar for manual players
+     * (see the Player.create method) and AUTOPLAYERTEMPLATE
+     * as an exemplar for automated players.  Reports
+     * board changes to VIEW at appropriate points.  Uses REPORTER
+     * to report moves, wins, and errors to user. If LOGFILE is
+     * non-null, copies all commands to it. If STRICT, exits the
+     * program with non-zero code on receiving an erroneous move from a
+     * player.
+     */
     Game(View view, PrintStream logFile, Reporter reporter,
          Player manualPlayerTemplate, Player autoPlayerTemplate,
          boolean strict) {
@@ -48,18 +57,24 @@ class Game {
         _strict = strict;
     }
 
-    /** Return the current board. */
+    /**
+     * Return the current board.
+     */
     Board getBoard() {
         return _board;
     }
 
-    /** Quit the game. */
+    /**
+     * Quit the game.
+     */
     private void quit() {
         System.exit(0);
     }
 
-    /** Return a move or command from the standard input, after prompting if
-     *  PROMPT. */
+    /**
+     * Return a move or command from the standard input, after prompting if
+     * PROMPT.
+     */
     String readLine(boolean prompt) {
         if (prompt) {
             prompt();
@@ -71,7 +86,9 @@ class Game {
         }
     }
 
-    /** Print a prompt for a move. */
+    /**
+     * Print a prompt for a move.
+     */
     private void prompt() {
         if (_playing) {
             System.out.print(_board.turn().abbrev().charAt(0));
@@ -82,11 +99,15 @@ class Game {
         System.out.flush();
     }
 
-    /** Describes a command with up to three arguments. */
+    /**
+     * Describes a command with up to three arguments.
+     */
     private static final Pattern COMMAND_PATN =
-        Pattern.compile("(#|\\S+)\\s*(\\S*)\\s*(\\S*)\\s*(\\S*).*");
+            Pattern.compile("(#|\\S+)\\s*(\\S*)\\s*(\\S*)\\s*(\\S*).*");
 
-    /** Process the command on LINE. */
+    /**
+     * Process the command on LINE.
+     */
     private void processCommand(String line) {
         line = line.trim();
         if (line.length() == 0) {
@@ -99,98 +120,118 @@ class Game {
         Matcher command = COMMAND_PATN.matcher(line);
         if (command.matches()) {
             switch (command.group(1).toLowerCase()) {
-            case "#":
-                break;
-            case "new":
-                _board.clear();
-                _playing = true;
-                break;
-            case "dump":
-                System.out.printf("%s%n", _board);
-                break;
-            case "manual":
-                manualCommand(command.group(2).toLowerCase());
-                break;
-            case "auto":
-                autoCommand(command.group(2).toLowerCase());
-                break;
-            case "quit":
-                quit();
-                break;
-            case "seed":
-                seedCommand(command.group(2));
-                break;
-            case "set":
-                setCommand(command.group(2), command.group(3).toLowerCase(),
-                           command.group(4).toLowerCase());
-                break;
-            case "?": case "help":
-                help();
-                break;
-            default: {
-                if (!processMove(line)) {
-                    error("unknown command: %s%n", line);
+                case "#":
+                    break;
+                case "new":
+                    _board.clear();
+                    _playing = true;
+                    break;
+                case "dump":
+                    System.out.printf("%s%n", _board);
+                    break;
+                case "manual":
+                    manualCommand(command.group(2).toLowerCase());
+                    break;
+                case "auto":
+                    autoCommand(command.group(2).toLowerCase());
+                    break;
+                case "quit":
+                    quit();
+                    break;
+                case "seed":
+                    seedCommand(command.group(2));
+                    break;
+                case "set":
+                    setCommand(command.group(2), command.group(3).toLowerCase(),
+                            command.group(4).toLowerCase());
+                    break;
+                case "?":
+                case "help":
+                    help();
+                    break;
+                case "undo":
+                    _board.retract();
+                    break;
+                default: {
+                    if (!processMove(line)) {
+                        error("unknown command: %s%n", line);
+                    }
+                    break;
                 }
-                break;
-            }
             }
         }
     }
 
-    /** Return true iff white is a manual player. */
+    /**
+     * Return true iff white is a manual player.
+     */
     boolean manualWhite() {
         return _white.isManual();
     }
 
-    /** Return true iff black is a manual player. */
+    /**
+     * Return true iff black is a manual player.
+     */
     boolean manualBlack() {
         return _black.isManual();
     }
 
-    /** Report error by calling reportError(FORMAT, ARGS) on my reporter. */
+    /**
+     * Report error by calling reportError(FORMAT, ARGS) on my reporter.
+     */
     void reportError(String format, Object... args) {
         _reporter.reportError(format, args);
     }
 
-    /** Report note by calling reportNote(FORMAT, ARGS) on my reporter. */
+    /**
+     * Report note by calling reportNote(FORMAT, ARGS) on my reporter.
+     */
     void reportNote(String format, Object... args) {
         _reporter.reportNote(format, args);
     }
 
-    /** Report move by calling reportMove(MOVE) on my reporter. */
+    /**
+     * Report move by calling reportMove(MOVE) on my reporter.
+     */
     void reportMove(Move move) {
         _reporter.reportMove(move);
     }
 
-    /** Set player PLAYER ("white" or "black") to be a manual player. */
+    /**
+     * Set player PLAYER ("white" or "black") to be a manual player.
+     */
     private void manualCommand(String player) {
         switch (player) {
-        case "white":
-            _white = _manualPlayerTemplate.create(WP, this);
-            break;
-        case "black":
-            _black = _manualPlayerTemplate.create(BP, this);
-            break;
-        default:
-            error("unknown player: %s%n", player);
+            case "white":
+                _white = _manualPlayerTemplate.create(WP, this);
+                break;
+            case "black":
+                _black = _manualPlayerTemplate.create(BP, this);
+                break;
+            default:
+                error("unknown player: %s%n", player);
         }
     }
 
-    /** Set player PLAYER ("white" or "black") to be an automated player. */
+    /**
+     * Set player PLAYER ("white" or "black") to be an automated player.
+     */
     private void autoCommand(String player) {
         switch (player) {
-        case "white":
-            _white = _autoPlayerTemplate.create(WP, this);
-            break;
-        case "black":
-            _black = _autoPlayerTemplate.create(BP, this);
-            break;
-        default:
-            error("unknown player: %s%n", player);
+            case "white":
+                _white = _autoPlayerTemplate.create(WP, this);
+                break;
+            case "black":
+                _black = _autoPlayerTemplate.create(BP, this);
+                break;
+            default:
+                error("unknown player: %s%n", player);
         }
     }
 
-    /** Seed random-number generator with SEED (as a long). */
+    /**
+     * Seed random-number generator with SEED (as a long).
+     */
     private void seedCommand(String seed) {
         try {
             _randomSource.setSeed(Long.parseLong(seed));
@@ -199,8 +240,10 @@ class Game {
         }
     }
 
-    /** Set square S to CONTENT ('black', 'white', or '-'), and next player
-        to move to NEXTPLAYER: 'black' or 'white'. */
+    /**
+     * Set square S to CONTENT ('black', 'white', or '-'), and next player
+     * to move to NEXTPLAYER: 'black' or 'white'.
+     */
     private void setCommand(String S, String content, String nextPlayer) {
         try {
             Piece p = Piece.playerValueOf(content);
@@ -212,12 +255,14 @@ class Game {
             }
         } catch (IllegalArgumentException excp) {
             error("invalid arguments to set: set %s %s %s%n", S, content,
-                  nextPlayer);
+                    nextPlayer);
         }
     }
 
-    /** Perform the move designated by LINE, if a valid move.  Return
-     *  true iff LINE has the syntax of a move. */
+    /**
+     * Perform the move designated by LINE, if a valid move.  Return
+     * true iff LINE has the syntax of a move.
+     */
     private boolean processMove(String line) {
         Move move = mv(line);
         if (move == null) {
@@ -234,7 +279,9 @@ class Game {
         }
     }
 
-    /** Play this game, printing any results. */
+    /**
+     * Play this game, printing any results.
+     */
     public void play() {
         _board = new Board();
         _playing = true;
@@ -249,14 +296,14 @@ class Game {
                 }
                 if (_playing) {
                     switch (_board.turn()) {
-                    case WP:
-                        next = _white.getMove();
-                        break;
-                    case BP:
-                        next = _black.getMove();
-                        break;
-                    default:
-                        throw new Error("Unreachable statement");
+                        case WP:
+                            next = _white.getMove();
+                            break;
+                        case BP:
+                            next = _black.getMove();
+                            break;
+                        default:
+                            throw new Error("Unreachable statement");
                     }
                 } else {
                     next = _nonplayer.getMove();
@@ -272,68 +319,97 @@ class Game {
         }
     }
 
-    /** Print an announcement of the winner.  Requires that the game has been
-     *  won. */
+    /**
+     * Print an announcement of the winner.  Requires that the game has been
+     * won.
+     */
     private void announceWinner() {
         switch (_board.winner()) {
-        case BP:
-            _reporter.reportNote("Black wins.");
-            break;
-        case WP:
-            _reporter.reportNote("White wins.");
-            break;
-        default:
-            _reporter.reportNote("Tie game.");
-            break;
+            case BP:
+                _reporter.reportNote("Black wins.");
+                break;
+            case WP:
+                _reporter.reportNote("White wins.");
+                break;
+            default:
+                _reporter.reportNote("Tie game.");
+                break;
         }
     }
 
-    /** Return an integer r, 0 <= r < N, randomly chosen from a
-     *  uniform distribution using the current random source. */
+    /**
+     * Return an integer r, 0 <= r < N, randomly chosen from a
+     * uniform distribution using the current random source.
+     */
     int randInt(int n) {
         return _randomSource.nextInt(n);
     }
 
-    /** Print a help message. */
+    /**
+     * Print a help message.
+     */
     void help() {
         Main.printResource(HELP_FILE);
     }
 
-    /** The official game board. */
+    /**
+     * The official game board.
+     */
     private Board _board;
 
-    /** The current templates for manual and automated players. */
+    /**
+     * The current templates for manual and automated players.
+     */
     private Player _autoPlayerTemplate, _manualPlayerTemplate;
 
-    /** Player of white pieces. */
+    /**
+     * Player of white pieces.
+     */
     private Player _white;
-    /** Player of black pieces. */
+    /**
+     * Player of black pieces.
+     */
     private Player _black;
-    /** A player to handle commands when game not started. Does not
-     *  actually generate moves. */
+    /**
+     * A player to handle commands when game not started. Does not
+     * actually generate moves.
+     */
     private Player _nonplayer;
 
-    /** A source of pseudo-random numbers, primed to deliver the same
-     *  sequence in any Game with the same seed value. */
+    /**
+     * A source of pseudo-random numbers, primed to deliver the same
+     * sequence in any Game with the same seed value.
+     */
     private Random _randomSource = new Random();
 
-    /** True if actually playing (game started and not stopped or finished).
+    /**
+     * True if actually playing (game started and not stopped or finished).
      */
     private boolean _playing;
 
-    /** The object that is displaying the current game. */
+    /**
+     * The object that is displaying the current game.
+     */
     private View _view;
 
-    /** Log file, or null if absent. */
+    /**
+     * Log file, or null if absent.
+     */
     private PrintStream _logFile;
 
-    /** Input source. */
+    /**
+     * Input source.
+     */
     private Scanner _input;
 
-    /** Reporter for messages and errors. */
+    /**
+     * Reporter for messages and errors.
+     */
     private Reporter _reporter;
 
-    /** If true, command errors cause termination with error exit
-     *  code. */
+    /**
+     * If true, command errors cause termination with error exit
+     * code.
+     */
     private boolean _strict;
 }

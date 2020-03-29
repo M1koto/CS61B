@@ -88,7 +88,7 @@ class GUI extends TopLevel implements View, Reporter {
 
     /** Response to "Undo" button click. */
     private void undo(String dummy) {
-        _pendingCommands.offer("UNDO");
+        _pendingCommands.offer("undo");
     }
 
     /**
