@@ -62,7 +62,7 @@ class GUI extends TopLevel implements View, Reporter {
         addMenuButton("Game->Switch White to Human", this::whiteManual);
         addMenuButton("Game->Switch Black to AI", this::blackAI);
         addMenuButton("Game->Switch White to AI", this::whiteAI);
-        // FIXME: Other controls?
+
 
         _widget = new BoardWidget(_pendingCommands);
         add(_widget,
@@ -73,7 +73,7 @@ class GUI extends TopLevel implements View, Reporter {
                 new LayoutSpec("x", 0, "y", 0,
                         "height", 1,
                         "width", 3));
-        // FIXME: Other components?
+
     }
 
     /**
@@ -156,7 +156,7 @@ class GUI extends TopLevel implements View, Reporter {
 
         boolean manualWhite = controller.manualWhite(),
                 manualBlack = controller.manualBlack();
-        // FIXME: More?
+
     }
 
     /**

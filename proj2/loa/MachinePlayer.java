@@ -127,13 +127,7 @@ class MachinePlayer extends Player {
         } else if (board.winner() == board.getOpp(p)) {
             return -INFTY;
         } else {
-            return (oGroup.size() - mGroup.size()) * 2
-                    + board.sum(oGroup) - board.sum(mGroup) + middle(board, p, board.getOpp(p))
-
-                    + quad(board, p) + lateGame(board, mGroup, oGroup);
-
-            //+ middle(board, p, board.getOpp(p))
-            //+ midGame(board, mGroup, oGroup) + lateGame(board, mGroup);
+            return (oGroup.size() - mGroup.size()) * 20;
         }
     }
     /** Return how many pieces P are in diagonal of each other based on quads of BOARD. */
@@ -148,7 +142,7 @@ class MachinePlayer extends Player {
                 for (int j = 1; j < 8; j += 2) {
                     Square target = sq.moveDest(j, 1);
                     if (target != null && board.get(target) == p) {
-                        count ++;
+                        count++;
                     }
                 }
             }
@@ -160,7 +154,7 @@ class MachinePlayer extends Player {
      * Return weight for BOARD considering A for early game.
      */
     private boolean middle(Board board) {
-        return board.movesMade() * 4 >= board.getLimit(); // <15
+        return board.movesMade() * 4 >= board.getLimit();
     }
 
     /**
@@ -168,7 +162,7 @@ class MachinePlayer extends Player {
      */
     private int midGame(Board board, ArrayList<Integer> a, ArrayList<Integer> o) {
         if (board.movesMade() * 4 >= board.getLimit()
-                && board.movesMade() * 2 <= board.getLimit() * 3) { // >15
+                && board.movesMade() * 2 <= board.getLimit() * 3) {
             return (board.sum(o) - board.sum(a)) * 10;
         }
         return 0;
@@ -178,7 +172,7 @@ class MachinePlayer extends Player {
      * Return weight for BOARD considering A for lategame.
      */
     private int lateGame(Board board, ArrayList<Integer> a, ArrayList<Integer> o) {
-        if (board.movesMade() * 3 >= board.getLimit() * 2) { //45
+        if (board.movesMade() * 3 >= board.getLimit() * 2) {
             return (o.size() - a.size()) * 5;
         }
         return 0;
@@ -274,8 +268,6 @@ class MachinePlayer extends Player {
     private Move simpleFindMin(Board board, double alpha, double beta, boolean me) {
         ArrayList<Move> legal = board.legalMoves();
         if (board.winner() != null) {
-            //System.out.println(board.toString());
-            //System.out.println("from min");
             return null;
         }
 
@@ -328,7 +320,6 @@ class MachinePlayer extends Player {
             Move response = findMin(board, depth - 1, alpha, beta, !me);
 
             int responseVal = heuristic(board, WP);
-            //System.out.println(responseVal);
             if (response != null) {
                 board.makeMove(response);
                 responseVal = heuristic(board, WP);
@@ -382,7 +373,6 @@ class MachinePlayer extends Player {
             Move response = findMax(board, depth - 1, alpha, beta, !me);
 
             int responseVal = heuristic(board, BP);
-            //System.out.println(responseVal);
             if (response != null) {
                 board.makeMove(response);
                 responseVal = heuristic(board, BP);

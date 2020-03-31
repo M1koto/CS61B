@@ -120,8 +120,8 @@ class Game {
         Matcher command = COMMAND_PATN.matcher(line);
         if (command.matches()) {
             switch (command.group(1).toLowerCase()) {
-                case "#":
-                    break;
+            case "#":
+                break;
                 case "new":
                     _board.clear();
                     _playing = true;
@@ -135,6 +135,8 @@ class Game {
                 case "auto":
                     autoCommand(command.group(2).toLowerCase());
                     break;
+                case "limit":
+                    _board.setMoveLimit(Integer.parseInt(command.group(2)));
                 case "quit":
                     quit();
                     break;
@@ -348,12 +350,16 @@ class Game {
         return _randomSource.nextInt(n);
     }
 
-    /** Returns the white player. */
+    /**
+     * Returns the white player.
+     */
     public Player wh() {
         return _white;
     }
 
-    /** Returns the black player. */
+    /**
+     * Returns the black player.
+     */
     public Player bl() {
         return _black;
     }

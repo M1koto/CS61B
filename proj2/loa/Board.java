@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Formatter;
-import java.util.List;
+
 
 import java.util.regex.Pattern;
 
@@ -543,7 +543,7 @@ class Board {
     }
 
 
-    /** Return Sq i. */
+    /** Return Sq I. */
     public Piece square(int i) {
         return get(ALL_SQUARES[i]);
     }
