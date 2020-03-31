@@ -127,7 +127,7 @@ class MachinePlayer extends Player {
         } else if (board.winner() == board.getOpp(p)) {
             return -INFTY;
         } else {
-            return (oGroup.size() - mGroup.size()) * 20;
+            return (10 - mGroup.size()) * 20;
         }
     }
     /** Return how many pieces P are in diagonal of each other based on quads of BOARD. */
@@ -223,11 +223,12 @@ class MachinePlayer extends Player {
     }
 
     /**
-     * Static evaluation.
+     * Static evaluation using ME.
      * Find a single layer of move in BOARD
      * where ALPHA < BETA and returns best move.
      */
-    private Move simpleFindMax(Board board, double alpha, double beta, boolean me) {
+    private Move simpleFindMax(Board board, double alpha,
+                               double beta, boolean me) {
         ArrayList<Move> legal = board.legalMoves();
         if (board.winner() != null) {
             //System.out.println(board.toString());
@@ -261,11 +262,12 @@ class MachinePlayer extends Player {
     }
 
     /**
-     * Static evaluation.
+     * Static evaluation using ME.
      * Find a single layer of move in BOARD
      * where ALPHA > BETA and returns best move.
      */
-    private Move simpleFindMin(Board board, double alpha, double beta, boolean me) {
+    private Move simpleFindMin(Board board, double alpha,
+                               double beta, boolean me) {
         ArrayList<Move> legal = board.legalMoves();
         if (board.winner() != null) {
             return null;
@@ -299,9 +301,11 @@ class MachinePlayer extends Player {
 
     /**
      * Return the next move in BOARD considering DEPTH and
-     * ALPHA BETA to prune from maximizing player's perspective. White.
+     * ALPHA BETA to prune from maximizing player's perspective.
+     * White. using ME.
      */
-    private Move findMax(Board board, int depth, double alpha, double beta, boolean me) {
+    private Move findMax(Board board, int depth, double alpha,
+                         double beta, boolean me) {
         if (depth == 0 || board.gameOver()) {
             return simpleFindMax(board, alpha, beta, me);
         }
@@ -352,9 +356,11 @@ class MachinePlayer extends Player {
 
     /**
      * Return the next move in BOARD considering DEPTH and
-     * ALPHA BETA to prune from minimizing player's perspective. Black.
+     * ALPHA BETA to prune from minimizing player's perspective.
+     * Black. Using ME.
      */
-    private Move findMin(Board board, int depth, double alpha, double beta, boolean me) {
+    private Move findMin(Board board, int depth, double alpha,
+                         double beta, boolean me) {
         if (depth == 0 || board.gameOver()) {
             return simpleFindMin(board, alpha, beta, me);
         }

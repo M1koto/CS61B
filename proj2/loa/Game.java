@@ -135,6 +135,11 @@ class Game {
             case "auto":
                 autoCommand(command.group(2).toLowerCase());
                 break;
+            case "undo":
+                _board.retract();
+                if (_board.movesMade() > 0) {
+                    _board.retract();
+                }
             case "quit":
                 quit();
                 break;

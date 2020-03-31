@@ -1,4 +1,3 @@
 #*java -ea loa.Main
 # Check that some simple moves entered by hand work.  The AI is never started.
 manual White
-limit 1
