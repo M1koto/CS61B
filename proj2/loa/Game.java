@@ -140,6 +140,7 @@ class Game {
                 if (_board.movesMade() > 0) {
                     _board.retract();
                 }
+                break;
             case "quit":
                 quit();
                 break;
