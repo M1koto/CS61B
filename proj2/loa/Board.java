@@ -139,18 +139,23 @@ class Board {
         set(sq, v, null);
     }
 
-    /**
-     * Set limit on number of moves (before tie results) to LIMIT.
-     */
+
+    /** Set limit on number of moves by each side that results in a tie to
+     *  LIMIT, where 2 * LIMIT > movesMade(). */
+
     void setMoveLimit(int limit) {
-        _moveLimit = limit;
-        _winnerKnown = false;
+        if (2 * limit <= movesMade()) {
+            throw new IllegalArgumentException("move limit too small");
+        }
+        _moveLimit = 2 * limit;
     }
 
-    /**
-     * Assuming isLegal(MOVE), make MOVE. Assumes MOVE.isCapture()
-     * is false.
-     */
+
+    /** Assuming isLegal(MOVE), make MOVE. This function assumes that
+     *  MOVE.isCapture() will return false.  If it saves the move for
+     *  later retraction, makeMove itself uses MOVE.captureMove() to produce
+     *  the capturing move. */
+
     void makeMove(Move move) {
         assert isLegal(move);
         Boolean capture = isCapture(move);

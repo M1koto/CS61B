@@ -120,47 +120,42 @@ class Game {
         Matcher command = COMMAND_PATN.matcher(line);
         if (command.matches()) {
             switch (command.group(1).toLowerCase()) {
-                case "#":
-                    break;
-                case "new":
-                    _board.clear();
-                    _playing = true;
-                    break;
-                case "dump":
-                    System.out.printf("%s%n", _board);
-                    break;
-                case "manual":
-                    manualCommand(command.group(2).toLowerCase());
-                    break;
-                case "auto":
-                    autoCommand(command.group(2).toLowerCase());
-                    break;
-                case "quit":
-                    quit();
-                    break;
-                case "seed":
-                    seedCommand(command.group(2));
-                    break;
-                case "set":
-                    setCommand(command.group(2), command.group(3).toLowerCase(),
-                            command.group(4).toLowerCase());
-                    break;
-                case "?":
-                case "help":
-                    help();
-                    break;
-                case "undo":
-                    _board.retract();
-                    if (_board.movesMade() > 0) {
-                        _board.retract();
-                    }
-                    break;
-                default: {
-                    if (!processMove(line)) {
-                        error("unknown command: %s%n", line);
-                    }
-                    break;
+            case "#":
+                break;
+            case "new":
+                _board.clear();
+                _playing = true;
+                break;
+            case "dump":
+                System.out.printf("%s%n", _board);
+                break;
+            case "manual":
+                manualCommand(command.group(2).toLowerCase());
+                break;
+            case "auto":
+                autoCommand(command.group(2).toLowerCase());
+                break;
+            case "quit":
+                quit();
+                break;
+            case "seed":
+                seedCommand(command.group(2));
+                break;
+            case "set":
+                setCommand(command.group(2), command.group(3).toLowerCase(),
+                           command.group(4).toLowerCase());
+                break;
+            case "limit":
+                limitCommand(command.group(2));
+                break;
+            case "?": case "help":
+                help();
+                break;
+            default:
+                if (!processMove(line)) {
+                    error("unknown command: %s%n", line);
                 }
+                break;
             }
         }
     }
@@ -262,24 +257,31 @@ class Game {
         }
     }
 
-    /**
-     * Perform the move designated by LINE, if a valid move.  Return
-     * true iff LINE has the syntax of a move.
-     */
+    /** Set the corrent move limit according to the numeral in LIMIT.  LIMIT
+     *  must be a valid numeral that is greater than the current number of
+     *  moves by either player in the current game. */
+    private void limitCommand(String limit) {
+        try {
+            _board.setMoveLimit(Integer.parseInt(limit));
+        } catch (NumberFormatException excp) {
+            throw new IllegalArgumentException("badly formed numeral");
+        }
+    }
+
+    /** Perform the move designated by LINE, if a valid move.  Return
+     *  true iff LINE has the syntax of a move. */
     private boolean processMove(String line) {
         Move move = mv(line);
         if (move == null) {
             return false;
         } else if (!_playing) {
             error("no game in progress%n");
-            return false;
         } else if (!_board.isLegal(move)) {
             error("illegal move: %s%n", line);
-            return false;
         } else {
             _board.makeMove(move);
-            return true;
         }
+        return true;
     }
 
     /**

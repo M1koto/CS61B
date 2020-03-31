@@ -132,7 +132,7 @@ public class BoardTest {
         assertTrue("Board 2 game over", b2.gameOver());
         Board b3 = new Board(BOARD3, BP);
         assertTrue("Board 3 white contiguous?", b3.piecesContiguous(WP));
-        assertTrue("Board 3 black contiguous?", b3.piecesContiguous(WP));
+        assertTrue("Board 3 black contiguous?", b3.piecesContiguous(BP));
         assertTrue("Board 3 game over", b3.gameOver());
     }
 
@@ -149,8 +149,8 @@ public class BoardTest {
         Board b0 = new Board(BOARD1, BP);
         Board b1 = new Board(BOARD1, BP);
         b1.makeMove(mv("f3-d5"));
-        assertEquals("square d5 after f3-d5", BP, b1.get(sq(4, 5)));
-        assertEquals("square f3 after f3-d5", EMP, b1.get(sq(6, 3)));
+        assertEquals("square d5 after f3-d5", BP, b1.get(sq(3, 4)));
+        assertEquals("square f3 after f3-d5", EMP, b1.get(sq(5, 2)));
         assertEquals("Check move count for board 1 after one move",
                      1, b1.movesMade());
         b1.retract();
