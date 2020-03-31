@@ -131,11 +131,12 @@ class MachinePlayer extends Player {
                     + board.sum(oGroup) - board.sum(mGroup) + middle(board, p, board.getOpp(p))
 
                     + quad(board, p) + lateGame(board, mGroup, oGroup);
+
             //+ middle(board, p, board.getOpp(p))
             //+ midGame(board, mGroup, oGroup) + lateGame(board, mGroup);
         }
     }
-
+    /** Return how many pieces P are in diagonal of each other based on quads of BOARD. */
     private int quad(Board board, Piece p) {
         if (p != _me) {
             return 0;
