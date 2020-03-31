@@ -15,9 +15,7 @@ import java.io.InputStream;
 import java.io.IOException;
 import java.io.StringWriter;
 
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-import java.net.URL;
+
 import java.util.concurrent.ArrayBlockingQueue;
 
 import static loa.Piece.*;
@@ -216,10 +214,7 @@ class GUI extends TopLevel implements View, Reporter {
      */
     private BoardWidget _widget;
 
-    /**
-     * The help page.
-     */
-    File _html;
+
 
     /**
      * Queue of pending commands resulting from menu clicks and moves on the
