@@ -329,10 +329,11 @@ class Board {
      * null.  If the game has ended in a tie, returns EMP.
      */
     Piece winner() {
+        _winnerKnown = false;
         _subsetsInitialized = false;
         computeRegions();
         _subsetsInitialized = true;
-        if (_moves.size() >= _moveLimit) {
+        if (_moves.size() >= _moveLimit && !_winnerKnown) {
             return EMP;
         }
         if (!_winnerKnown) {
@@ -473,8 +474,7 @@ class Board {
         _blackRegionSizes.removeAll(Collections.singleton(0));
         Collections.sort(_whiteRegionSizes, Collections.reverseOrder());
         Collections.sort(_blackRegionSizes, Collections.reverseOrder());
-        if (_blackRegionSizes.size() == 1 || _whiteRegionSizes.size() == 1
-                || movesMade() >= _moveLimit) {
+        if (_blackRegionSizes.size() == 1 || _whiteRegionSizes.size() == 1) {
             _winnerKnown = true;
         }
         _subsetsInitialized = true;

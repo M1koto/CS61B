@@ -248,7 +248,7 @@ class MachinePlayer extends Player {
                 best = m;
                 alpha = Double.max(alpha, (double) board.getValue());
                 if (!me) {
-                    alpha += 2;
+                    alpha += 0;
                 }
                 board.retract();
                 if (alpha >= beta) {
@@ -286,7 +286,7 @@ class MachinePlayer extends Player {
                 best = m;
                 beta = Double.min(beta, (double) board.getValue());
                 if (!me) {
-                    beta -= 2;
+                    beta -= 0;
                 }
                 board.retract();
                 if (alpha >= beta) {
@@ -332,14 +332,15 @@ class MachinePlayer extends Player {
 
             if (responseVal >= compare) {
                 if (response == null) {
-                    Move ret = board.lastmove();
-                    board.retract();
-                    return ret;
+                    if (board.winner() == WP) {
+                        board.retract();
+                        return m;
+                    }
                 }
                 best = m;
                 alpha = Double.max(alpha, (double) responseVal);
                 if (!me) {
-                    alpha += 2;
+                    alpha += 0;
                 }
                 if (alpha >= beta) {
                     board.retract();
@@ -387,14 +388,15 @@ class MachinePlayer extends Player {
 
             if (responseVal <= compare) {
                 if (response == null) {
-                    Move ret = board.lastmove();
-                    board.retract();
-                    return ret;
+                    if (board.winner() == BP) {
+                        board.retract();
+                        return m;
+                    }
                 }
                 best = m;
                 beta = Double.min(beta, (double) responseVal);
                 if (!me) {
-                    beta -= 2;
+                    beta -= 0;
                 }
                 if (alpha >= beta) {
                     board.retract();
