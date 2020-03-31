@@ -129,6 +129,8 @@ class Game {
                 case "dump":
                     System.out.printf("%s%n", _board);
                     break;
+                case "limit":
+                    _board.setMoveLimit(Integer.parseInt(command.group(2)));
                 case "manual":
                     manualCommand(command.group(2).toLowerCase());
                     break;
