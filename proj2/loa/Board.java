@@ -333,12 +333,6 @@ class Board {
         _subsetsInitialized = false;
         computeRegions();
         _subsetsInitialized = true;
-        if (movesMade() >= _moveLimit && !_winnerKnown) {
-            return EMP;
-        }
-        if (!_winnerKnown) {
-            return null;
-        }
         if (piecesContiguous(WP) && piecesContiguous(BP)) {
             if (turn() == BP) {
                 _winner = WP;
@@ -349,6 +343,12 @@ class Board {
             _winner = WP;
         } else if (piecesContiguous(BP)) {
             _winner = BP;
+        }
+        if (movesMade() >= _moveLimit && !_winnerKnown) {
+            return EMP;
+        }
+        if (!_winnerKnown) {
+            return null;
         }
         return _winner;
     }
