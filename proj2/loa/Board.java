@@ -340,7 +340,7 @@ class Board {
             return null;
         }
         if (piecesContiguous(WP) && piecesContiguous(BP)) {
-            if (movesMade() % 2 == 0) {
+            if (turn() == BP) {
                 _winner = WP;
             } else {
                 _winner = BP;
