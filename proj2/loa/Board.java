@@ -23,7 +23,7 @@ class Board {
     /**
      * Default number of moves for each side that results in a draw.
      */
-    static final int DEFAULT_MOVE_LIMIT = 30;
+    static final int DEFAULT_MOVE_LIMIT = 60;
 
     /**
      * Pattern describing a valid square designator (cr).
