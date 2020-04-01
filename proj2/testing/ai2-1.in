@@ -1,5 +1,6 @@
 # Have the program play against itself.  Make sure somebody wins.
 #* java -ea loa.Main 
 seed 12347
+limit 3
 auto Black
 #*move/win
