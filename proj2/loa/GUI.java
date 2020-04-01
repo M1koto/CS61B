@@ -5,12 +5,10 @@ package loa;
 import ucb.gui2.TopLevel;
 import ucb.gui2.LayoutSpec;
 
-import java.awt.*;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 
-import java.io.File;
 import java.io.InputStream;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -35,7 +33,8 @@ class GUI extends TopLevel implements View, Reporter {
     /**
      * Size of pane used to contain help text.
      */
-    static final Dimension TEXT_BOX_SIZE = new Dimension(500, 700);
+    static final java.awt.Dimension TEXT_BOX_SIZE =
+            new java.awt.Dimension(500, 700);
 
     /**
      * Resource name of "About" message.

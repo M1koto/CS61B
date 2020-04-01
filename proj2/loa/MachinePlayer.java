@@ -117,7 +117,7 @@ class MachinePlayer extends Player {
 
 
     /**
-     * Assigns estimated values to the each BOARD considering P.
+     * Return estimated values to the each BOARD considering P.
      */
     private int heuristic(Board board, Piece p) {
         ArrayList<Integer> mGroup = board.getRegionSizes(p);
@@ -127,10 +127,11 @@ class MachinePlayer extends Player {
         } else if (board.winner() == board.getOpp(p)) {
             return -INFTY;
         } else {
-            return (10 - mGroup.size()) * 20;
+            return (10 - mGroup.size());
         }
     }
-    /** Return how many pieces P are in diagonal of each other based on quads of BOARD. */
+    /** Return how many pieces P are in diagonal of
+     * each other based on quads of BOARD. */
     private int quad(Board board, Piece p) {
         if (p != _me) {
             return 0;
@@ -160,7 +161,8 @@ class MachinePlayer extends Player {
     /**
      * Return weight for BOARD considering A, O for mid-game.
      */
-    private int midGame(Board board, ArrayList<Integer> a, ArrayList<Integer> o) {
+    private int midGame(Board board, ArrayList<Integer> a,
+                        ArrayList<Integer> o) {
         if (board.movesMade() * 4 >= board.getLimit()
                 && board.movesMade() * 2 <= board.getLimit() * 3) {
             return (board.sum(o) - board.sum(a)) * 10;
@@ -171,7 +173,8 @@ class MachinePlayer extends Player {
     /**
      * Return weight for BOARD considering A, O for lategame.
      */
-    private int lateGame(Board board, ArrayList<Integer> a, ArrayList<Integer> o) {
+    private int lateGame(Board board, ArrayList<Integer> a,
+                         ArrayList<Integer> o) {
         if (board.movesMade() * 3 >= board.getLimit() * 2) {
             return (o.size() - a.size()) * 5;
         }

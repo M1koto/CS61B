@@ -206,14 +206,14 @@ class Game {
      */
     private void manualCommand(String player) {
         switch (player) {
-            case "white":
-                _white = _manualPlayerTemplate.create(WP, this);
-                break;
-            case "black":
-                _black = _manualPlayerTemplate.create(BP, this);
-                break;
-            default:
-                error("unknown player: %s%n", player);
+        case "white":
+            _white = _manualPlayerTemplate.create(WP, this);
+            break;
+        case "black":
+            _black = _manualPlayerTemplate.create(BP, this);
+            break;
+        default:
+            error("unknown player: %s%n", player);
         }
     }
 
@@ -336,15 +336,15 @@ class Game {
      */
     private void announceWinner() {
         switch (_board.winner()) {
-            case BP:
-                _reporter.reportNote("Black wins.");
-                break;
-            case WP:
-                _reporter.reportNote("White wins.");
-                break;
-            default:
-                _reporter.reportNote("Tie game.");
-                break;
+        case BP:
+            _reporter.reportNote("Black wins.");
+            break;
+        case WP:
+            _reporter.reportNote("White wins.");
+            break;
+        default:
+            _reporter.reportNote("Tie game.");
+            break;
         }
     }
 

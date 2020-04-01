@@ -459,14 +459,14 @@ class Board {
         int countW = 0;
         int countB = 0;
         while (sum(_whiteRegionSizes) != whitePiece) {
-            _whiteRegionSizes.add
-                    (numContig(ALL_SQUARES[countW], whiteVis, WP, true));
+            _whiteRegionSizes.add(numContig(ALL_SQUARES[countW],
+                    whiteVis, WP, true));
             countW += 1;
             update(whiteVis);
         }
         while (sum(_blackRegionSizes) != blackPiece) {
-            _blackRegionSizes.add
-                    (numContig(ALL_SQUARES[countB], blackVis, BP, true));
+            _blackRegionSizes.add(numContig(ALL_SQUARES[countB],
+                    blackVis, BP, true));
             countB += 1;
             update(blackVis);
         }
