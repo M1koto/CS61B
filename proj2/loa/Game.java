@@ -222,14 +222,14 @@ class Game {
      */
     private void autoCommand(String player) {
         switch (player) {
-            case "white":
-                _white = _autoPlayerTemplate.create(WP, this);
-                break;
-            case "black":
-                _black = _autoPlayerTemplate.create(BP, this);
-                break;
-            default:
-                error("unknown player: %s%n", player);
+        case "white":
+            _white = _autoPlayerTemplate.create(WP, this);
+            break;
+        case "black":
+            _black = _autoPlayerTemplate.create(BP, this);
+            break;
+        default:
+            error("unknown player: %s%n", player);
         }
     }
 
@@ -307,14 +307,14 @@ class Game {
                 }
                 if (_playing) {
                     switch (_board.turn()) {
-                        case WP:
-                            next = _white.getMove();
-                            break;
-                        case BP:
-                            next = _black.getMove();
-                            break;
-                        default:
-                            throw new Error("Unreachable statement");
+                    case WP:
+                        next = _white.getMove();
+                        break;
+                    case BP:
+                        next = _black.getMove();
+                        break;
+                    default:
+                        throw new Error("Unreachable statement");
                     }
                 } else {
                     next = _nonplayer.getMove();

@@ -333,7 +333,7 @@ class Board {
         _subsetsInitialized = false;
         computeRegions();
         _subsetsInitialized = true;
-        if (_moves.size() >= _moveLimit && !_winnerKnown) {
+        if (movesMade() >= _moveLimit && !_winnerKnown) {
             return EMP;
         }
         if (!_winnerKnown) {
