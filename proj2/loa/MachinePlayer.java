@@ -158,7 +158,7 @@ class MachinePlayer extends Player {
     }
 
     /**
-     * Return weight for BOARD considering A for mid-game.
+     * Return weight for BOARD considering A, O for mid-game.
      */
     private int midGame(Board board, ArrayList<Integer> a, ArrayList<Integer> o) {
         if (board.movesMade() * 4 >= board.getLimit()
@@ -169,44 +169,13 @@ class MachinePlayer extends Player {
     }
 
     /**
-     * Return weight for BOARD considering A for lategame.
+     * Return weight for BOARD considering A, O for lategame.
      */
     private int lateGame(Board board, ArrayList<Integer> a, ArrayList<Integer> o) {
         if (board.movesMade() * 3 >= board.getLimit() * 2) {
             return (o.size() - a.size()) * 5;
         }
         return 0;
-    }
-
-    /**
-     * Return weights for mid square in BOARD considering P and OPP.
-     */
-    private int middle(Board board, Piece p, Piece opp) {
-        if (!middle(board)) {
-            return 0;
-        }
-        int ans = 0;
-        if (board.twoEight() == p) {
-            ans += 1;
-        } else if (board.twoEight() == opp) {
-            ans -= 1;
-        }
-        if (board.twoSev() == p) {
-            ans += 1;
-        } else if (board.twoSev() == opp) {
-            ans -= 1;
-        }
-        if (board.thrFive() == p) {
-            ans += 1;
-        } else if (board.thrFive() == opp) {
-            ans -= 1;
-        }
-        if (board.thrSix() == p) {
-            ans += 1;
-        } else if (board.thrSix() == opp) {
-            ans -= 1;
-        }
-        return ans * 10;
     }
 
     /**
@@ -231,8 +200,6 @@ class MachinePlayer extends Player {
                                double beta, boolean me) {
         ArrayList<Move> legal = board.legalMoves();
         if (board.winner() != null) {
-            //System.out.println(board.toString());
-            //System.out.println("from max");
             return null;
         }
         Move best = legal.get(0);

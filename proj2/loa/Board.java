@@ -519,12 +519,6 @@ class Board {
     }
 
     /**
-     * Returns desired square for test.
-     */
-    public Square forTest() {
-        return ALL_SQUARES[47];
-    }
-    /**
      * Return the movelimit.
      */
     public int getLimit() {
@@ -552,25 +546,7 @@ class Board {
     public Piece square(int i) {
         return get(ALL_SQUARES[i]);
     }
-    /** Return Sq 27. */
-    public Piece twoSev() {
-        return get(ALL_SQUARES[27]);
-    }
 
-    /** Return Sq 28. */
-    public Piece twoEight() {
-        return get(ALL_SQUARES[28]);
-    }
-
-    /** Return Sq 35. */
-    public Piece thrFive() {
-        return get(ALL_SQUARES[35]);
-    }
-
-    /** Return Sq 36. */
-    public Piece thrSix() {
-        return get(ALL_SQUARES[36]);
-    }
 
     /** Return the estimated of board. */
     public int getValue() {
