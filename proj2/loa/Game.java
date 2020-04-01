@@ -301,6 +301,7 @@ class Game {
             try {
                 String next;
                 _view.update(this);
+                System.out.println(_board.movesMade());
                 if (_board.gameOver() && _playing) {
                     announceWinner();
                     _playing = false;
