@@ -41,7 +41,9 @@ class MachinePlayer extends Player {
     @Override
     String getMove() {
         Move choice;
-
+        if (getBoard().movesMade() >= getBoard().getLimit()) {
+            return null;
+        }
         assert side() == getGame().getBoard().turn();
         int depth;
         choice = searchForMove();
