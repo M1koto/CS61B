@@ -3,5 +3,6 @@
 seed 129384
 manual white
 auto black
+limit 3
 #*move
 #*remote move/win
