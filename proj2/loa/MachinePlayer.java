@@ -65,6 +65,7 @@ class MachinePlayer extends Player {
      */
     private Move searchForMove() {
         Board work = new Board(getBoard());
+        work.setMoveLimit(getBoard().getLimit() - getBoard().movesMade());
         int value;
         assert side() == work.turn();
         _foundMove = null;
@@ -74,7 +75,6 @@ class MachinePlayer extends Player {
         } else {
             _me = BP;
             value = findMove(work, chooseDepth(), true, -1, -INFTY, INFTY);
-
         }
         return _foundMove;
     }
