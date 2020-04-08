@@ -1,22 +1,22 @@
 import java.util.Arrays;
 
 /**
- * Note that every sorting algorithm takes in an argument k. The sorting 
+ * Note that every sorting algorithm takes in an argument k. The sorting
  * algorithm should sort the array from index 0 to k. This argument could
  * be useful for some of your sorts.
- *
+ * <p>
  * Class containing all the sorting algorithms from 61B to date.
- *
+ * <p>
  * You may add any number instance variables and instance methods
  * to your Sorting Algorithm classes.
- *
+ * <p>
  * You may also override the empty no-argument constructor, but please
  * only use the no-argument constructor for each of the Sorting
  * Algorithms, as that is what will be used for testing.
- *
+ * <p>
  * Feel free to use any resources out there to write each sort,
  * including existing implementations on the web or from DSIJ.
- *
+ * <p>
  * All implementations except Counting Sort adopted from Algorithms,
  * a textbook by Kevin Wayne and Bob Sedgewick. Their code does not
  * obey our style conventions.
@@ -38,7 +38,9 @@ public class MySortingAlgorithms {
         }
     }
 
-    /** Insertion sorts the provided data. */
+    /**
+     * Insertion sorts the provided data.
+     */
     public static class InsertionSort implements SortingAlgorithm {
         @Override
         public void sort(int[] array, int k) {
@@ -92,15 +94,47 @@ public class MySortingAlgorithms {
         }
     }
 
-    /** Your mergesort implementation. An iterative merge
-      * method is easier to write than a recursive merge method.
-      * Note: I'm only talking about the merge operation here,
-      * not the entire algorithm, which is easier to do recursively.
-      */
+    /**
+     * Your merge sort implementation. An iterative merge
+     * method is easier to write than a recursive merge method.
+     * Note: I'm only talking about the merge operation here,
+     * not the entire algorithm, which is easier to do recursively.
+     */
     public static class MergeSort implements SortingAlgorithm {
         @Override
         public void sort(int[] array, int k) {
-            // FIXME
+            int[] ans = new int[array.length];
+            int hi = Math.min(k - 1, array.length - 1);
+            sort(array, ans, 0, hi);
+        }
+
+        private static void sort(int[] a, int[] ans, int lo, int hi) {
+            if (hi <= lo) {
+                return;
+            }
+            int mid = lo + (hi - lo) / 2;
+            sort(a, ans, lo, mid);
+            sort(a, ans, mid + 1, hi);
+            merge(a, ans, lo, mid, hi);
+        }
+
+        private static void merge(int[] a, int[] ans, int lo, int mid, int hi) {
+            if (hi + 1 - lo >= 0) {
+                System.arraycopy(a, lo, ans, lo, hi + 1 - lo);
+            }
+
+            int i = lo, j = mid + 1;
+            for (int k = lo; k <= hi; k++) {
+                if (i > mid) {
+                    a[k] = ans[j++];
+                } else if (j > hi) {
+                    a[k] = ans[i++];
+                } else if (ans[j] < ans[i]) {
+                    a[k] = ans[j++];
+                } else {
+                    a[k] = ans[i++];
+                }
+            }
         }
 
         // may want to add additional methods
@@ -130,7 +164,8 @@ public class MySortingAlgorithms {
         }
     }
 
-    /** Your Heapsort implementation.
+    /**
+     * Your Heapsort implementation.
      */
     public static class HeapSort implements SortingAlgorithm {
         @Override
@@ -144,7 +179,8 @@ public class MySortingAlgorithms {
         }
     }
 
-    /** Your Quicksort implementation.
+    /**
+     * Your Quicksort implementation.
      */
     public static class QuickSort implements SortingAlgorithm {
         @Override
@@ -195,7 +231,9 @@ public class MySortingAlgorithms {
         }
     }
 
-    /** Exchange A[I] and A[J]. */
+    /**
+     * Exchange A[I] and A[J].
+     */
     private static void swap(int[] a, int i, int j) {
         int swap = a[i];
         a[i] = a[j];
