@@ -7,6 +7,9 @@ import static org.junit.Assert.*;
 
 public class MySortingAlgorithmsTest {
 
+    int[] original = {0, 3, 5, 1, 2, 6, 9, 7, 4, 8};
+    int[] correct = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+
     private SortingAlgorithm[] algorithms = {
         new MySortingAlgorithms.InsertionSort(),
         new MySortingAlgorithms.SelectionSort(),
@@ -134,6 +137,20 @@ public class MySortingAlgorithmsTest {
                         correct, input);
             }
         }
+    }
+
+    @Test
+    public void select() {
+        MySortingAlgorithms.SelectionSort test = new MySortingAlgorithms.SelectionSort();
+        int [] sort = original.clone();
+    }
+
+    @Test
+    public void insert() {
+        MySortingAlgorithms.InsertionSort test1 = new MySortingAlgorithms.InsertionSort();
+        int [] sort = original.clone();
+        test1.sort(sort, 10);
+        assertArrayEquals(sort, correct);
     }
 
     public static void main(String[] args) {

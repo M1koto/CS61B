@@ -42,7 +42,18 @@ public class MySortingAlgorithms {
     public static class InsertionSort implements SortingAlgorithm {
         @Override
         public void sort(int[] array, int k) {
-            // FIXME
+            for (int i = 0; i < k; i++) {
+                int small = array[i];
+                for (int j = 0; j < i; j++) {
+                    if (array[j] > small) {
+                        for (int l = i; l > j; l--) {
+                            array[l] = array[l - 1];
+                        }
+                        array[j] = small;
+                        break;
+                    }
+                }
+            }
         }
 
         @Override
@@ -60,7 +71,19 @@ public class MySortingAlgorithms {
     public static class SelectionSort implements SortingAlgorithm {
         @Override
         public void sort(int[] array, int k) {
-            // FIXME
+            for (int i = 0; i < k; i++) {
+                int small = array[i];
+                int index = i;
+                for (int j = i; j < k; j++) {
+                    if (array[j] < small) {
+                        small = array[j];
+                        index = j;
+                    }
+                }
+                int temp = array[i];
+                array[i] = array[index];
+                array[index] = temp;
+            }
         }
 
         @Override
