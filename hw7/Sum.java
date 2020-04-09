@@ -8,12 +8,15 @@ public class Sum {
         MySortingAlgorithms.MergeSort t = new MySortingAlgorithms.MergeSort();
         t.sort(A, A.length);
         t.sort(B, B.length);
-        for (int i = 0; i < A.length; i++) {
-            int keep = m - A[i];
-            for (int j = 0; j < B.length; j++) {
-                if (keep - B[j] == 0) {
+        for (int value : A) {
+            if (value > m) {
+                return false;
+            }
+            int keep = m - value;
+            for (int i : B) {
+                if (keep - i == 0) {
                     return true;
-                } else if (keep - B[j] < 0) {
+                } else if (keep - i < 0) {
                     break;
                 }
             }
