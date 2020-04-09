@@ -146,11 +146,11 @@ public class MySortingAlgorithmsTest {
     }
 
     @Test
-    public void insert() {
-        MySortingAlgorithms.InsertionSort test1 = new MySortingAlgorithms.InsertionSort();
+    public void LSD() {
+        MySortingAlgorithms.LSDSort test1 = new MySortingAlgorithms.LSDSort();
         int [] sort = original.clone();
         test1.sort(sort, 10);
-        assertArrayEquals(sort, correct);
+        assertArrayEquals("Eq", correct, sort);
     }
 
     public static void main(String[] args) {

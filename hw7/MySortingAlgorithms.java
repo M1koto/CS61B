@@ -48,9 +48,7 @@ public class MySortingAlgorithms {
                 int small = array[i];
                 for (int j = 0; j < i; j++) {
                     if (array[j] > small) {
-                        for (int l = i; l > j; l--) {
-                            array[l] = array[l - 1];
-                        }
+                        System.arraycopy(array, j, array, j + 1, i - j);
                         array[j] = small;
                         break;
                     }
@@ -122,8 +120,8 @@ public class MySortingAlgorithms {
             if (hi + 1 - lo >= 0) {
                 System.arraycopy(a, lo, ans, lo, hi + 1 - lo);
             }
-
-            int i = lo, j = mid + 1;
+            int i = lo;
+            int j = mid + 1;
             for (int k = lo; k <= hi; k++) {
                 if (i > mid) {
                     a[k] = ans[j++];
@@ -207,29 +205,61 @@ public class MySortingAlgorithms {
     public static class LSDSort implements SortingAlgorithm {
         @Override
         public void sort(int[] a, int k) {
-            // FIXME
+            int N = Math.min(k, a.length);
+            int[] ans = new int[N];
+            int temp = 1 << 8;
+            int mask = temp - 1;
+
+            for (int d = 0; d < 4; d++) {
+
+                int[] count = new int[temp + 1];
+                for (int i = 0; i < N; i++) {
+                    int c = (a[i] >> 8 * d) & mask;
+                    count[c + 1]++;
+                }
+
+                for (int r = 0; r < temp; r++)
+                    count[r + 1] += count[r];
+
+                if (d == 3) {
+                    int shift1 = count[temp] - count[temp / 2];
+                    int shift2 = count[temp / 2];
+                    for (int r = 0; r < temp / 2; r++)
+                        count[r] += shift1;
+                    for (int r = temp / 2; r < temp; r++)
+                        count[r] -= shift2;
+                }
+
+                for (int i = 0; i < N; i++) {
+                    int c = (a[i] >> 8 * d) & mask;
+                    ans[count[c]++] = a[i];
+                }
+
+                for (int i = 0; i < N; i++)
+                    a[i] = ans[i];
+            }
         }
 
-        @Override
-        public String toString() {
-            return "LSD Sort";
-        }
+    @Override
+    public String toString() {
+        return "LSD Sort";
+    }
+}
+
+/**
+ * MSD Sort implementation.
+ */
+public static class MSDSort implements SortingAlgorithm {
+    @Override
+    public void sort(int[] a, int k) {
+        // FIXME
     }
 
-    /**
-     * MSD Sort implementation.
-     */
-    public static class MSDSort implements SortingAlgorithm {
-        @Override
-        public void sort(int[] a, int k) {
-            // FIXME
-        }
-
-        @Override
-        public String toString() {
-            return "MSD Sort";
-        }
+    @Override
+    public String toString() {
+        return "MSD Sort";
     }
+}
 
     /**
      * Exchange A[I] and A[J].
