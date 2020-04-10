@@ -41,6 +41,7 @@ public class Dog implements Serializable{ // FIXME
      */
     public void haveBirthday() {
         _age += 1;
+        saveDog();
         System.out.println(toString());
         System.out.println("Happy birthday! Woof! Woof!");
     }
