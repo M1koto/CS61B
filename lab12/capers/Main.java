@@ -1,6 +1,7 @@
 package capers;
 
 import java.io.File;
+import java.io.IOException;
 
 /** Canine Capers: A Gitlet Prelude.
  * @author Sean Dooher
@@ -10,7 +11,9 @@ public class Main {
     static final File CWD = new File(".");
 
     /** Main metadata folder. */
-    static final File CAPERS_FOLDER = null; // FIXME
+    static final File CAPERS_FOLDER = new File(".capers");
+    static File dog = new File(".capers/dogs");
+    static File story = new File(".capers/story.txt");
 
     /**
      * Runs one of three commands:
@@ -49,6 +52,12 @@ public class Main {
         case "story":
             writeStory(args);
             break;
+        case "dog":
+            makeDog(args);
+            break;
+        case "birthday":
+            celebrateBirthday(args);
+            break;
         // FIXME
         default:
             exitWithError(String.format("Unknown command: %s", args[0]));
@@ -67,6 +76,13 @@ public class Main {
      *
      */
     public static void setupPersistence() {
+        CAPERS_FOLDER.mkdir();
+        dog.mkdir();
+        try {
+            story.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         // FIXME
     }
 
@@ -77,6 +93,9 @@ public class Main {
      */
     public static void writeStory(String[] args) {
         validateNumArgs("story", args, 2);
+        String target = Utils.readContentsAsString(story) + args[1] + '\n';
+        Utils.writeContents(story, target);
+        System.out.println(Utils.readContentsAsString(story));
         // FIXME
     }
 
@@ -88,6 +107,10 @@ public class Main {
      */
     public static void makeDog(String[] args) {
         validateNumArgs("dog", args, 4);
+        int age = Integer.parseInt(args[3]);
+        Dog target = new Dog(args[1], args[2], age);
+        target.saveDog();
+        System.out.println(target.toString());
         // FIXME
     }
 
@@ -99,6 +122,10 @@ public class Main {
      */
     public static void celebrateBirthday(String[] args) {
         validateNumArgs("birthday", args, 2);
+        assert Dog.fromFile(args[1]) != null;
+        if (Dog.fromFile(args[1]) != null) {
+            Dog.fromFile(args[1]).haveBirthday();
+        }
         // FIXME
     }
 
