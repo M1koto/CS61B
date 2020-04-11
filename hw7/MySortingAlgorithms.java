@@ -205,21 +205,21 @@ public class MySortingAlgorithms {
     public static class LSDSort implements SortingAlgorithm {
         @Override
         public void sort(int[] a, int k) {
-            int N = Math.min(k, a.length);
-            int[] ans = new int[N];
+            int[] ans = new int[Math.min(k, a.length)];
             int temp = 1 << 8;
             int mask = temp - 1;
 
             for (int d = 0; d < 4; d++) {
 
                 int[] count = new int[temp + 1];
-                for (int i = 0; i < N; i++) {
+                for (int i = 0; i < ans.length; i++) {
                     int c = (a[i] >> 8 * d) & mask;
                     count[c + 1]++;
                 }
 
-                for (int r = 0; r < temp; r++)
+                for (int r = 0; r < temp; r++) {
                     count[r + 1] += count[r];
+                }
 
                 if (d == 3) {
                     int shift1 = count[temp] - count[temp / 2];
@@ -230,13 +230,12 @@ public class MySortingAlgorithms {
                         count[r] -= shift2;
                 }
 
-                for (int i = 0; i < N; i++) {
+                for (int i = 0; i < ans.length; i++) {
                     int c = (a[i] >> 8 * d) & mask;
                     ans[count[c]++] = a[i];
                 }
 
-                for (int i = 0; i < N; i++)
-                    a[i] = ans[i];
+                System.arraycopy(ans, 0, a, 0, ans.length);
             }
         }
 
