@@ -56,8 +56,10 @@ This class compares individual file with its latest commits, noticing addition a
 ####track(File f): Tracks File f in the commit class to track File F for commits
 ####Untrack(File f): Untracks File f in commit class by the rm command
 
-####Double HT: 
-add(Commit c, branch b): adds commit c to branch b and makes c branch head. adding b to branch field. errors of > 2 branch
+####Double HT:
+addChild(), addParent()
+
+add(DoubleHT c, branch b): adds DoubleHT c to branch b and makes c branch head. adding b to branch field. errors of > 2 branch
 
 find(Message M): Returns all commit id associated with the log Message m.
 

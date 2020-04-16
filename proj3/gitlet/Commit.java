@@ -8,4 +8,16 @@ package gitlet;
  *  @author kenny liao
  *  */
 public class Commit {
+    private String _code;
+    private String _message;
+
+    /** Return _code. */
+    public String getCode() {
+        return _code;
+    }
+
+    /** Return _message. */
+    public String getMessage() {
+        return _message;
+    }
 }
