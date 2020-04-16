@@ -1,6 +1,11 @@
 package gitlet;
 
-import java.util.LinkedList;
+/** This class implements linked list by allowing
+ * its pointer to point to at most two double HT objects (branch),
+ and allows it to be pointed by at most two double HT object (merge).
+ *
+ *  @author kenny liao
+ *  */
 
 public class DoubleHT{
     DoubleHT(DoubleHT Parent, Commit C) {
