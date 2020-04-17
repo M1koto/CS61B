@@ -52,6 +52,9 @@ public class RedBlackTree<T extends Comparable<T>> {
             } else {
                 temp = temp.left;
             }
+            if (temp == null) {
+                return node;
+            }
         }
         RBTreeNode<T> left = temp.left;
         RBTreeNode<T> temp2 = left.right;
@@ -78,6 +81,9 @@ public class RedBlackTree<T extends Comparable<T>> {
                 temp = temp.right;  // traverse to the correct node
             } else {
                 temp = temp.left;
+            }
+            if (temp == null) {
+                return node;
             }
         }
         RBTreeNode<T> right = temp.right;
