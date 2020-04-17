@@ -61,8 +61,8 @@ public class RedBlackTree<T extends Comparable<T>> {
         left.right = temp;
         temp.left = temp2;
         root = left;
-        root.isBlack = temp.isBlack;
-        temp.isBlack = false;
+        //root.isBlack = temp.isBlack;
+        //temp.isBlack = false;
         return root;
     }
 
@@ -91,8 +91,8 @@ public class RedBlackTree<T extends Comparable<T>> {
         right.left = temp;
         temp.right = temp2;
         root = right;
-        root.isBlack = temp.isBlack;
-        temp.isBlack = false;
+        //root.isBlack = temp.isBlack;
+        //temp.isBlack = false;
         return root;
     }
 
