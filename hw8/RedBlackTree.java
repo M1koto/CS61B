@@ -45,25 +45,9 @@ public class RedBlackTree<T extends Comparable<T>> {
      * @return new root of the (sub)tree.
      */
     RBTreeNode<T> rotateRight(RBTreeNode<T> node) {
-        RBTreeNode<T> temp = root;
-        while (temp.item.compareTo(node.item) != 0) {
-            if (temp.item.compareTo(node.item) < 0) {
-                temp = temp.right;  // traverse to the correct node
-            } else {
-                temp = temp.left;
-            }
-            if (temp == null) {
-                return node;
-            }
-        }
-        RBTreeNode<T> left = temp.left;
-        RBTreeNode<T> temp2 = left.right;
-        left.right = temp;
-        temp.left = temp2;
-        root = left;
-        //root.isBlack = temp.isBlack;
-        //temp.isBlack = false;
-        return root;
+        RBTreeNode right = new RBTreeNode<T>(false, node.item, node.left.right, node.right);
+        node = new RBTreeNode<T>(node.isBlack, node.left.item, node.left.left, right);
+        return node;
     }
 
     /**
@@ -75,25 +59,9 @@ public class RedBlackTree<T extends Comparable<T>> {
      * @return new root of the (sub)tree.
      */
     RBTreeNode<T> rotateLeft(RBTreeNode<T> node) {
-        RBTreeNode<T> temp = root;
-        while (temp.item.compareTo(node.item) != 0) {
-            if (temp.item.compareTo(node.item) < 0) {
-                temp = temp.right;  // traverse to the correct node
-            } else {
-                temp = temp.left;
-            }
-            if (temp == null) {
-                return node;
-            }
-        }
-        RBTreeNode<T> right = temp.right;
-        RBTreeNode<T> temp2 = right.left;
-        right.left = temp;
-        temp.right = temp2;
-        root = right;
-        //root.isBlack = temp.isBlack;
-        //temp.isBlack = false;
-        return root;
+        RBTreeNode left = new RBTreeNode<T>(false, node.item, node.left, node.right.left);
+        node = new RBTreeNode<T>(node.isBlack, node.right.item, left, node.right.right);
+        return node;
     }
 
     /**
