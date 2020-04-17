@@ -10,14 +10,16 @@ import java.util.ArrayList;
  *  */
 
 public class DoubleHT{
-    DoubleHT(DoubleHT parent, Commit c) {
+    DoubleHT(DoubleHT parent, Commit c, String branch) {
         _parent1 = parent;
         _commit = c;
+        _branch1 = branch;
     }
 
     /** Make DoubleHT d the children of this DoubleHT.
      */
     public void addChild(DoubleHT d) {
+        assert branchMatch(d);
         if (_child1 == null) {
             _child1 = d;
         } else if (_child2 == null) {
@@ -26,6 +28,12 @@ public class DoubleHT{
             System.out.println("More than two branches in the same commit");
             //FIXME
         }
+    }
+
+    /** Check if d is in same branch as this. */
+    private boolean branchMatch(DoubleHT d) {
+        return d._branch1.equals(_branch1) || d._branch1.equals(_branch2)
+                || d._branch2.equals(_branch1) || d._branch2.equals(_branch2);
     }
 
     /** Make DoubleHT d the children of this DoubleHT.
@@ -74,13 +82,10 @@ public class DoubleHT{
         }
     }
 
-
-
-
-
-
-
-
+    /** Make _branch2 to the specified branch. */
+    public void addBranch(String branch) {
+        _branch2 = branch;
+    }
 
     /** The commit stored in this DoubleHT. */
     private Commit _commit;

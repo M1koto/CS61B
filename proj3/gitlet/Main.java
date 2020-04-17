@@ -7,6 +7,9 @@ package gitlet;
  */
 public class Main {
 
+    /** Creates a new User for gitlet. */
+    private static User _user;
+
     /**
      * Usage: java gitlet.Main ARGS, where ARGS contains
      * <COMMAND> <OPERAND> ....
@@ -18,12 +21,19 @@ public class Main {
         }
         switch (args[0]) {
             case "init":
-                new User();
+                if (_user != null) {
+                    System.out.println("A Gitlet version-control system already exists in the current directory.");
+                    break;
+                    //FIXME
+                }
+                _user = new User();
                 break;
             case "add":
+                _user.add(args[1]);
                 //FIXME
                 break;
             case "commit":
+                _user.commit(args[1]);
                 //FIXME
                 break;
             case "rm":
