@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * This class stores permanent information for 'user'
@@ -23,13 +24,18 @@ public class User {
 
     static final File STAGING = new File(".gitlet/stage");
 
+    static DoubleHT INITIAL;
+
     User() {
         lists = new ArrayList<String>();
         tracked = new ArrayList<String>();
         DIRECTORY.mkdir();
         STAGING.mkdir();
-        Commit initial = new Commit("initial commit", Commit.FIRSTCOMMIT);
-        HEAD = new DoubleHT(null, initial, "Master");
+        Commit first = new Commit("initial commit", Commit.FIRSTCOMMIT);
+        INITIAL = new DoubleHT(null, first, "Master");
+        HEAD = INITIAL;
+        _branchHeads = new HashMap<String, DoubleHT>();
+        _branchHeads.put("Master", INITIAL);
     }
 
     /**
@@ -71,6 +77,14 @@ public class User {
         }
     }
 
+    /** Responds to the command with message m. */
+    public void find(String m) {
+        ArrayList<String> ans = new ArrayList<>();
+        INITIAL.findMessage(m, ans);
+        if (ans.size() == 0) {
+            System.out.println("Found no commit with that message.");
+        }
+    }
     /**
      * An arraylist that caches all staged but not committed files.
      */
@@ -79,6 +93,9 @@ public class User {
     /** An arraylist that stores all the tracked files. */
     private ArrayList<String> tracked;
 
-    /** Where the HEAD is. */
+    /** Where the DOUBLEHT HEAD is on. */
     private DoubleHT HEAD;
+
+    /** Stores name : position of branch head. */
+    private HashMap<String, DoubleHT> _branchHeads;
 }

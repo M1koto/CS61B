@@ -1,5 +1,8 @@
 package gitlet;
 
+import java.io.File;
+import java.io.IOException;
+
 /**
  * Driver class for Gitlet, the tiny stupid version-control system.
  *
@@ -29,8 +32,14 @@ public class Main {
                 _user = new User();
                 break;
             case "add":
-                _user.add(args[1]);
-                //FIXME
+                File temp = new File(args[1]);
+                try {
+                    temp.createNewFile();
+                } catch (IOException e) {
+                    System.out.println("File does not exist.");
+                    System.exit(0);
+                }
+                _user.add(temp);
                 break;
             case "commit":
                 _user.commit(args[1]);
@@ -47,7 +56,7 @@ public class Main {
                 //FIXME
                 break;
             case "find":
-                //FIXME
+                _user.find(args[1]);
                 break;
             case "status":
                 //FIXME

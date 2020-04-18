@@ -2,21 +2,23 @@ package gitlet;
 
 import java.util.ArrayList;
 
-/** This class implements linked list by allowing
+/**
+ * This class implements linked list by allowing
  * its pointer to point to at most two double HT objects (branch),
- and allows it to be pointed by at most two double HT object (merge).
+ * and allows it to be pointed by at most two double HT object (merge).
  *
- *  @author kenny liao
- *  */
+ * @author kenny liao
+ */
 
-public class DoubleHT{
+public class DoubleHT {
     DoubleHT(DoubleHT parent, Commit c, String branch) {
         _parent1 = parent;
         _commit = c;
         _branch1 = branch;
     }
 
-    /** Make DoubleHT d the children of this DoubleHT.
+    /**
+     * Make DoubleHT d the children of this DoubleHT.
      */
     public void addChild(DoubleHT d) {
         assert branchMatch(d);
@@ -30,13 +32,16 @@ public class DoubleHT{
         }
     }
 
-    /** Check if d is in same branch as this. */
+    /**
+     * Check if d is in same branch as this.
+     */
     private boolean branchMatch(DoubleHT d) {
         return d._branch1.equals(_branch1) || d._branch1.equals(_branch2)
                 || d._branch2.equals(_branch1) || d._branch2.equals(_branch2);
     }
 
-    /** Make DoubleHT d the children of this DoubleHT.
+    /**
+     * Make DoubleHT d the children of this DoubleHT.
      */
     public void addParent(DoubleHT d) {
         if (_parent1 == null) {
@@ -49,7 +54,9 @@ public class DoubleHT{
         }
     }
 
-    /** For a given Commit ID s return the corresponding Commit C. */
+    /**
+     * For a given Commit ID s return the corresponding Commit C.
+     */
     public Commit findCommit(String s) {
         Commit a;
         Commit b = null;
@@ -70,53 +77,71 @@ public class DoubleHT{
         }
     }
 
-    /** For a given Commit Message m add all corresponding Commit to ArrayList ans. */
-    public void findMessage(String m, ArrayList<Commit> ans) {
+    /**
+     * For a given Commit Message m add all corresponding Commit to ArrayList ans.
+     */
+    public void findMessage(String m, ArrayList<String> ans) {
         if (_commit.getMessage().equals(m)) {
-            ans.add(_commit);
-        } else {
-            _parent1.findMessage(m, ans);
-            if (_parent2 != null) {
-                _parent2.findMessage(m, ans);
-            }
+            ans.add(_commit.getMessage());
+            System.out.println(_commit.getMessage());
+        }
+        _child1.findMessage(m, ans);
+        if (_child2 != null) {
+            _child2.findMessage(m, ans);
+
         }
     }
 
-    /** Return the Commit stored here. */
+    /**
+     * Return the Commit stored here.
+     */
     public Commit getCommit() {
         return _commit;
     }
 
-    /** Make _branch2 to the specified branch. */
+    /**
+     * Make _branch2 to the specified branch.
+     */
     public void addBranch(String branch) {
         _branch2 = branch;
     }
 
-    /** The commit stored in this DoubleHT. */
+    /**
+     * The commit stored in this DoubleHT.
+     */
     private Commit _commit;
 
-    /** The first branch of where this DoubleHT is on.
-     * This field is never null. */
+    /**
+     * The first branch of where this DoubleHT is on.
+     * This field is never null.
+     */
     private String _branch1;
 
-    /** The second branch of where this DoubleHT is on.*/
+    /**
+     * The second branch of where this DoubleHT is on.
+     */
     private String _branch2;
 
-    /** The first parent of this DoubleHT.
-     * Is never null except for the first ever commit. */
+    /**
+     * The first parent of this DoubleHT.
+     * Is never null except for the first ever commit.
+     */
     private DoubleHT _parent1;
 
-    /** The second parent of this DoubleHT.
+    /**
+     * The second parent of this DoubleHT.
      * Null if does not exist.
      */
     private DoubleHT _parent2;
 
-    /** The first child of this DoubleHT.
+    /**
+     * The first child of this DoubleHT.
      * If doesn't have any, then is null.
      */
     private DoubleHT _child1;
 
-    /** The second child of this DoubleHT.
+    /**
+     * The second child of this DoubleHT.
      * If doesn't have any, then is null.
      */
     private DoubleHT _child2;
