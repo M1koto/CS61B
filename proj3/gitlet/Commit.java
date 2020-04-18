@@ -1,5 +1,7 @@
 package gitlet;
 
+import java.util.ArrayList;
+
 /** This class calls compare class on all file and get difference between latest commit and version now?
  Tracks all files in staging class, receives
  info from user class for latest commit info, synthesis data adding on metadata to produce a new commit
@@ -8,8 +10,13 @@ package gitlet;
  *  @author kenny liao
  *  */
 public class Commit {
-    private String _code;
-    private String _message;
+
+    static final String FIRSTCOMMIT = "Thu 1 1 00:00:00 1970 -0700";
+
+    Commit(String message, String time) {
+        _message = message;
+        _timestamp = time;
+    }
 
     /** Return _code. */
     public String getCode() {
@@ -20,4 +27,21 @@ public class Commit {
     public String getMessage() {
         return _message;
     }
+
+    /** Returns true if this Commit is tracking File with name name. */
+    public boolean tracking(String name) {
+        return tracked.contains(name);
+    }
+
+    /** An arraylist that stores all the tracked files. */
+    private ArrayList<String> tracked;
+
+    /** Records time of Commit. */
+    String _timestamp;
+
+    /** Records message. */
+    private String _message;
+
+    /** Records SHA1 code. */
+    private String _code;
 }

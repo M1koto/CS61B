@@ -82,6 +82,11 @@ public class DoubleHT{
         }
     }
 
+    /** Return the Commit stored here. */
+    public Commit getCommit() {
+        return _commit;
+    }
+
     /** Make _branch2 to the specified branch. */
     public void addBranch(String branch) {
         _branch2 = branch;
