@@ -26,18 +26,25 @@ public class User implements Serializable {
 
     static final File STAGING = new File(".gitlet/stage");
 
+    File USER = new File("USER");
     static DoubleHT INITIAL;
 
-    User() {
+    public User() {
         lists = new ArrayList<String>();
         tracked = new ArrayList<String>();
         DIRECTORY.mkdir();
         STAGING.mkdir();
+        try {
+            USER.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         Commit first = new Commit("initial commit", Commit.FIRSTCOMMIT);
         INITIAL = new DoubleHT(null, first, "Master");
         HEAD = INITIAL;
         _branchHeads = new HashMap<String, DoubleHT>();
         _branchHeads.put("Master", INITIAL);
+        save();
     }
 
     /**
@@ -83,6 +90,11 @@ public class User implements Serializable {
     /** Returns the Commit time. */
     private Date time() {
         return new Date();
+    }
+
+    /** Saves this User. */
+    public void save() {
+        Utils.writeContents(USER, this);
     }
 
     /** Responds to the command with message m. */

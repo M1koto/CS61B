@@ -11,7 +11,9 @@ import java.util.IllegalFormatCodePointException;
  */
 public class Main {
 
-    /** Creates a new User for gitlet. */
+    /**
+     * Creates a new User for gitlet.
+     */
     private static User _user;
 
     /**
@@ -24,12 +26,7 @@ public class Main {
             System.exit(0);
         }
         File buffer = new File("USER");
-        if (buffer.exists()) {
-            _user = Utils.readObject(buffer, User.class);
-        } else {
-            System.out.println("init command please");
-            System.exit(0);
-        }
+        _user = Utils.readObject(buffer, User.class);
         switch (args[0]) {
             case "init":
                 if (_user != null) {
