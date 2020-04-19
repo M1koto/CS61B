@@ -105,8 +105,15 @@ public class User implements Serializable {
         return new Date();
     }
 
-    /** Adds branch to HEAD. */
-
+    /** Adds a pointer of name name to tip of the branch. */
+    public void addBranch(String name) {
+        if (_branchHeads.containsKey(name)) {
+            System.out.println("A branch with that name already exists.");
+        } else {
+            DoubleHT temp = _branchHeads.get(_current);
+            _branchHeads.put(name, temp);
+        }
+    }
 
     /**
      * Saves this User.

@@ -73,6 +73,7 @@ public class Main {
                 break;
             case "branch":
                 _user.addBranch(args[1]);
+                _user.save();
                 //FIXME
                 break;
             case "rm-branch":
