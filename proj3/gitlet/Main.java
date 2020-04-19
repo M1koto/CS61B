@@ -40,12 +40,17 @@ public class Main {
                 break;
             case "add":
                 File temp = new File(args[1]);
+                if (!temp.exists()) {
+                    System.out.println("File does not exist.");
+                    System.exit(0);
+                }
                 _user.add(temp);
                 _user.save();
                 break;
             case "commit":
                 _user.commit(args[1]);
                 //FIXME
+                _user.save();
                 break;
             case "rm":
                 _user.rm(args[1]);
@@ -67,6 +72,7 @@ public class Main {
                 //FIXME
                 break;
             case "branch":
+                _user.addBranch(args[1]);
                 //FIXME
                 break;
             case "rm-branch":

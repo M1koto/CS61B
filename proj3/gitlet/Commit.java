@@ -15,19 +15,37 @@ public class Commit implements Serializable {
 
     static final String FIRSTCOMMIT = "Thu 1 1 00:00:00 1970 -0700";
 
-    Commit(String message, String time) {
+    /** Creates a new Commit with following message and time. */
+    Commit(String message, String time, ArrayList<File> parent, ArrayList<File> staged) {
         _message = message;
+        if (!time.equals(FIRSTCOMMIT)) {
+            time = time.substring(0, time.length() - 8);
+            time = time + "2020 -0700";
+        }
         _timestamp = time;
+        _tracked = combine(parent, staged);
+        _code = Utils.sha1(_tracked);
     }
 
-    /** Remove file with name. */
+    /** Combine all data passed in to be committed. */
+    private ArrayList<File> combine(ArrayList<File> parent, ArrayList<File> staged) {
+        parent.addAll(staged);
+        return parent;
+    }
+
+    /** Remove file with name in tracked. */
     public void remove(String name) {
-        for (File f: tracked) {
+        for (File f: _tracked) {
             if (f.getName().equals(name)) {
-                tracked.remove(f);
+                _tracked.remove(f);
                 break;
             }
         }
+    }
+
+    /** Returns the tracked files. */
+    public ArrayList<File> getTracked() {
+        return _tracked;
     }
 
     /** Return _code. */
@@ -42,11 +60,11 @@ public class Commit implements Serializable {
 
     /** Returns true if this Commit is tracking File with name name. */
     public boolean tracking(String name) {
-        return tracked.contains(name);
+        return _tracked.contains(name);
     }
 
     /** An arraylist that stores all the tracked files. */
-    private ArrayList<File> tracked;
+    private ArrayList<File> _tracked;
 
     /** Records time of Commit. */
     String _timestamp;

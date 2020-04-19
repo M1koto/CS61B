@@ -30,7 +30,7 @@ public class User implements Serializable {
     static DoubleHT INITIAL;
 
     public User() {
-        tracked = new ArrayList<String>();
+        staged = new ArrayList<File>();
         DIRECTORY.mkdir();
         STAGING.mkdir();
         try {
@@ -38,9 +38,10 @@ public class User implements Serializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Commit first = new Commit("initial commit", Commit.FIRSTCOMMIT);
+        Commit first = new Commit("initial commit", Commit.FIRSTCOMMIT, null, null);
         INITIAL = new DoubleHT(null, first, "Master");
         HEAD = INITIAL;
+        _current = "Master";
         _branchHeads = new HashMap<String, DoubleHT>();
         _branchHeads.put("Master", INITIAL);
         save();
@@ -51,19 +52,24 @@ public class User implements Serializable {
      * Overwrites same file if exists.
      */
     public void add(File file) {
-        String a = file.getName();
         String name = ".gitlet/stage/" + Utils.sha1(file.getName());
-        delete(name);
         File f = new File(name);
+        if (FileUtils.contentEquals()) {
+            rm(file.getName());
+            return;
+        }
+        delete(name);
+        staged.remove(file);
         try {
             f.createNewFile();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        staged.add(file);
     }
 
     /**
-     * Actual removal of file.
+     * Actual removal of file in directory based on name passed in.
      */
     private void delete(String name) {
         File temp = new File(name);
@@ -72,17 +78,23 @@ public class User implements Serializable {
         }
     }
 
-    public void commit(String arg) {
+    /** Makes a commit with message. */
+    public void commit(String message) {
+        Commit c = new Commit(message, time().toString(),
+                HEAD.getCommit().getTracked(), staged);
+        DoubleHT d = new DoubleHT(HEAD, c, _current);
+        staged.clear();
     }
 
     /**
      * Removes file with name name.
      */
     public void rm(String name) {
-        delete(name);
-        if (HEAD.getCommit().tracking(name)) {
-            HEAD.getCommit().remove(name);
-            //FIXME delete file
+        String stage = ".gitlet/stage/" + Utils.sha1(name);
+        delete(stage);
+        if (HEAD.getCommit().tracking(stage)) {
+            HEAD.getCommit().remove(stage);
+            delete(name);
         }
     }
 
@@ -92,6 +104,9 @@ public class User implements Serializable {
     private Date time() {
         return new Date();
     }
+
+    /** Adds branch to HEAD. */
+
 
     /**
      * Saves this User.
@@ -114,7 +129,7 @@ public class User implements Serializable {
     /**
      * An arraylist that stores all the tracked files.
      */
-    private ArrayList<String> tracked;
+    private ArrayList<File> staged;
 
     /**
      * Where the DOUBLEHT HEAD is on.
@@ -125,4 +140,7 @@ public class User implements Serializable {
      * Stores name : position of branch head.
      */
     private HashMap<String, DoubleHT> _branchHeads;
+
+    /** Stores the current branch the user is on. */
+    private String _current;
 }
