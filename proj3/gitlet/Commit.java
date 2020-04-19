@@ -1,5 +1,6 @@
 package gitlet;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /** This class calls compare class on all file and get difference between latest commit and version now?
@@ -18,6 +19,16 @@ public class Commit {
         _timestamp = time;
     }
 
+    /** Remove file with name. */
+    public void remove(String name) {
+        for (File f: tracked) {
+            if (f.getName().equals(name)) {
+                tracked.remove(f);
+                break;
+            }
+        }
+    }
+
     /** Return _code. */
     public String getCode() {
         return _code;
@@ -34,7 +45,7 @@ public class Commit {
     }
 
     /** An arraylist that stores all the tracked files. */
-    private ArrayList<String> tracked;
+    private ArrayList<File> tracked;
 
     /** Records time of Commit. */
     String _timestamp;
@@ -44,4 +55,5 @@ public class Commit {
 
     /** Records SHA1 code. */
     private String _code;
+
 }

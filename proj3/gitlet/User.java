@@ -73,6 +73,7 @@ public class User {
     public void rm(String name) {
         delete(name);
         if (HEAD.getCommit().tracking(name)) {
+            HEAD.getCommit().remove(name)
             //FIXME delete file
         }
     }
