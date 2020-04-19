@@ -26,7 +26,9 @@ public class Main {
             System.exit(0);
         }
         File buffer = new File("USER");
-        _user = Utils.readObject(buffer, User.class);
+        if (buffer.exists()) {
+            _user = Utils.readObject(buffer, User.class);
+        }
         switch (args[0]) {
             case "init":
                 if (_user != null) {
@@ -39,6 +41,7 @@ public class Main {
             case "add":
                 File temp = new File(args[1]);
                 _user.add(temp);
+                _user.save();
                 break;
             case "commit":
                 _user.commit(args[1]);

@@ -30,7 +30,7 @@ public class User implements Serializable {
     static DoubleHT INITIAL;
 
     public User() {
-        lists = new ArrayList<String>();
+        lists = new ArrayList<File>();
         tracked = new ArrayList<String>();
         DIRECTORY.mkdir();
         STAGING.mkdir();
@@ -52,24 +52,17 @@ public class User implements Serializable {
      * Overwrites same file if exists.
      */
     public void add(File file) {
-        String name = STAGING.getName() + Utils.sha1(file.getName());
+        String name = STAGING.getName() + "/" + Utils.sha1(file.getName());
         delete(name);
         File f = new File(name);
-        try {
-            f.createNewFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Utils.writeContents(f, file);
-        lists.add(name);
+        lists.add(f);
     }
 
-    /** Actual removal of file name. */
+    /** Actual removal of file. */
     private void delete(String name) {
-        for (String f : lists) {
-            if (f.equals(name)) {
+        for (File f : lists) {
+            if (f.getName().equals(name)) {
                 lists.remove(f);
-                new File("name").delete();
             }
             break;
         }
@@ -94,7 +87,7 @@ public class User implements Serializable {
 
     /** Saves this User. */
     public void save() {
-        Utils.writeContents(USER, this);
+        Utils.writeObject(USER, this);
     }
 
     /** Responds to the command with message m. */
@@ -108,7 +101,7 @@ public class User implements Serializable {
     /**
      * An arraylist that caches all staged but not committed files.
      */
-    private ArrayList<String> lists;
+    private ArrayList<File> lists;
     
     /** An arraylist that stores all the tracked files. */
     private ArrayList<String> tracked;
