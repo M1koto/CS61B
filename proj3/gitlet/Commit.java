@@ -1,6 +1,7 @@
 package gitlet;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -27,6 +28,7 @@ public class Commit implements Serializable {
         }
         _timestamp = time;
         _tracked = combine(parent, staged);
+        makeCode();
     }
 
     /**
@@ -80,7 +82,25 @@ public class Commit implements Serializable {
      * Returns true if this Commit is tracking File with name name.
      */
     public boolean tracking(String name) {
-        return _tracked.contains(name);
+        for (File f: _tracked) {
+            if (f.getName().equals(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** Make code of this commit */
+    private void makeCode() {
+        File temp = new File("temp");
+        try {
+            temp.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Utils.writeObject(temp, this);
+        _code =  Utils.sha1(temp.toString());
+        temp.delete();
     }
 
     /**
@@ -98,9 +118,6 @@ public class Commit implements Serializable {
      */
     private String _message;
 
-    /**
-     * Records SHA1 code.
-     */
+    /** Stores the code of the commit this Commit contains. */
     private String _code;
-
 }

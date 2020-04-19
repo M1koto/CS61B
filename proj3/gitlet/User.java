@@ -43,11 +43,11 @@ public class User implements Serializable {
         Commit first = new Commit("initial commit", Commit.FIRSTCOMMIT, null, null);
         INITIAL = new DoubleHT(null, first, "Master");
         HEAD = INITIAL;
-        INITIAL._code = Utils.sha1(INITIAL);
         _current = "Master";
         _branchHeads = new HashMap<String, DoubleHT>();
         _branchHeads.put("Master", INITIAL);
-        publish(INITIAL._code);
+
+        publish(first.getCode());
     }
 
     /** File writing with code as name. */
@@ -100,6 +100,7 @@ public class User implements Serializable {
         }
         if (message.isEmpty()) {
             System.out.println("Please enter a commit message.");
+            return;
         }
         Commit c = new Commit(message, time().toString(),
                 HEAD.getCommit().getTracked(), staged);
@@ -107,9 +108,8 @@ public class User implements Serializable {
         _branchHeads.remove(_current);
         _branchHeads.put(_current, d);
         HEAD = d;
-        d._code = Utils.sha1(d);
 
-        publish(d._code);
+        publish(c.getCode());
         staged.clear();
     }
 
