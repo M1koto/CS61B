@@ -53,10 +53,10 @@ public class User implements Serializable {
     public void add(File file) {
         String name = ".gitlet/stage/" + Utils.sha1(file.getName());
         File f = new File(name);
-        if (FileUtils.contentEquals()) {
-            rm(file.getName());
-            return;
-        }
+        //if (FileUtils.contentEquals()) {
+            //rm(file.getName());
+            //return;
+        //}
         delete(name);
         staged.remove(file);
         try {
@@ -92,6 +92,14 @@ public class User implements Serializable {
         _branchHeads.remove(_current);
         _branchHeads.put(_current, d);
         HEAD = d;
+
+        File store = new File(".gitlet/" + Utils.sha1(d));
+        try {
+            store.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Utils.writeObject(store, d);
         staged.clear();
     }
 

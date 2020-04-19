@@ -56,6 +56,7 @@ public class Main {
             case "rm":
                 _user.rm(args[1]);
                 //FIXME
+                _user.save();
                 break;
             case "log":
                 //FIXME
