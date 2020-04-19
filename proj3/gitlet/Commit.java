@@ -1,6 +1,7 @@
 package gitlet;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /** This class calls compare class on all file and get difference between latest commit and version now?
@@ -10,7 +11,7 @@ import java.util.ArrayList;
  *
  *  @author kenny liao
  *  */
-public class Commit {
+public class Commit implements Serializable {
 
     static final String FIRSTCOMMIT = "Thu 1 1 00:00:00 1970 -0700";
 

@@ -2,6 +2,7 @@ package gitlet;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.IllegalFormatCodePointException;
 
 /**
  * Driver class for Gitlet, the tiny stupid version-control system.
@@ -22,6 +23,13 @@ public class Main {
             System.out.println("Please enter a command.");
             System.exit(0);
         }
+        File buffer = new File("USER");
+        if (buffer.exists()) {
+            _user = Utils.readObject(buffer, User.class);
+        } else {
+            System.out.println("init command please");
+            System.exit(0);
+        }
         switch (args[0]) {
             case "init":
                 if (_user != null) {
@@ -33,12 +41,6 @@ public class Main {
                 break;
             case "add":
                 File temp = new File(args[1]);
-                try {
-                    temp.createNewFile();
-                } catch (IOException e) {
-                    System.out.println("File does not exist.");
-                    System.exit(0);
-                }
                 _user.add(temp);
                 break;
             case "commit":

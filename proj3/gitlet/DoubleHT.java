@@ -1,5 +1,6 @@
 package gitlet;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -10,7 +11,7 @@ import java.util.ArrayList;
  * @author kenny liao
  */
 
-public class DoubleHT {
+public class DoubleHT implements Serializable {
     DoubleHT(DoubleHT parent, Commit c, String branch) {
         _parent1 = parent;
         _commit = c;

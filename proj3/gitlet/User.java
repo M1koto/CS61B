@@ -4,8 +4,10 @@ import edu.neu.ccs.util.FileUtilities;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 /**
@@ -15,7 +17,7 @@ import java.util.HashMap;
  * @author kenny liao
  */
 
-public class User {
+public class User implements Serializable {
 
     /**
      * File in which the .gitlet directory exists.
@@ -73,9 +75,14 @@ public class User {
     public void rm(String name) {
         delete(name);
         if (HEAD.getCommit().tracking(name)) {
-            HEAD.getCommit().remove(name)
+            HEAD.getCommit().remove(name);
             //FIXME delete file
         }
+    }
+
+    /** Returns the Commit time. */
+    private Date time() {
+        return new Date();
     }
 
     /** Responds to the command with message m. */
