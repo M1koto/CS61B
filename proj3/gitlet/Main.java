@@ -37,6 +37,7 @@ public class Main {
                     //FIXME
                 }
                 _user = new User();
+                _user.save();
                 break;
             case "add":
                 File temp = new File(args[1]);
@@ -77,6 +78,8 @@ public class Main {
                 //FIXME
                 break;
             case "rm-branch":
+                _user.rmBranch(args[1]);
+                _user.save();
                 //FIXME
                 break;
             case "reset":

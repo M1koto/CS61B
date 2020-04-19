@@ -44,7 +44,6 @@ public class User implements Serializable {
         _current = "Master";
         _branchHeads = new HashMap<String, DoubleHT>();
         _branchHeads.put("Master", INITIAL);
-        save();
     }
 
     /**
@@ -83,6 +82,9 @@ public class User implements Serializable {
         Commit c = new Commit(message, time().toString(),
                 HEAD.getCommit().getTracked(), staged);
         DoubleHT d = new DoubleHT(HEAD, c, _current);
+        _branchHeads.remove(_current);
+        _branchHeads.put(_current, d);
+        HEAD = d;
         staged.clear();
     }
 
@@ -111,7 +113,23 @@ public class User implements Serializable {
             System.out.println("A branch with that name already exists.");
         } else {
             DoubleHT temp = _branchHeads.get(_current);
-            _branchHeads.put(name, temp);
+            if (temp._branch2 == null) {
+                temp._branch2 = name;
+                _branchHeads.put(name, temp);
+            } else {
+                System.out.println("Only two branch");
+            }
+        }
+    }
+
+    /** Removes pointer of name of branch. */
+    public void rmBranch(String name) {
+        if (name.equals(_current)) {
+            System.out.println("Cannot remove the current branch.");
+        } else if (!_branchHeads.containsKey(name)) {
+            System.out.println("branch with that name does not exist.");
+        } else {
+            _branchHeads.remove(name);
         }
     }
 
@@ -139,7 +157,7 @@ public class User implements Serializable {
     private ArrayList<File> staged;
 
     /**
-     * Where the DOUBLEHT HEAD is on.
+     * Where the HEAD is on.
      */
     private DoubleHT HEAD;
 

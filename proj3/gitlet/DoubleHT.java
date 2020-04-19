@@ -36,7 +36,7 @@ public class DoubleHT implements Serializable {
     /**
      * Check if d is in same branch as this.
      */
-    private boolean branchMatch(DoubleHT d) {
+    public boolean branchMatch(DoubleHT d) {
         return d._branch1.equals(_branch1) || d._branch1.equals(_branch2)
                 || d._branch2.equals(_branch1) || d._branch2.equals(_branch2);
     }
@@ -116,12 +116,12 @@ public class DoubleHT implements Serializable {
      * The first branch of where this DoubleHT is on.
      * This field is never null.
      */
-    private String _branch1;
+    public String _branch1;
 
     /**
      * The second branch of where this DoubleHT is on.
      */
-    private String _branch2;
+    public String _branch2;
 
     /**
      * The first parent of this DoubleHT.
