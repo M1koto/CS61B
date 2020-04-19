@@ -30,7 +30,6 @@ public class User implements Serializable {
     static DoubleHT INITIAL;
 
     public User() {
-        lists = new ArrayList<File>();
         tracked = new ArrayList<String>();
         DIRECTORY.mkdir();
         STAGING.mkdir();
@@ -52,10 +51,10 @@ public class User implements Serializable {
      * Overwrites same file if exists.
      */
     public void add(File file) {
-        String name = STAGING.getName() + "/" + Utils.sha1(file.getName());
+        String a = file.getName();
+        String name = ".gitlet/stage/" + Utils.sha1(file.getName());
         delete(name);
         File f = new File(name);
-        lists.add(f);
         try {
             f.createNewFile();
         } catch (IOException e) {
@@ -63,21 +62,22 @@ public class User implements Serializable {
         }
     }
 
-    /** Actual removal of file. */
+    /**
+     * Actual removal of file.
+     */
     private void delete(String name) {
-        for (File f : lists) {
-            if (f.getName().equals(name)) {
-                lists.remove(f);
-                new File(STAGING.getName() + "/" + name).delete();
-            }
-            break;
+        File temp = new File(name);
+        if (temp.exists()) {
+            temp.delete();
         }
     }
 
     public void commit(String arg) {
     }
 
-    /** Removes file with name name. */
+    /**
+     * Removes file with name name.
+     */
     public void rm(String name) {
         delete(name);
         if (HEAD.getCommit().tracking(name)) {
@@ -86,17 +86,23 @@ public class User implements Serializable {
         }
     }
 
-    /** Returns the Commit time. */
+    /**
+     * Returns the Commit time.
+     */
     private Date time() {
         return new Date();
     }
 
-    /** Saves this User. */
+    /**
+     * Saves this User.
+     */
     public void save() {
         Utils.writeObject(USER, this);
     }
 
-    /** Responds to the command with message m. */
+    /**
+     * Responds to the command with message m.
+     */
     public void find(String m) {
         ArrayList<String> ans = new ArrayList<>();
         INITIAL.findMessage(m, ans);
@@ -104,17 +110,19 @@ public class User implements Serializable {
             System.out.println("Found no commit with that message.");
         }
     }
+
     /**
-     * An arraylist that caches all staged but not committed files.
+     * An arraylist that stores all the tracked files.
      */
-    private ArrayList<File> lists;
-    
-    /** An arraylist that stores all the tracked files. */
     private ArrayList<String> tracked;
 
-    /** Where the DOUBLEHT HEAD is on. */
+    /**
+     * Where the DOUBLEHT HEAD is on.
+     */
     private DoubleHT HEAD;
 
-    /** Stores name : position of branch head. */
+    /**
+     * Stores name : position of branch head.
+     */
     private HashMap<String, DoubleHT> _branchHeads;
 }
