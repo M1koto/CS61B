@@ -26,7 +26,7 @@ public class User implements Serializable {
 
     static final File STAGING = new File(".gitlet/stage");
 
-    File USER = new File("USER");
+    File USER = new File(".gitlet/USER");
     static DoubleHT INITIAL;
 
     public User() {
@@ -56,6 +56,11 @@ public class User implements Serializable {
         delete(name);
         File f = new File(name);
         lists.add(f);
+        try {
+            f.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /** Actual removal of file. */
@@ -63,6 +68,7 @@ public class User implements Serializable {
         for (File f : lists) {
             if (f.getName().equals(name)) {
                 lists.remove(f);
+                new File(STAGING.getName() + "/" + name).delete();
             }
             break;
         }

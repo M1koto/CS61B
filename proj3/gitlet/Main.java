@@ -25,7 +25,7 @@ public class Main {
             System.out.println("Please enter a command.");
             System.exit(0);
         }
-        File buffer = new File("USER");
+        File buffer = new File(".gitlet/USER");
         if (buffer.exists()) {
             _user = Utils.readObject(buffer, User.class);
         }
