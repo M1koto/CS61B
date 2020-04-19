@@ -146,5 +146,8 @@ public class DoubleHT implements Serializable {
      * If doesn't have any, then is null.
      */
     private DoubleHT _child2;
+
+    /** Stores the code of the commit this DOUBLEHT contains. */
+    public String _code;
 }
 

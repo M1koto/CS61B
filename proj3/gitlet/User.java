@@ -38,12 +38,27 @@ public class User implements Serializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+
         Commit first = new Commit("initial commit", Commit.FIRSTCOMMIT, null, null);
         INITIAL = new DoubleHT(null, first, "Master");
         HEAD = INITIAL;
+        INITIAL._code = Utils.sha1(INITIAL);
         _current = "Master";
         _branchHeads = new HashMap<String, DoubleHT>();
         _branchHeads.put("Master", INITIAL);
+        publish(INITIAL._code);
+    }
+
+    /** File writing with code as name. */
+    private void publish(String code) {
+        File store = new File(".gitlet/" + code);
+        try {
+            store.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Utils.writeObject(store, code);
     }
 
     /**
@@ -92,14 +107,9 @@ public class User implements Serializable {
         _branchHeads.remove(_current);
         _branchHeads.put(_current, d);
         HEAD = d;
+        d._code = Utils.sha1(d);
 
-        File store = new File(".gitlet/" + Utils.sha1(d));
-        try {
-            store.createNewFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Utils.writeObject(store, d);
+        publish(d._code);
         staged.clear();
     }
 
