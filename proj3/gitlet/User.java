@@ -79,6 +79,13 @@ public class User implements Serializable {
 
     /** Makes a commit with message. */
     public void commit(String message) {
+        if (staged.size() == 0) {
+            System.out.println("No changes added to the commit.");
+            return;
+        }
+        if (message.isEmpty()) {
+            System.out.println("Please enter a commit message.");
+        }
         Commit c = new Commit(message, time().toString(),
                 HEAD.getCommit().getTracked(), staged);
         DoubleHT d = new DoubleHT(HEAD, c, _current);
