@@ -62,6 +62,7 @@ public class Main {
                 _user.save();
                 break;
             case "log":
+                _user.log();
                 //FIXME
                 break;
             case "global-log":

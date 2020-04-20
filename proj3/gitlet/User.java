@@ -103,7 +103,7 @@ public class User implements Serializable {
             System.out.println("Please enter a commit message.");
             return;
         }
-        Commit c = new Commit(message, time().toString(),
+        Commit c = new Commit(message, time(),
                 HEAD.getCommit().getTracked(), staged);
         DoubleHT d = new DoubleHT(HEAD, c, _current);
         _branchHeads.remove(_current);
@@ -178,6 +178,14 @@ public class User implements Serializable {
         if (ans.size() == 0) {
             System.out.println("Found no commit with that message.");
         }
+    }
+
+    /** Prints log since initial commit until now.
+     * In chronological order.
+     */
+    public void log() {
+        DoubleHT temp = _branchHeads.get(_current);
+        temp.printlog(_current);
     }
 
     /**

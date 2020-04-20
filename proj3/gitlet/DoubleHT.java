@@ -112,6 +112,19 @@ public class DoubleHT implements Serializable {
         _branch2 = branch;
     }
 
+    /** Prints Commited info on branch _current. */
+    public void printlog(String current) {
+        Commit c = _commit;
+        System.out.println(String.format("===\ncommit %s\nDate: %s\n%s\n",
+                c.getCode(), c.time(), c.getMessage()));
+
+        if (_parent1 != null && _branch1.equals(current)) {
+            _parent1.printlog(current);
+        } else if (_parent2 != null && _branch2.equals(current)){
+            _parent2.printlog(current);
+        }
+    }
+
     /**
      * The commit stored in this DoubleHT.
      */

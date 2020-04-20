@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * This class calls compare class on all file and get difference between latest commit and version now?
@@ -15,18 +17,18 @@ import java.util.ArrayList;
  */
 public class Commit implements Serializable {
 
-    static final String FIRSTCOMMIT = "Thu 1 1 00:00:00 1970 -0700";
+    static Date FIRSTCOMMIT = new Date(0, Calendar.JANUARY, 1, 0, 0, 0 );
 
     /**
      * Creates a new Commit with following message and time.
      */
-    Commit(String message, String time, ArrayList<File> parent, ArrayList<File> staged) {
+    Commit(String message, Date time, ArrayList<File> parent, ArrayList<File> staged) {
         _message = message;
-        if (!time.equals(FIRSTCOMMIT)) {
-            time = time.substring(0, time.length() - 8);
-            time = time + "2020 -0700";
+        if (time.compareTo(FIRSTCOMMIT) != 0) {
+            _timestamp = time;
+        } else {
+            _timestamp = FIRSTCOMMIT;
         }
-        _timestamp = time;
         _tracked = combine(parent, staged);
         makeCode();
     }
@@ -103,6 +105,11 @@ public class Commit implements Serializable {
         temp.delete();
     }
 
+    /** Return string form of _timestamp. */
+    public String time() {
+        return _timestamp.toString();
+    }
+
     /**
      * An arraylist that stores all the tracked files.
      */
@@ -111,7 +118,7 @@ public class Commit implements Serializable {
     /**
      * Records time of Commit.
      */
-    String _timestamp;
+    Date _timestamp;
 
     /**
      * Records message.
