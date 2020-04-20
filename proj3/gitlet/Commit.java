@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 
 /**
  * This class calls compare class on all file and get difference between latest commit and version now?
@@ -61,6 +62,11 @@ public class Commit implements Serializable {
             }
         }
     }
+    /** Set real to given HASHMAP h. */
+    public void setReal(HashMap<String, String> h) {
+        real.putAll(h);
+    }
+
 
     /**
      * Returns the tracked files.
@@ -69,11 +75,26 @@ public class Commit implements Serializable {
         return _tracked;
     }
 
+    /** Return the file under track with name s. */
+    public File getFile(String s) {
+        for (File f: _tracked) {
+            if (f.getName().equals(s)) {
+                return f;
+            }
+        }
+        return null;
+    }
+
     /**
      * Return _code.
      */
     public String getCode() {
         return _code;
+    }
+
+    /** Return real. */
+    public HashMap<String, String> getReal() {
+        return real;
     }
 
     /**
@@ -94,6 +115,13 @@ public class Commit implements Serializable {
         }
         return false;
     }
+    /**
+     * Returns true if this Commit is tracking File with name name.
+     */
+    public boolean trackingR(String real) {
+        return real.contains(real);
+    }
+
 
     /**
      * Make code of this commit
@@ -144,4 +172,7 @@ public class Commit implements Serializable {
      * Stores the code of the commit this Commit contains.
      */
     private String _code;
+
+    /** Hashmap that has code as key, and real file name as value. */
+    private HashMap<String, String> real;
 }

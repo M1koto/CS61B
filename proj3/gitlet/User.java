@@ -67,7 +67,8 @@ public class User implements Serializable {
      * Overwrites same file if exists.
      */
     public void add(File file) {
-        String name = ".gitlet/stage/" + Utils.sha1(file.getName());
+        String buffer = Utils.sha1(file.getName());
+        String name = ".gitlet/stage/" + buffer;
         File f = new File(name);
         //if (FileUtils.contentEquals()) {
             //rm(file.getName());
@@ -75,11 +76,13 @@ public class User implements Serializable {
         //}
         delete(name);
         staged.remove(file);
+        real.remove(buffer);
         try {
             f.createNewFile();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        real.putIfAbsent(buffer, file.getName());
         staged.add(file);
     }
 
@@ -105,6 +108,8 @@ public class User implements Serializable {
         }
         Commit c = new Commit(message, time(),
                 HEAD.getCommit().getTracked(), staged);
+        c.setReal(HEAD.getCommit().getReal());
+        c.setReal(real);
         total.add(c);
         DoubleHT d = new DoubleHT(HEAD, c, _current);
         _branchHeads.remove(_current);
@@ -113,6 +118,7 @@ public class User implements Serializable {
 
         publish(c.getCode());
         staged.clear();
+        real.clear();
         for(File file: STAGING.listFiles())
             if (!file.isDirectory())
                 file.delete();
@@ -204,6 +210,9 @@ public class User implements Serializable {
         } else if (arg.equals(_current)) {
             System.out.println("No need to checkout the current branch.");
             System.exit(0);
+        } else {
+            _current = arg;
+            HEAD = _branchHeads.get(_current);
         }
     }
 
@@ -212,7 +221,15 @@ public class User implements Serializable {
         return HEAD;
     }
 
+    /** Checks out all files in a commit. */
+    public void checkAll() {
+        Commit c = HEAD.getCommit();
+        for (File f: c.getTracked()) {
+            checkout(HEAD.getCommit().getCode(), f.getName());
+        }
+    }
 
+    /** Switches to commit with code, and checkout file with name file. */
     public void checkout(String code, String file) {
         DoubleHT temp = HEAD;
         Commit c = temp.getCommit();
@@ -223,7 +240,26 @@ public class User implements Serializable {
                 c = temp.findCommit(code);
             }
         }
-
+        if (c == null) {
+            System.out.println("No commit with that id exists.");
+            System.exit(0);
+        } else if (!c.trackingR(file)) {
+            System.out.println("File does not exist in that commit.");
+            System.exit(0);
+        } else {
+            String s = ".gitlet/stage/" + c.getReal().get(file);
+            File f = c.getFile(s);
+            File t = new File(file);
+            if (t.exists()) {
+                t.delete();
+            }
+            try {
+                t.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            Utils.writeContents(f, t);
+        }
     }
 
     /**
@@ -246,4 +282,7 @@ public class User implements Serializable {
 
     /** Stores all commit since the first. */
     private ArrayList<Commit> total;
+
+    /** Hashmap that has code as key, and real file name as value. */
+    private HashMap<String, String> real;
 }

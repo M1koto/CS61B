@@ -78,6 +78,7 @@ public class Main {
                         _user.checkout(args[1], args[3]);
                     } else {
                         _user.switchBranch(args[1]);
+                        _user.checkAll();
                     }
                 }
                 _user.save();
