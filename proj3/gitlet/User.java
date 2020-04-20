@@ -111,6 +111,9 @@ public class User implements Serializable {
 
         publish(c.getCode());
         staged.clear();
+        for(File file: STAGING.listFiles())
+            if (!file.isDirectory())
+                file.delete();
     }
 
     /**
