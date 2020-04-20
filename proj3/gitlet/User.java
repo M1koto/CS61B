@@ -50,7 +50,7 @@ public class User implements Serializable {
         publish(first.getCode());
     }
 
-    /** File writing with code as name. */
+    /** File writing of Commit with code as name. */
     private void publish(String code) {
         File store = new File(".gitlet/" + code);
         try {

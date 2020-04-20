@@ -28,6 +28,9 @@ public class Main {
         File buffer = new File(".gitlet/USER");
         if (buffer.exists()) {
             _user = Utils.readObject(buffer, User.class);
+        } else if (!args[0].equals("init")) {
+            System.out.println("Please init first");
+            System.exit(0);
         }
         switch (args[0]) {
             case "init":

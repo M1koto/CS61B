@@ -99,7 +99,7 @@ public class Commit implements Serializable {
             e.printStackTrace();
         }
         Utils.writeObject(temp, this);
-        _code =  Utils.sha1(temp.toString());
+        _code =  Utils.sha1(Utils.readContentsAsString(temp));
         temp.delete();
     }
 
