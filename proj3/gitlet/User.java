@@ -6,9 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
 
 /**
  * This class stores permanent information for 'user'
@@ -197,6 +195,35 @@ public class User implements Serializable {
             System.out.println(String.format("===\ncommit %s\nDate: %s\n%s\n",
                     c.getCode(), c.time(), c.getMessage()));
         }
+    }
+    /** Switches Branch from to arg and updating _current. */
+    public void switchBranch(String arg) {
+        if (!_branchHeads.containsKey(arg)){
+            System.out.println("No such branch exists.");
+            System.exit(0);
+        } else if (arg.equals(_current)) {
+            System.out.println("No need to checkout the current branch.");
+            System.exit(0);
+        }
+    }
+
+    /** Returns the HEAD. */
+    public DoubleHT getH() {
+        return HEAD;
+    }
+
+
+    public void checkout(String code, String file) {
+        DoubleHT temp = HEAD;
+        Commit c = temp.getCommit();
+        Iterator<DoubleHT> i = _branchHeads.values().iterator();
+        while (c != null && !c.getCode().equals(code)) {
+            if (i.hasNext()) {
+                temp = i.next();
+                c = temp.findCommit(code);
+            }
+        }
+
     }
 
     /**

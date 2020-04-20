@@ -71,8 +71,16 @@ public class Main {
                 //FIXME
                 break;
             case "checkout":
-                _user.checkout();
-                //FIXME
+                if (args[1].equals("--")) {
+                    _user.checkout(_user.getH().getCommit().getCode(), args[2]);
+                } else {
+                    if (args[2].equals("--")) {
+                        _user.checkout(args[1], args[3]);
+                    } else {
+                        _user.switchBranch(args[1]);
+                    }
+                }
+                _user.save();
                 break;
             case "branch":
                 _user.addBranch(args[1]);

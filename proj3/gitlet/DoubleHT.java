@@ -105,13 +105,6 @@ public class DoubleHT implements Serializable {
         return _commit;
     }
 
-    /**
-     * Make _branch2 to the specified branch.
-     */
-    public void addBranch(String branch) {
-        _branch2 = branch;
-    }
-
     /** Prints Commited info on branch _current. */
     public void printlog(String current) {
         Commit c = _commit;
