@@ -37,7 +37,6 @@ public class Main {
                 if (_user != null) {
                     System.out.println("A Gitlet version-control system already exists in the current directory.");
                     break;
-                    //FIXME
                 }
                 _user = new User();
                 _user.save();
@@ -53,20 +52,17 @@ public class Main {
                 break;
             case "commit":
                 _user.commit(split(args));
-                //FIXME
                 _user.save();
                 break;
             case "rm":
                 _user.rm(args[1]);
-                //FIXME
                 _user.save();
                 break;
             case "log":
                 _user.log();
-                //FIXME
                 break;
             case "global-log":
-                //FIXME
+                _user.global();
                 break;
             case "find":
                 _user.find(args[1]);
@@ -75,17 +71,16 @@ public class Main {
                 //FIXME
                 break;
             case "checkout":
+                _user.checkout();
                 //FIXME
                 break;
             case "branch":
                 _user.addBranch(args[1]);
                 _user.save();
-                //FIXME
                 break;
             case "rm-branch":
                 _user.rmBranch(args[1]);
                 _user.save();
-                //FIXME
                 break;
             case "reset":
                 //FIXME

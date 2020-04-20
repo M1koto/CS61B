@@ -39,9 +39,11 @@ public class User implements Serializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        total = new ArrayList<Commit>();
 
 
         Commit first = new Commit("initial commit", null, null, null);
+        total.add(first);
         INITIAL = new DoubleHT(null, first, "Master");
         HEAD = INITIAL;
         _current = "Master";
@@ -105,6 +107,7 @@ public class User implements Serializable {
         }
         Commit c = new Commit(message, time(),
                 HEAD.getCommit().getTracked(), staged);
+        total.add(c);
         DoubleHT d = new DoubleHT(HEAD, c, _current);
         _branchHeads.remove(_current);
         _branchHeads.put(_current, d);
@@ -188,6 +191,14 @@ public class User implements Serializable {
         temp.printlog(_current);
     }
 
+    /** Prints out all commits since the first first one. */
+    public void global() {
+        for (Commit c: total) {
+            System.out.println(String.format("===\ncommit %s\nDate: %s\n%s\n",
+                    c.getCode(), c.time(), c.getMessage()));
+        }
+    }
+
     /**
      * An arraylist that stores all the tracked files.
      */
@@ -205,4 +216,7 @@ public class User implements Serializable {
 
     /** Stores the current branch the user is on. */
     private String _current;
+
+    /** Stores all commit since the first. */
+    private ArrayList<Commit> total;
 }
