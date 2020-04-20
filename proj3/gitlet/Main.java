@@ -99,11 +99,13 @@ public class Main {
         }
     }
 
-    static String split(String[] args){
+    static String split(String[] args) {
         StringBuilder ret = new StringBuilder();
         for (int i = 1; i < args.length; i++) {
             ret.append(args[i].replace("'", ""));
-            ret.append(' ');
+            if (i != args.length - 1) {
+                ret.append(' ');
+            }
         }
         return ret.toString();
     }

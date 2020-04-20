@@ -17,7 +17,7 @@ import java.util.Date;
  */
 public class Commit implements Serializable {
 
-    static String FIRSTCOMMIT = "Thu 1 1 00:00:00 1970 -0700";
+    static String FIRSTCOMMIT = "Thu Jan 1 00:00:00 1970 -0700";
 
     static final int FORMAT = 8;
 
