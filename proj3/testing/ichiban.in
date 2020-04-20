@@ -1,0 +1,6 @@
+java -ea gitlet.Main init
+add t.txt
+commit test
+add h.txt
+commit test2
+log

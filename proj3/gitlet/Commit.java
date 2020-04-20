@@ -17,17 +17,20 @@ import java.util.Date;
  */
 public class Commit implements Serializable {
 
-    static Date FIRSTCOMMIT = new Date(0, Calendar.JANUARY, 1, 0, 0, 0 );
+    static String FIRSTCOMMIT = "Thu 1 1 00:00:00 1970 -0700";
+
+    static final int FORMAT = 8;
 
     /**
      * Creates a new Commit with following message and time.
      */
     Commit(String message, Date time, ArrayList<File> parent, ArrayList<File> staged) {
         _message = message;
-        if (time.compareTo(FIRSTCOMMIT) != 0) {
-            _timestamp = time;
+        _timestamp = time;
+        if (_timestamp != null) {
+            _time = _timestamp.toString();
         } else {
-            _timestamp = FIRSTCOMMIT;
+            _time = FIRSTCOMMIT;
         }
         _tracked = combine(parent, staged);
         makeCode();
@@ -84,7 +87,7 @@ public class Commit implements Serializable {
      * Returns true if this Commit is tracking File with name name.
      */
     public boolean tracking(String name) {
-        for (File f: _tracked) {
+        for (File f : _tracked) {
             if (f.getName().equals(name)) {
                 return true;
             }
@@ -92,7 +95,9 @@ public class Commit implements Serializable {
         return false;
     }
 
-    /** Make code of this commit */
+    /**
+     * Make code of this commit
+     */
     private void makeCode() {
         File temp = new File("temp");
         try {
@@ -101,13 +106,19 @@ public class Commit implements Serializable {
             e.printStackTrace();
         }
         Utils.writeObject(temp, this);
-        _code =  Utils.sha1(Utils.readContentsAsString(temp));
+        _code = Utils.sha1(Utils.readContentsAsString(temp));
         temp.delete();
     }
 
-    /** Return string form of _timestamp. */
+    /**
+     * Return string form of _timestamp.
+     */
     public String time() {
-        return _timestamp.toString();
+        if (_timestamp == null) {
+            return _time;
+        } else {
+            return _time.substring(0, _time.length() - FORMAT) + "2020 -0700";
+        }
     }
 
     /**
@@ -121,10 +132,16 @@ public class Commit implements Serializable {
     Date _timestamp;
 
     /**
+     * String of time.
+     */
+    String _time;
+    /**
      * Records message.
      */
     private String _message;
 
-    /** Stores the code of the commit this Commit contains. */
+    /**
+     * Stores the code of the commit this Commit contains.
+     */
     private String _code;
 }

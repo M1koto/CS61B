@@ -41,7 +41,7 @@ public class User implements Serializable {
         }
 
 
-        Commit first = new Commit("initial commit", Commit.FIRSTCOMMIT, null, null);
+        Commit first = new Commit("initial commit", null, null, null);
         INITIAL = new DoubleHT(null, first, "Master");
         HEAD = INITIAL;
         _current = "Master";

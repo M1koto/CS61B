@@ -52,7 +52,7 @@ public class Main {
                 _user.save();
                 break;
             case "commit":
-                _user.commit(args[1]);
+                _user.commit(split(args));
                 //FIXME
                 _user.save();
                 break;
@@ -97,6 +97,15 @@ public class Main {
                 System.out.println("No command with that name exists.");
                 System.exit(0);
         }
+    }
+
+    static String split(String[] args){
+        StringBuilder ret = new StringBuilder();
+        for (int i = 1; i < args.length; i++) {
+            ret.append(args[i].replace("'", ""));
+            ret.append(' ');
+        }
+        return ret.toString();
     }
 
 }
