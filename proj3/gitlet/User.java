@@ -27,7 +27,8 @@ public class User implements Serializable {
     static final File STAGING = new File(".gitlet/stage");
 
     File USER = new File(".gitlet/USER");
-    static DoubleHT INITIAL;
+
+    DoubleHT INITIAL;
 
     public User() {
         staged = new ArrayList<File>();
@@ -173,7 +174,7 @@ public class User implements Serializable {
      */
     public void find(String m) {
         ArrayList<String> ans = new ArrayList<>();
-        INITIAL.findMessage(m, ans);
+        HEAD.findMessage(m, ans);
         if (ans.size() == 0) {
             System.out.println("Found no commit with that message.");
         }

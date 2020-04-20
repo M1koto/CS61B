@@ -16,6 +16,9 @@ public class DoubleHT implements Serializable {
         _parent1 = parent;
         _commit = c;
         _branch1 = branch;
+        if (parent != null) {
+            parent.addChild(this);
+        }
     }
 
     /**
@@ -84,11 +87,13 @@ public class DoubleHT implements Serializable {
     public void findMessage(String m, ArrayList<String> ans) {
         if (_commit.getMessage().equals(m)) {
             ans.add(_commit.getMessage());
-            System.out.println(_commit.getMessage());
+            System.out.println(_commit.getCode());
         }
-        _child1.findMessage(m, ans);
-        if (_child2 != null) {
-            _child2.findMessage(m, ans);
+        if (_parent1 != null) {
+            _parent1.findMessage(m, ans);
+        }
+        if (_parent2 != null) {
+            _parent2.findMessage(m, ans);
 
         }
     }
