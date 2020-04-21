@@ -22,16 +22,24 @@ public class User implements Serializable {
      */
     static final File DIRECTORY = new File(".gitlet");
 
-    /** Dir Staging. */
+    /**
+     * Dir Staging.
+     */
     static final File STAGING = new File(".gitlet/stage");
 
-    /** File for permanent storage. */
+    /**
+     * File for permanent storage.
+     */
     File USER = new File(".gitlet/USER");
 
-    /** First commit's doubleHT. */
+    /**
+     * First commit's doubleHT.
+     */
     DoubleHT INITIAL;
 
-    /** Creates a unique user for gitlet. */
+    /**
+     * Creates a unique user for gitlet.
+     */
     public User() {
         staged = new ArrayList<File>();
         DIRECTORY.mkdir();
@@ -65,7 +73,7 @@ public class User implements Serializable {
     private void publish(Commit c, String code) {
         File store = new File(".gitlet/" + code);
         store.mkdir();
-        for (File f: c.getTracked()) {
+        for (File f : c.getTracked()) {
             File temp = new File(".gitlet/" + code + "/" + f.getName());
             try {
                 temp.createNewFile();
@@ -84,10 +92,12 @@ public class User implements Serializable {
         String buffer = Utils.sha1(file.getName());
         String name = ".gitlet/stage/" + buffer;
         File f = new File(name);
-        //if (FileUtils.contentEquals()) {
-        //rm(file.getName());
-        //return;
-        //}
+        if (compare(file, f)) {
+            delete(name);
+            staged.remove(file);
+            real.remove(buffer);
+            return;
+        }
         delete(name);
         staged.remove(file);
         real.remove(buffer);
@@ -159,11 +169,13 @@ public class User implements Serializable {
         }
     }
 
-    /** Corresponds to reset command
-     * and checks out all with CODE. */
+    /**
+     * Corresponds to reset command
+     * and checks out all with CODE.
+     */
     public void reset(String code) {
         Commit target = null;
-        for (Commit c: total) {
+        for (Commit c : total) {
             if (c.getCode().equals(code)) {
                 target = c;
                 break;
@@ -324,16 +336,20 @@ public class User implements Serializable {
         }
     }
 
-    /** Compares two files,
-     * returns true if same content false otherwise. */
+    /**
+     * Compares two files,
+     * returns true if same content false otherwise.
+     */
     private boolean compare(File a, File b) {
         String temp1 = Utils.readContentsAsString(a);
         return temp1.equals(Utils.readContentsAsString(b));
     }
 
-    /** Search through dir and add untracked files to untrack. */
+    /**
+     * Search through dir and add untracked files to untrack.
+     */
     public void update() {
-        DIRECTORY.listFiles()
+
     }
 
     /**
@@ -366,6 +382,13 @@ public class User implements Serializable {
      */
     private HashMap<String, String> real;
 
-    /** Arraylist that keeps track of untracked files. */
+    /**
+     * Arraylist that keeps track of untracked files.
+     */
     private ArrayList<File> untracked;
+
+    /**
+     * Arraylist that keeps track of modified files.
+     */
+    private ArrayList<File> modified;
 }
