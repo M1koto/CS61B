@@ -34,6 +34,7 @@ public class Commit implements Serializable {
             _time = FIRSTCOMMIT;
         }
         _tracked = combine(parent, staged);
+        real = new HashMap<>();
         makeCode();
     }
 

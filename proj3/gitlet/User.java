@@ -38,6 +38,7 @@ public class User implements Serializable {
             e.printStackTrace();
         }
         total = new ArrayList<Commit>();
+        real = new HashMap<>();
 
 
         Commit first = new Commit("initial commit", null, null, null);
@@ -48,18 +49,24 @@ public class User implements Serializable {
         _branchHeads = new HashMap<String, DoubleHT>();
         _branchHeads.put("Master", INITIAL);
 
-        publish(first.getCode());
+        publish(first, first.getCode());
     }
 
-    /** File writing of Commit with code as name. */
-    private void publish(String code) {
+    /**
+     * File writing of Commit with code as name.
+     */
+    private void publish(Commit c, String code) {
         File store = new File(".gitlet/" + code);
-        try {
-            store.createNewFile();
-        } catch (IOException e) {
-            e.printStackTrace();
+        store.mkdir();
+        for (File f: c.getTracked()) {
+            File temp = new File(store.getName() + "/" + f.getName());
+            try {
+                temp.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            Utils.writeContents(temp, f);
         }
-        Utils.writeObject(store, code);
     }
 
     /**
@@ -71,8 +78,8 @@ public class User implements Serializable {
         String name = ".gitlet/stage/" + buffer;
         File f = new File(name);
         //if (FileUtils.contentEquals()) {
-            //rm(file.getName());
-            //return;
+        //rm(file.getName());
+        //return;
         //}
         delete(name);
         staged.remove(file);
@@ -96,7 +103,9 @@ public class User implements Serializable {
         }
     }
 
-    /** Makes a commit with message. */
+    /**
+     * Makes a commit with message.
+     */
     public void commit(String message) {
         if (staged.size() == 0) {
             System.out.println("No changes added to the commit.");
@@ -108,18 +117,18 @@ public class User implements Serializable {
         }
         Commit c = new Commit(message, time(),
                 HEAD.getCommit().getTracked(), staged);
-        c.setReal(HEAD.getCommit().getReal());
-        c.setReal(real);
+        c.setReal(HEAD.getCommit().getReal()); // add real name of files of parent commit to this commit's real name
+        c.setReal(real); // add staged file's real name to this commit's real name hashmap
         total.add(c);
         DoubleHT d = new DoubleHT(HEAD, c, _current);
         _branchHeads.remove(_current);
         _branchHeads.put(_current, d);
         HEAD = d;
 
-        publish(c.getCode());
+        publish(c, c.getCode());
         staged.clear();
         real.clear();
-        for(File file: STAGING.listFiles())
+        for (File file : STAGING.listFiles())
             if (!file.isDirectory())
                 file.delete();
     }
@@ -143,7 +152,9 @@ public class User implements Serializable {
         return new Date();
     }
 
-    /** Adds a pointer of name name to tip of the branch. */
+    /**
+     * Adds a pointer of name name to tip of the branch.
+     */
     public void addBranch(String name) {
         if (_branchHeads.containsKey(name)) {
             System.out.println("A branch with that name already exists.");
@@ -158,7 +169,9 @@ public class User implements Serializable {
         }
     }
 
-    /** Removes pointer of name of branch. */
+    /**
+     * Removes pointer of name of branch.
+     */
     public void rmBranch(String name) {
         if (name.equals(_current)) {
             System.out.println("Cannot remove the current branch.");
@@ -187,7 +200,8 @@ public class User implements Serializable {
         }
     }
 
-    /** Prints log since initial commit until now.
+    /**
+     * Prints log since initial commit until now.
      * In chronological order.
      */
     public void log() {
@@ -195,16 +209,21 @@ public class User implements Serializable {
         temp.printlog(_current);
     }
 
-    /** Prints out all commits since the first first one. */
+    /**
+     * Prints out all commits since the first first one.
+     */
     public void global() {
-        for (Commit c: total) {
+        for (Commit c : total) {
             System.out.println(String.format("===\ncommit %s\nDate: %s\n%s\n",
                     c.getCode(), c.time(), c.getMessage()));
         }
     }
-    /** Switches Branch from to arg and updating _current. */
+
+    /**
+     * Switches Branch from to arg and updating _current.
+     */
     public void switchBranch(String arg) {
-        if (!_branchHeads.containsKey(arg)){
+        if (!_branchHeads.containsKey(arg)) {
             System.out.println("No such branch exists.");
             System.exit(0);
         } else if (arg.equals(_current)) {
@@ -216,20 +235,26 @@ public class User implements Serializable {
         }
     }
 
-    /** Returns the HEAD. */
+    /**
+     * Returns the HEAD.
+     */
     public DoubleHT getH() {
         return HEAD;
     }
 
-    /** Checks out all files in a commit. */
+    /**
+     * Checks out all files in a commit.
+     */
     public void checkAll() {
         Commit c = HEAD.getCommit();
-        for (File f: c.getTracked()) {
+        for (File f : c.getTracked()) {
             checkout(HEAD.getCommit().getCode(), f.getName());
         }
     }
 
-    /** Switches to commit with code, and checkout file with name file. */
+    /**
+     * Switches to commit with code, and checkout file with name file.
+     */
     public void checkout(String code, String file) {
         DoubleHT temp = HEAD;
         Commit c = temp.getCommit();
@@ -247,8 +272,8 @@ public class User implements Serializable {
             System.out.println("File does not exist in that commit.");
             System.exit(0);
         } else {
-            String s = ".gitlet/stage/" + c.getReal().get(file);
-            File f = c.getFile(s);
+            String s = ".gitlet/" + c.getCode() + file;
+            File f = new File(s);
             File t = new File(file);
             if (t.exists()) {
                 t.delete();
@@ -258,7 +283,7 @@ public class User implements Serializable {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            Utils.writeContents(f, t);
+            Utils.writeContents(t, f);
         }
     }
 
@@ -277,12 +302,18 @@ public class User implements Serializable {
      */
     private HashMap<String, DoubleHT> _branchHeads;
 
-    /** Stores the current branch the user is on. */
+    /**
+     * Stores the current branch the user is on.
+     */
     private String _current;
 
-    /** Stores all commit since the first. */
+    /**
+     * Stores all commit since the first.
+     */
     private ArrayList<Commit> total;
 
-    /** Hashmap that has code as key, and real file name as value. */
+    /**
+     * Hashmap that has code as key, and real file name as value.
+     */
     private HashMap<String, String> real;
 }
