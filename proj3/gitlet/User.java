@@ -333,7 +333,6 @@ public class User implements Serializable {
 
     /** Search through dir and add untracked files to untrack. */
     public void update() {
-        DIRECTORY.listFiles()
     }
 
     /**
