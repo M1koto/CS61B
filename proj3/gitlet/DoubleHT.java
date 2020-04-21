@@ -12,6 +12,12 @@ import java.util.ArrayList;
  */
 
 public class DoubleHT implements Serializable {
+
+    /** Creates a DoubleHT data structure.
+     * @param parent
+     * @param c
+     * @param branch
+     */
     DoubleHT(DoubleHT parent, Commit c, String branch) {
         _parent1 = parent;
         _commit = c;
@@ -22,7 +28,7 @@ public class DoubleHT implements Serializable {
     }
 
     /**
-     * Make DoubleHT d the children of this DoubleHT.
+     * Make DoubleHT D the children of this DoubleHT.
      */
     public void addChild(DoubleHT d) {
         assert branchMatch(d);
@@ -37,7 +43,7 @@ public class DoubleHT implements Serializable {
     }
 
     /**
-     * Check if d is in same branch as this.
+     * Check if D is in same branch as this.
      */
     public boolean branchMatch(DoubleHT d) {
         return d._branch1.equals(_branch1) || d._branch1.equals(_branch2)
@@ -45,7 +51,7 @@ public class DoubleHT implements Serializable {
     }
 
     /**
-     * Make DoubleHT d the children of this DoubleHT.
+     * Make DoubleHT D the children of this DoubleHT.
      */
     public void addParent(DoubleHT d) {
         if (_parent1 == null) {
@@ -59,7 +65,7 @@ public class DoubleHT implements Serializable {
     }
 
     /**
-     * For a given Commit ID s return the corresponding Commit C.
+     * For a given Commit ID S return the corresponding Commit C.
      */
     public Commit findCommit(String s) {
         Commit a;
@@ -82,7 +88,7 @@ public class DoubleHT implements Serializable {
     }
 
     /**
-     * For a given Commit Message m add all corresponding Commit to ArrayList ans.
+     * For a given Commit Message M add all corresponding Commit to ArrayList ANS.
      */
     public void findMessage(String m, ArrayList<String> ans) {
         if (_commit.getMessage().equals(m)) {

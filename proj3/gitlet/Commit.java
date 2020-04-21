@@ -4,26 +4,30 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
 /**
- * This class calls compare class on all file and get difference between latest commit and version now?
+ * This class calls compare class on all file and get
+ * difference between latest commit and version now?
  * Tracks all files in staging class, receives
- * info from user class for latest commit info, synthesis data adding on metadata to produce a new commit
+ * info from user class for latest commit info, synthesis
+ * data adding on metadata to produce a new commit
  * In case of merge calls user class twice, merge, and create new commit.
  *
  * @author kenny liao
  */
 public class Commit implements Serializable {
 
-    static String FIRSTCOMMIT = "Thu Jan 1 00:00:00 1970 -0700";
+    /** Records the first commit. */
+    static final String FIRSTCOMMIT = "Thu Jan 1 00:00:00 1970 -0700";
 
+    /** For convienence. */
     static final int FORMAT = 8;
 
     /**
-     * Creates a new Commit with following message and time.
+     * Creates a new Commit with following
+     * MESSAGE, PARENT, STAGED and TIME.
      */
     Commit(String message, Date time, ArrayList<File> parent, ArrayList<File> staged) {
         _message = message;
@@ -39,7 +43,8 @@ public class Commit implements Serializable {
     }
 
     /**
-     * Combine all data passed in to be committed.
+     * Combine all data of PARENT and STAGED files
+     * passed in to be committed.
      */
     private ArrayList<File> combine(ArrayList<File> parent, ArrayList<File> staged) {
         ArrayList<File> comb = new ArrayList<File>();
@@ -53,7 +58,7 @@ public class Commit implements Serializable {
     }
 
     /**
-     * Remove file with name in tracked.
+     * Remove file with NAME in tracked.
      */
     public void remove(String name) {
         for (File f : _tracked) {
@@ -63,7 +68,7 @@ public class Commit implements Serializable {
             }
         }
     }
-    /** Set real to given HASHMAP h. */
+    /** Set real to given hashmap H. */
     public void setReal(HashMap<String, String> h) {
         real.putAll(h);
     }
@@ -76,7 +81,7 @@ public class Commit implements Serializable {
         return _tracked;
     }
 
-    /** Return the file under track with name s. */
+    /** Return the file under track with name S. */
     public File getFile(String s) {
         for (File f: _tracked) {
             if (f.getName().equals(s)) {
@@ -106,7 +111,7 @@ public class Commit implements Serializable {
     }
 
     /**
-     * Returns true if this Commit is tracking File with name name.
+     * Returns true if this Commit is tracking File with name NAME.
      */
     public boolean tracking(String name) {
         for (File f : _tracked) {
@@ -117,7 +122,7 @@ public class Commit implements Serializable {
         return false;
     }
     /**
-     * Returns true if this Commit is tracking File with name name.
+     * Returns true if this Commit is tracking File with REAL name.
      */
     public boolean trackingR(String real) {
         return real.contains(real);
@@ -125,7 +130,7 @@ public class Commit implements Serializable {
 
 
     /**
-     * Make code of this commit
+     * Make code of this commit.
      */
     private void makeCode() {
         File temp = new File("temp");
@@ -158,12 +163,12 @@ public class Commit implements Serializable {
     /**
      * Records time of Commit.
      */
-    Date _timestamp;
+    private Date _timestamp;
 
     /**
      * String of time.
      */
-    String _time;
+    private String _time;
     /**
      * Records message.
      */

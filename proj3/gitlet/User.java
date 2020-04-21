@@ -22,12 +22,16 @@ public class User implements Serializable {
      */
     static final File DIRECTORY = new File(".gitlet");
 
+    /** Dir Staging. */
     static final File STAGING = new File(".gitlet/stage");
 
+    /** File for permanent storage. */
     File USER = new File(".gitlet/USER");
 
+    /** First commit's doubleHT. */
     DoubleHT INITIAL;
 
+    /** Creates a unique user for gitlet. */
     public User() {
         staged = new ArrayList<File>();
         DIRECTORY.mkdir();
@@ -53,7 +57,7 @@ public class User implements Serializable {
     }
 
     /**
-     * File writing of Commit with code as name.
+     * File writing of Commit c with code as name.
      */
     private void publish(Commit c, String code) {
         File store = new File(".gitlet/" + code);
@@ -70,7 +74,7 @@ public class User implements Serializable {
     }
 
     /**
-     * Adds file with name file to the staging area.
+     * Adds file with name FILE to the staging area.
      * Overwrites same file if exists.
      */
     public void add(File file) {
@@ -95,7 +99,7 @@ public class User implements Serializable {
     }
 
     /**
-     * Actual removal of file in directory based on name passed in.
+     * Actual removal of file in directory based on NAME passed in.
      */
     private void delete(String name) {
         File temp = new File(name);
@@ -105,7 +109,7 @@ public class User implements Serializable {
     }
 
     /**
-     * Makes a commit with message.
+     * Makes a commit with MESSAGE.
      */
     public void commit(String message) {
         if (staged.size() == 0) {
@@ -135,7 +139,7 @@ public class User implements Serializable {
     }
 
     /**
-     * Removes file with name name.
+     * Removes file with name NAME.
      */
     public void rm(String name) {
         String stage = ".gitlet/stage/" + Utils.sha1(name);
@@ -159,7 +163,7 @@ public class User implements Serializable {
     }
 
     /**
-     * Adds a pointer of name name to tip of the branch.
+     * Adds a pointer of name NAME to tip of the branch.
      */
     public void addBranch(String name) {
         if (_branchHeads.containsKey(name)) {
@@ -176,7 +180,7 @@ public class User implements Serializable {
     }
 
     /**
-     * Removes pointer of name of branch.
+     * Removes pointer of NAME of branch.
      */
     public void rmBranch(String name) {
         if (name.equals(_current)) {
@@ -196,7 +200,7 @@ public class User implements Serializable {
     }
 
     /**
-     * Responds to the command with message m.
+     * Responds to the command with message M.
      */
     public void find(String m) {
         ArrayList<String> ans = new ArrayList<>();
@@ -226,7 +230,7 @@ public class User implements Serializable {
     }
 
     /**
-     * Switches Branch from to arg and updating _current.
+     * Switches Branch from to ARG and updating _current.
      */
     public void switchBranch(String arg) {
         if (!_branchHeads.containsKey(arg)) {
@@ -259,7 +263,7 @@ public class User implements Serializable {
     }
 
     /**
-     * Switches to commit with code, and checkout file with name file.
+     * Switches to commit with CODE, and checkout file with name FILE.
      */
     public void checkout(String code, String file) {
         DoubleHT temp = HEAD;
