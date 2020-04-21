@@ -139,10 +139,15 @@ public class User implements Serializable {
      */
     public void rm(String name) {
         String stage = ".gitlet/stage/" + Utils.sha1(name);
+        File temp = new File(name);
+        boolean removed = staged.remove(temp);
         delete(stage);
         if (HEAD.getCommit().tracking(stage)) {
             HEAD.getCommit().remove(stage);
             delete(name);
+        } else if (!removed) {
+            System.out.println("No reason to remove the file.");
+            System.exit(0);
         }
     }
 
