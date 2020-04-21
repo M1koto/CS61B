@@ -67,11 +67,11 @@ public class DoubleHT implements Serializable {
     /**
      * For a given Commit ID S return the corresponding Commit C.
      */
-    public Commit findCommit(String s) {
-        Commit a;
-        Commit b = null;
+    public DoubleHT findCommit(String s) {
+        DoubleHT a;
+        DoubleHT b = null;
         if (_commit.getCode().equals(s)) {
-            return _commit;
+            return this;
         } else {
             a = _parent1.findCommit(s);
             if (_parent2 != null) {

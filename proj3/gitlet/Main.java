@@ -28,6 +28,7 @@ public class Main {
         File buffer = new File(".gitlet/USER");
         if (buffer.exists()) {
             _user = Utils.readObject(buffer, User.class);
+            _user.update();
         } else if (!args[0].equals("init")) {
             System.out.println("Please init first");
             System.exit(0);
@@ -92,7 +93,8 @@ public class Main {
                 _user.save();
                 break;
             case "reset":
-                //FIXME
+                _user.reset(args[1]);
+                _user.save();
                 break;
             case "merge":
                 //FIXME

@@ -73,6 +73,16 @@ public class Commit implements Serializable {
         real.putAll(h);
     }
 
+    /** Set _father to D. */
+    public void setFather(DoubleHT d) {
+        _father = d;
+    }
+
+    /** Returns _father. */
+    public DoubleHT getFather() {
+        return _father;
+    }
+
 
     /**
      * Returns the tracked files.
@@ -173,6 +183,9 @@ public class Commit implements Serializable {
      * Records message.
      */
     private String _message;
+
+    /** Stores the DoubleHT that contains this commit. */
+    private DoubleHT _father;
 
     /**
      * Stores the code of the commit this Commit contains.

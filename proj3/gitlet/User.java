@@ -41,13 +41,16 @@ public class User implements Serializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         total = new ArrayList<Commit>();
         real = new HashMap<>();
+        untracked = new ArrayList<>();
 
 
         Commit first = new Commit("initial commit", null, null, null);
         total.add(first);
         INITIAL = new DoubleHT(null, first, "Master");
+        first.setFather(INITIAL);
         HEAD = INITIAL;
         _current = "Master";
         _branchHeads = new HashMap<String, DoubleHT>();
@@ -126,6 +129,7 @@ public class User implements Serializable {
         c.setReal(real); // add staged file's real name to this commit's real name hashmap
         total.add(c);
         DoubleHT d = new DoubleHT(HEAD, c, _current);
+        c.setFather(d);
         _branchHeads.remove(_current);
         _branchHeads.put(_current, d);
         HEAD = d;
@@ -152,6 +156,27 @@ public class User implements Serializable {
         } else if (!removed) {
             System.out.println("No reason to remove the file.");
             System.exit(0);
+        }
+    }
+
+    /** Corresponds to reset command
+     * and checks out all with CODE. */
+    public void reset(String code) {
+        Commit target = null;
+        for (Commit c: total) {
+            if (c.getCode().equals(code)) {
+                target = c;
+                break;
+            }
+        }
+        if (target == null) {
+            System.out.println("No commit with that id exists.");
+            System.exit(0);
+        } else {
+            HEAD = target.getFather();
+            _branchHeads.remove(code);
+            _branchHeads.put(code, target.getFather());
+            checkAll();
         }
     }
 
@@ -271,8 +296,10 @@ public class User implements Serializable {
         Iterator<DoubleHT> i = _branchHeads.values().iterator();
         while (c != null && !c.getCode().equals(code)) {
             if (i.hasNext()) {
-                temp = i.next();
-                c = temp.findCommit(code);
+                temp = i.next().findCommit(code);
+                if (temp != null) {
+                    c = temp.getCommit();
+                }
             }
         }
         if (c == null) {
@@ -297,8 +324,20 @@ public class User implements Serializable {
         }
     }
 
+    /** Compares two files,
+     * returns true if same content false otherwise. */
+    private boolean compare(File a, File b) {
+        String temp1 = Utils.readContentsAsString(a);
+        return temp1.equals(Utils.readContentsAsString(b));
+    }
+
+    /** Search through dir and add untracked files to untrack. */
+    public void update() {
+        DIRECTORY.listFiles()
+    }
+
     /**
-     * An arraylist that stores all the tracked files.
+     * An arraylist that stores all the staged files.
      */
     private ArrayList<File> staged;
 
@@ -326,4 +365,7 @@ public class User implements Serializable {
      * Hashmap that has code as key, and real file name as value.
      */
     private HashMap<String, String> real;
+
+    /** Arraylist that keeps track of untracked files. */
+    private ArrayList<File> untracked;
 }
