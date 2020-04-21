@@ -11,10 +11,10 @@
 <<<
 > commit "added wug2"
 <<<
-echo 'ichiban' >wug2.txt
++ wug2.txt notwug.txt
 > add wug2.txt
 <<<
-> commit "added wug2 second time"
+> rm notwug.txt
 <<<
-> log
+> commit "should output no staged file"
 <<<*

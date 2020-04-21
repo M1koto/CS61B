@@ -59,13 +59,13 @@ public class User implements Serializable {
         File store = new File(".gitlet/" + code);
         store.mkdir();
         for (File f: c.getTracked()) {
-            File temp = new File(store.getName() + "/" + f.getName());
+            File temp = new File(".gitlet/" + code + "/" + f.getName());
             try {
                 temp.createNewFile();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            Utils.writeContents(temp, f);
+            Utils.writeContents(temp, Utils.readContentsAsString(f));
         }
     }
 
@@ -89,6 +89,7 @@ public class User implements Serializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        Utils.writeContents(f, Utils.readContentsAsString(file));
         real.putIfAbsent(buffer, file.getName());
         staged.add(file);
     }
@@ -272,7 +273,7 @@ public class User implements Serializable {
             System.out.println("File does not exist in that commit.");
             System.exit(0);
         } else {
-            String s = ".gitlet/" + c.getCode() + file;
+            String s = ".gitlet/" + c.getCode() + "/" + file;
             File f = new File(s);
             File t = new File(file);
             if (t.exists()) {
@@ -283,7 +284,7 @@ public class User implements Serializable {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            Utils.writeContents(t, f);
+            Utils.writeContents(t, Utils.readContentsAsString(f));
         }
     }
 
