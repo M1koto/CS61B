@@ -165,6 +165,11 @@ public class Commit implements Serializable {
         }
     }
 
+    /** Change _tracked to BUFFER. */
+    public void changeTracked(ArrayList<File> buffer) {
+        _tracked = buffer;
+    }
+
     /**
      * An arraylist that stores all the tracked files.
      */

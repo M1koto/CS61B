@@ -88,6 +88,7 @@ public class User implements Serializable {
      * File writing of Commit c with code as name.
      */
     private void publish(Commit c, String code) {
+        ArrayList<File> buffer = new ArrayList<>();
         File store = new File(".gitlet/" + code);
         store.mkdir();
         for (File f : c.getTracked()) {
@@ -101,7 +102,9 @@ public class User implements Serializable {
                 Utils.writeContents(temp, Utils.readContentsAsString(f));
             } catch (IllegalArgumentException ignored) {
             }
+            buffer.add(temp);
         }
+        c.changeTracked(buffer);
     }
 
     /**
@@ -126,6 +129,7 @@ public class User implements Serializable {
         Utils.writeContents(f, Utils.readContentsAsString(file));
         real.putIfAbsent(buffer, file.getName());
         staged.add(file);
+        untracked.remove(file);
     }
 
     /**
@@ -463,17 +467,15 @@ public class User implements Serializable {
             return;
         }
         for (int i = 0; i < now.length; i++) {
-            try {
-                Utils.readContentsAsString(now[i]);
-                if (prev.contains(now[i])) {
-                    int x = prev.indexOf(now[i]);
-                    if (!compare(now[i], prev.get(x))) {
+            if (now[i].getName().contains(".txt")) {
+                if (has(prev, now[i]) != -1) {
+                    int x = has(prev, now[i]);
+                    if (!compare(prev.get(x), now[i])) {
                         modified.add(now[i]);
                     }
-                } else {
+                } else if (!staged.contains(now[i])){
                     untracked.add(now[i]);
                 }
-            } catch (IllegalArgumentException ignored) {
             }
             prev.remove(now[i]);
             now[i] = null;
@@ -484,6 +486,17 @@ public class User implements Serializable {
             modified.remove(f);
             deleted.remove(f);
         }
+    }
+
+    /** Returns index if arraylist PREV contains file with name FILE.
+     * Returns -1 otherwise*/
+    private int has(ArrayList<File> prev, File file) {
+        for (File f: prev) {
+            if (f.getName().equals(file.getName())) {
+                return prev.indexOf(f);
+            }
+        }
+        return -1;
     }
 
     /**
