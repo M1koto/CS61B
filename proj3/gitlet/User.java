@@ -55,9 +55,12 @@ public class User implements Serializable {
         untracked = new ArrayList<>();
         modified = new ArrayList<>();
         deleted = new ArrayList<>();
+        removal = new ArrayList<>();
+        branches = new ArrayList<>();
 
         Commit first = new Commit("initial commit", null, initParent(), null);
         total.add(first);
+        branches.add("Master");
         INITIAL = new DoubleHT(null, first, "Master");
         first.setFather(INITIAL);
         HEAD = INITIAL;
@@ -224,6 +227,7 @@ public class User implements Serializable {
             if (temp._branch2 == null) {
                 temp._branch2 = name;
                 _branchHeads.put(name, temp);
+                branches.add(name);
             } else {
                 System.out.println("Only two branch");
             }
@@ -351,6 +355,71 @@ public class User implements Serializable {
     }
 
     /**
+     * Show the status of this gitlet.
+     */
+    public void status() {
+        Collections.sort(staged);
+        Collections.sort(removal);
+        Collections.sort(deleted);
+        Collections.sort(modified);
+        Collections.sort(untracked);
+        System.out.println("=== Branches ===");
+        for (String s : branches) {
+            if (s.equals(_current)) {
+                System.out.println("*" + s);
+            } else {
+                System.out.println(s);
+            }
+        }
+        System.out.println("\n");
+        System.out.println("=== Staged Files ===");
+        for (File f : staged) {
+            System.out.println(f.getName());
+        }
+        System.out.println("\n");
+        System.out.println("=== Removed Files ===");
+        for (File f : removal) {
+            System.out.println(f.getName());
+        }
+        System.out.println("\n");
+        System.out.println("=== Modifications Not Staged For Commit Files ===");
+        compareTwo(deleted, modified);
+        System.out.println("\n");
+        System.out.println("=== Untracked Files ===");
+        for (File f : untracked) {
+            System.out.println(f.getName());
+        }
+        System.out.println("\n");
+    }
+
+    /**
+     * Decide the ordering of printing of DELETED and MODIFIED.
+     */
+    private void compareTwo(ArrayList<File> deleted, ArrayList<File> modified) {
+        int d = 0;
+        int m = 0;
+        while (d < deleted.size() && m < modified.size()) {
+            if (d >= deleted.size() - 1) {
+                System.out.println(modified.get(m).getName() + " (modified)");
+                m += 1;
+            } else if (m >= modified.size() - 1) {
+                System.out.println(deleted.get(d).getName() + " (deleted)");
+                d += 1;
+            } else {
+                String del = deleted.get(d).getName();
+                String mod = modified.get(m).getName();
+                if (del.compareTo(mod) > 0) {
+                    System.out.println(del + " (deleted)");
+                    d += 1;
+                } else {
+                    System.out.println(mod + " (modified)");
+                    m += 1;
+                }
+            }
+        }
+    }
+
+    /**
      * Compares two files,
      * returns true if same content false otherwise.
      */
@@ -446,4 +515,14 @@ public class User implements Serializable {
      * Arraylist that keeps track of deleted files.
      */
     private ArrayList<File> deleted;
+
+    /**
+     * Arraylist that keeps track of REMOVAl files.
+     */
+    private ArrayList<File> removal;
+
+    /**
+     * Arraylist that keeps track of branch names.
+     */
+    private ArrayList<String> branches;
 }

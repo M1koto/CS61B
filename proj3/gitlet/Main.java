@@ -69,7 +69,7 @@ public class Main {
                 _user.find(args[1]);
                 break;
             case "status":
-                //FIXME
+                _user.status();
                 break;
             case "checkout":
                 if (_user.warning()) {
