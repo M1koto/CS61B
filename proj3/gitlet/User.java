@@ -1,6 +1,7 @@
 package gitlet;
 
 import edu.neu.ccs.util.FileUtilities;
+import org.checkerframework.checker.units.qual.A;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -111,13 +112,12 @@ public class User implements Serializable {
         String buffer = Utils.sha1(file.getName());
         String name = ".gitlet/stage/" + buffer;
         File f = new File(name);
-        //if (FileUtils.contentEquals()) {
-        //rm(file.getName());
-        //return;
-        //}
         delete(name);
         staged.remove(file);
         real.remove(buffer);
+        if (compare(f, file)) {
+            
+        }
         try {
             f.createNewFile();
         } catch (IOException e) {
@@ -137,7 +137,23 @@ public class User implements Serializable {
             temp.delete();
         }
     }
-
+    /** Delete file if B has the same name with A. */
+    private ArrayList<File> delSimilar(ArrayList<File> a, ArrayList<File> b) {
+        ArrayList<File> ret = new ArrayList<>();
+        boolean flag = true;
+        for (File f1: a) {
+            for (File f2: b) {
+                if (f1.getName().equals(f2.getName())) {
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag) {
+                ret.add(f1);
+            }
+        }
+        return ret;
+    }
     /**
      * Makes a commit with MESSAGE.
      */
@@ -150,10 +166,12 @@ public class User implements Serializable {
             System.out.println("Please enter a commit message.");
             return;
         }
+        ArrayList<File> pass = delSimilar(HEAD.getCommit().getTracked(), staged);
         Commit c = new Commit(message, time(),
-                HEAD.getCommit().getTracked(), staged);
-        c.setReal(HEAD.getCommit().getReal()); // add real name of files of parent commit to this commit's real name
+                pass, staged);
         c.setReal(real); // add staged file's real name to this commit's real name hashmap
+        c.setReal(HEAD.getCommit().getReal()); // add real name of files of parent commit to this commit's real name
+
         total.add(c);
         DoubleHT d = new DoubleHT(HEAD, c, _current);
         c.setFather(d);
@@ -180,6 +198,7 @@ public class User implements Serializable {
         if (HEAD.getCommit().tracking(stage)) {
             HEAD.getCommit().remove(stage);
             delete(name);
+            removal.add(temp);
         } else if (!removed) {
             System.out.println("No reason to remove the file.");
             System.exit(0);
