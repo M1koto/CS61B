@@ -424,7 +424,7 @@ public class User implements Serializable {
     private void compareTwo(ArrayList<File> deleted, ArrayList<File> modified) {
         int d = 0;
         int m = 0;
-        while (d < deleted.size() && m < modified.size()) {
+        while (d < deleted.size() || m < modified.size()) {
             if (d >= deleted.size() - 1) {
                 System.out.println(modified.get(m).getName() + " (modified)");
                 m += 1;
@@ -473,18 +473,21 @@ public class User implements Serializable {
                     if (!compare(prev.get(x), now[i])) {
                         modified.add(now[i]);
                     }
-                } else if (!staged.contains(now[i])){
+                } else if (!staged.contains(now[i])
+                        && !untracked.contains(now[i])) {
                     untracked.add(now[i]);
                 }
             }
-            prev.remove(now[i]);
+            File lamb = now[i];
+            prev.removeIf(f -> f.getName().equals(lamb.getName()));
             now[i] = null;
         }
         deleted.addAll(prev);
 
         for (File f : staged) {
-            modified.remove(f);
-            deleted.remove(f);
+            while (modified.remove(f)) {
+                while (deleted.remove(f));
+            }
         }
     }
 
