@@ -195,8 +195,8 @@ public class User implements Serializable {
         File temp = new File(name);
         boolean removed = staged.remove(temp);
         delete(stage);
-        if (HEAD.getCommit().tracking(stage)) {
-            HEAD.getCommit().remove(stage);
+        if (HEAD.getCommit().tracking(name)) {
+            HEAD.getCommit().remove(name);
             delete(name);
             removal.add(temp);
         } else if (!removed) {
@@ -390,6 +390,7 @@ public class User implements Serializable {
                 System.out.println(s);
             }
         }
+        System.out.println("");
         System.out.println("=== Staged Files ===");
         for (File f : staged) {
             System.out.println(f.getName());
