@@ -115,9 +115,9 @@ public class User implements Serializable {
         delete(name);
         staged.remove(file);
         real.remove(buffer);
-        if (compare(f, file)) {
-            
-        }
+        //if (compare(f, file)) {
+
+        //}
         try {
             f.createNewFile();
         } catch (IOException e) {
