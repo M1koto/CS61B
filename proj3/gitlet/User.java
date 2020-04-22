@@ -22,16 +22,24 @@ public class User implements Serializable {
      */
     static final File DIRECTORY = new File(".gitlet");
 
-    /** Dir Staging. */
+    /**
+     * Dir Staging.
+     */
     static final File STAGING = new File(".gitlet/stage");
 
-    /** File for permanent storage. */
+    /**
+     * File for permanent storage.
+     */
     File USER = new File(".gitlet/USER");
 
-    /** First commit's doubleHT. */
+    /**
+     * First commit's doubleHT.
+     */
     DoubleHT INITIAL;
 
-    /** Creates a unique user for gitlet. */
+    /**
+     * Creates a unique user for gitlet.
+     */
     public User() {
         staged = new ArrayList<File>();
         DIRECTORY.mkdir();
@@ -45,7 +53,8 @@ public class User implements Serializable {
         total = new ArrayList<Commit>();
         real = new HashMap<>();
         untracked = new ArrayList<>();
-
+        modified = new ArrayList<>();
+        deleted = new ArrayList<>();
 
         Commit first = new Commit("initial commit", null, initParent(), null);
         total.add(first);
@@ -59,7 +68,9 @@ public class User implements Serializable {
         publish(first, first.getCode());
     }
 
-    /** Adds all existing files when initializing to the first commit.*/
+    /**
+     * Adds all existing files when initializing to the first commit.
+     */
     private ArrayList<File> initParent() {
         File[] temp = DIRECTORY.listFiles();
         ArrayList<File> ret = new ArrayList<>();
@@ -75,14 +86,17 @@ public class User implements Serializable {
     private void publish(Commit c, String code) {
         File store = new File(".gitlet/" + code);
         store.mkdir();
-        for (File f: c.getTracked()) {
+        for (File f : c.getTracked()) {
             File temp = new File(".gitlet/" + code + "/" + f.getName());
             try {
                 temp.createNewFile();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            Utils.writeContents(temp, Utils.readContentsAsString(f));
+            try {
+                Utils.writeContents(temp, Utils.readContentsAsString(f));
+            } catch (IllegalArgumentException ignored) {
+            }
         }
     }
 
@@ -169,11 +183,13 @@ public class User implements Serializable {
         }
     }
 
-    /** Corresponds to reset command
-     * and checks out all with CODE. */
+    /**
+     * Corresponds to reset command
+     * and checks out all with CODE.
+     */
     public void reset(String code) {
         Commit target = null;
-        for (Commit c: total) {
+        for (Commit c : total) {
             if (c.getCode().equals(code)) {
                 target = c;
                 break;
@@ -334,16 +350,20 @@ public class User implements Serializable {
         }
     }
 
-    /** Compares two files,
-     * returns true if same content false otherwise. */
+    /**
+     * Compares two files,
+     * returns true if same content false otherwise.
+     */
     private boolean compare(File a, File b) {
         String temp1 = Utils.readContentsAsString(a);
         return temp1.equals(Utils.readContentsAsString(b));
     }
 
-    /** Search through dir and
+    /**
+     * Search through dir and
      * add untracked files to untrack.
-     * add modified files to modified.*/
+     * add modified files to modified.
+     */
     public void update() {
         ArrayList<File> prev = new ArrayList<>(HEAD.getCommit().getTracked());
         FilenameFilter forNow = (dir, name) -> !dir.getPath().equals(STAGING.getPath());
@@ -352,26 +372,32 @@ public class User implements Serializable {
             return;
         }
         for (int i = 0; i < now.length; i++) {
-            if (prev.contains(now[i])) {
-                int x = prev.indexOf(now[i]);
-                if (!compare(now[i], prev.get(x))) {
-                    modified.add(now[i]);
+            try {
+                Utils.readContentsAsString(now[i]);
+                if (prev.contains(now[i])) {
+                    int x = prev.indexOf(now[i]);
+                    if (!compare(now[i], prev.get(x))) {
+                        modified.add(now[i]);
+                    }
+                } else {
+                    untracked.add(now[i]);
                 }
-            } else {
-                untracked.add(now[i]);
+            } catch (IllegalArgumentException ignored) {
             }
             prev.remove(now[i]);
             now[i] = null;
         }
         deleted.addAll(prev);
 
-        for (File f: staged) {
+        for (File f : staged) {
             modified.remove(f);
             deleted.remove(f);
         }
     }
 
-    /** Returns whether there is an untracked file. */
+    /**
+     * Returns whether there is an untracked file.
+     */
     public boolean warning() {
         return untracked.size() != 0;
     }
@@ -406,12 +432,18 @@ public class User implements Serializable {
      */
     private HashMap<String, String> real;
 
-    /** Arraylist that keeps track of untracked files. */
+    /**
+     * Arraylist that keeps track of untracked files.
+     */
     private ArrayList<File> untracked;
 
-    /** Arraylist that keeps track of modified files. */
+    /**
+     * Arraylist that keeps track of modified files.
+     */
     private ArrayList<File> modified;
 
-    /** Arraylist that keeps track of deleted files. */
+    /**
+     * Arraylist that keeps track of deleted files.
+     */
     private ArrayList<File> deleted;
 }
