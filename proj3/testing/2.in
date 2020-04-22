@@ -6,4 +6,15 @@
 <<<
 > add f.txt
 <<<
-
+> commit "Two files"
+<<<
+> rm f.txt
+<<<
+> commit "Remove one file"
+<<<
+> add f.txt
+<<<
+> commit "Two files"
+<<<
+> log
+<<<*

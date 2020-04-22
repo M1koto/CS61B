@@ -30,7 +30,7 @@ public class Main {
             _user = Utils.readObject(buffer, User.class);
             _user.update();
         } else if (!args[0].equals("init")) {
-            System.out.println("Please init first");
+            System.out.println("Not in an initialized Gitlet directory.");
             System.exit(0);
         }
         switch (args[0]) {
@@ -79,7 +79,7 @@ public class Main {
                 if (args[1].equals("--")) {
                     _user.checkout(_user.getH().getCommit().getCode(), args[2]);
                 } else {
-                    if (args[2].equals("--")) {
+                    if (args.length > 2 && args[2].equals("--")) {
                         _user.checkout(args[1], args[3]);
                     } else {
                         _user.switchBranch(args[1]);

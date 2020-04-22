@@ -158,7 +158,7 @@ public class User implements Serializable {
      * Makes a commit with MESSAGE.
      */
     public void commit(String message) {
-        if (staged.size() == 0) {
+        if (staged.size() == 0 && removal.size() == 0) {
             System.out.println("No changes added to the commit.");
             return;
         }
@@ -181,6 +181,7 @@ public class User implements Serializable {
 
         publish(c, c.getCode());
         staged.clear();
+        removal.clear();
         real.clear();
         for (File file : STAGING.listFiles())
             if (!file.isDirectory())
