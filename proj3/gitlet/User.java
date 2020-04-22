@@ -61,13 +61,13 @@ public class User implements Serializable {
 
         Commit first = new Commit("initial commit", null, initParent(), null);
         total.add(first);
-        branches.add("Master");
-        INITIAL = new DoubleHT(null, first, "Master");
+        branches.add("master");
+        INITIAL = new DoubleHT(null, first, "master");
         first.setFather(INITIAL);
         HEAD = INITIAL;
-        _current = "Master";
+        _current = "master";
         _branchHeads = new HashMap<String, DoubleHT>();
-        _branchHeads.put("Master", INITIAL);
+        _branchHeads.put("master", INITIAL);
 
         publish(first, first.getCode());
     }
@@ -245,7 +245,7 @@ public class User implements Serializable {
         } else {
             DoubleHT temp = _branchHeads.get(_current);
             if (temp._branch2 == null) {
-                temp._branch2 = name;
+                temp.addBranch(name);
                 _branchHeads.put(name, temp);
                 branches.add(name);
             } else {

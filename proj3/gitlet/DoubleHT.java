@@ -51,16 +51,15 @@ public class DoubleHT implements Serializable {
     }
 
     /**
-     * Make DoubleHT D the children of this DoubleHT.
+     * Add string S to all of its parents.
      */
-    public void addParent(DoubleHT d) {
-        if (_parent1 == null) {
-            _parent1 = d;
-        } else if (_parent2 == null) {
-            _parent2 = d;
-        } else {
-            System.out.println("More than two branches in the same commit");
-            //FIXME
+    public void addBranch(String s) {
+        _branch2 = s;
+        if (_parent1 != null) {
+            _parent1.addBranch(s);
+        }
+        if (_parent2 != null) {      //FIXME Now writing add branch to both idk if true
+            _parent2.addBranch(s);
         }
     }
 
