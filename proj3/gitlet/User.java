@@ -3,9 +3,9 @@ package gitlet;
 import edu.neu.ccs.util.FileUtilities;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.*;
 
 /**
@@ -47,7 +47,7 @@ public class User implements Serializable {
         untracked = new ArrayList<>();
 
 
-        Commit first = new Commit("initial commit", null, null, null);
+        Commit first = new Commit("initial commit", null, initParent(), null);
         total.add(first);
         INITIAL = new DoubleHT(null, first, "Master");
         first.setFather(INITIAL);
@@ -57,6 +57,16 @@ public class User implements Serializable {
         _branchHeads.put("Master", INITIAL);
 
         publish(first, first.getCode());
+    }
+
+    /** Adds all existing files when initializing to the first commit.*/
+    private ArrayList<File> initParent() {
+        File[] temp = DIRECTORY.listFiles();
+        ArrayList<File> ret = new ArrayList<>();
+        if (temp != null) {
+            Collections.addAll(ret, temp);
+        }
+        return ret;
     }
 
     /**
@@ -331,8 +341,39 @@ public class User implements Serializable {
         return temp1.equals(Utils.readContentsAsString(b));
     }
 
-    /** Search through dir and add untracked files to untrack. */
+    /** Search through dir and
+     * add untracked files to untrack.
+     * add modified files to modified.*/
     public void update() {
+        ArrayList<File> prev = new ArrayList<>(HEAD.getCommit().getTracked());
+        FilenameFilter forNow = (dir, name) -> !dir.getPath().equals(STAGING.getPath());
+        File[] now = DIRECTORY.listFiles(forNow);
+        if (now == null) {
+            return;
+        }
+        for (int i = 0; i < now.length; i++) {
+            if (prev.contains(now[i])) {
+                int x = prev.indexOf(now[i]);
+                if (!compare(now[i], prev.get(x))) {
+                    modified.add(now[i]);
+                }
+            } else {
+                untracked.add(now[i]);
+            }
+            prev.remove(now[i]);
+            now[i] = null;
+        }
+        deleted.addAll(prev);
+
+        for (File f: staged) {
+            modified.remove(f);
+            deleted.remove(f);
+        }
+    }
+
+    /** Returns whether there is an untracked file. */
+    public boolean warning() {
+        return untracked.size() != 0;
     }
 
     /**
@@ -367,4 +408,10 @@ public class User implements Serializable {
 
     /** Arraylist that keeps track of untracked files. */
     private ArrayList<File> untracked;
+
+    /** Arraylist that keeps track of modified files. */
+    private ArrayList<File> modified;
+
+    /** Arraylist that keeps track of deleted files. */
+    private ArrayList<File> deleted;
 }

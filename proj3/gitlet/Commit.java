@@ -47,7 +47,7 @@ public class Commit implements Serializable {
      * passed in to be committed.
      */
     private ArrayList<File> combine(ArrayList<File> parent, ArrayList<File> staged) {
-        ArrayList<File> comb = new ArrayList<File>();
+        ArrayList<File> comb = new ArrayList<>();
         if (parent != null) {
             comb.addAll(parent);
         }
