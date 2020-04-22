@@ -1,6 +1,5 @@
 package gitlet;
 
-import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -163,10 +162,5 @@ public class DoubleHT implements Serializable {
      * If doesn't have any, then is null.
      */
     private DoubleHT _child2;
-
-    /**
-     * Array that keeps track of all files.
-     */
-    private File[] all;
 }
 

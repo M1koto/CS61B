@@ -73,9 +73,9 @@ public class Main {
                 break;
             case "checkout":
                 if (_user.warning()) {
-                System.out.println("There is an untracked file in the way; delete it or add it first.");
-                System.exit(0);
-            }
+                    System.out.println("There is an untracked file in the way; delete it or add it first.");
+                    System.exit(0);
+                }
                 if (args[1].equals("--")) {
                     _user.checkout(_user.getH().getCommit().getCode(), args[2]);
                 } else {
