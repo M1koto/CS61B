@@ -110,6 +110,21 @@ public class DoubleHT implements Serializable {
         return _commit;
     }
 
+    /** Removes branch NAME for it and all of its parents. */
+    public void rmbranch(String name) {
+        if (_branch1.equals(name)) {
+            _branch1 = null;
+        } else if (_branch2.equals(name)) {
+            _branch2 = null;
+        }
+        if (_parent1 != null) {
+            _parent1.rmbranch(name);
+        }
+        if (_parent2 != null) {
+            _parent2.rmbranch(name); //FIXME test 30 contradicts website
+        }
+    }
+
     /** Prints Commited info on branch _current. */
     public void printlog(String current) {
         Commit c = _commit;

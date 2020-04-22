@@ -263,7 +263,9 @@ public class User implements Serializable {
         } else if (!_branchHeads.containsKey(name)) {
             System.out.println("branch with that name does not exist.");
         } else {
+            branches.remove(name);
             _branchHeads.remove(name);
+            HEAD.rmbranch(name);
         }
     }
 
