@@ -390,25 +390,24 @@ public class User implements Serializable {
                 System.out.println(s);
             }
         }
-        System.out.println("\n");
         System.out.println("=== Staged Files ===");
         for (File f : staged) {
             System.out.println(f.getName());
         }
-        System.out.println("\n");
+        System.out.println("");
         System.out.println("=== Removed Files ===");
         for (File f : removal) {
             System.out.println(f.getName());
         }
-        System.out.println("\n");
+        System.out.println("");
         System.out.println("=== Modifications Not Staged For Commit Files ===");
         compareTwo(deleted, modified);
-        System.out.println("\n");
+        System.out.println("");
         System.out.println("=== Untracked Files ===");
         for (File f : untracked) {
             System.out.println(f.getName());
         }
-        System.out.println("\n");
+        System.out.println("");
     }
 
     /**
