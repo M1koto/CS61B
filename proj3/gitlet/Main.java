@@ -66,7 +66,7 @@ public class Main {
                 _user.global();
                 break;
             case "find":
-                _user.find(args[1]);
+                _user.find(split(args));
                 break;
             case "status":
                 _user.status();

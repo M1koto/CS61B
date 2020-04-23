@@ -201,6 +201,7 @@ public class User implements Serializable {
         boolean removed = staged.remove(temp);
         delete(stage);
         if (HEAD.getCommit().tracking(name)) {
+            removed = true;
             HEAD.getCommit().remove(name);
             delete(name);
             removal.add(temp);
@@ -285,9 +286,17 @@ public class User implements Serializable {
      */
     public void find(String m) {
         ArrayList<String> ans = new ArrayList<>();
-        HEAD.findMessage(m, ans);
+        for (Commit c: total) {
+            if (c.getMessage().equals(m)) {
+                ans.add(c.getCode());
+            }
+        }
         if (ans.size() == 0) {
             System.out.println("Found no commit with that message.");
+        } else {
+            for (String s: ans) {
+                System.out.println(s);
+            }
         }
     }
 

@@ -25,6 +25,9 @@ public class Commit implements Serializable {
     /** For convienence. */
     static final int FORMAT = 8;
 
+    /** For convienence. */
+    static final int GITLET = 8;
+
     /**
      * Creates a new Commit with following
      * MESSAGE, PARENT, STAGED and TIME.
@@ -61,6 +64,7 @@ public class Commit implements Serializable {
      * Remove file with NAME in tracked.
      */
     public void remove(String name) {
+        name = name.substring(GITLET, name.length());
         for (File f : _tracked) {
             if (f.getName().equals(name)) {
                 _tracked.remove(f);
@@ -124,6 +128,11 @@ public class Commit implements Serializable {
      * Returns true if this Commit is tracking File with name NAME.
      */
     public boolean tracking(String name) {
+        if (!name.substring(0, GITLET).equals(".gitlet/")) {
+            return false;
+        } else {
+            name = name.substring(GITLET, name.length());
+        }
         for (File f : _tracked) {
             if (f.getName().equals(name)) {
                 return true;
