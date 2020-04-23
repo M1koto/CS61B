@@ -408,7 +408,7 @@ public class User implements Serializable {
             System.out.println(f.getName());
         }
         System.out.println("");
-        System.out.println("=== Modifications Not Staged For Commit Files ===");
+        System.out.println("=== Modifications Not Staged For Commit ===");
         compareTwo(deleted, modified);
         System.out.println("");
         System.out.println("=== Untracked Files ===");
