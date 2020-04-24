@@ -38,7 +38,9 @@ public class User implements Serializable {
      */
     DoubleHT INITIAL;
 
-    /** For convienence. */
+    /**
+     * For convienence.
+     */
     static final int GITLET = 9;
 
     /**
@@ -132,7 +134,12 @@ public class User implements Serializable {
         }
         Utils.writeContents(f, Utils.readContentsAsString(file));
         real.putIfAbsent(buffer, file.getName());
-        if (!HEAD.getCommit().tracking(".gitlet/" + file.getName())) {
+        Commit c = HEAD.getCommit();
+        if (c.tracking(".gitlet/" + file.getName())) {
+            if (!compare(file, c.getFile(file.getName()))) {
+                staged.add(file);
+            }
+        } else {
             staged.add(file);
         }
         untracked.remove(file);
@@ -360,7 +367,9 @@ public class User implements Serializable {
         Commit c = HEAD.getCommit();
         File[] all = DIRECTORY.listFiles();
         for (File file : all) {
-            file.delete();
+            if (file.isFile() && file.getName().contains(".txt")) {
+                file.delete();
+            }
         }
         for (File f : c.getTracked()) {
             if (f.getName().contains(".txt")) {
@@ -393,7 +402,7 @@ public class User implements Serializable {
         } else {
             String s = ".gitlet/" + c.getCode() + "/" + file;
             File f = new File(s);
-            File t = new File(file);
+            File t = new File(".gitlet/" + file);
             if (t.exists()) {
                 t.delete();
             }
@@ -514,8 +523,8 @@ public class User implements Serializable {
             prev.removeIf(f -> f.getName().equals(lamb.getName()));
             now[i] = null;
         }
-        for (String s: removal) {
-            for (File f: prev) {
+        for (String s : removal) {
+            for (File f : prev) {
                 if (f.getName().contains(s.substring(GITLET))) {
                     prev.remove(f);
                     break;
@@ -606,6 +615,8 @@ public class User implements Serializable {
      */
     private ArrayList<String> branches;
 
-    /** Arraylist specifically for rm command. */
+    /**
+     * Arraylist specifically for rm command.
+     */
     private ArrayList<String> rmList;
 }
