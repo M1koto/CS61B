@@ -356,6 +356,10 @@ public class User implements Serializable {
      */
     public void checkAll() {
         Commit c = HEAD.getCommit();
+        File[] all = DIRECTORY.listFiles();
+        for (File file : all) {
+            file.delete();
+        }
         for (File f : c.getTracked()) {
             checkout(HEAD.getCommit().getCode(), f.getName());
         }
@@ -385,7 +389,7 @@ public class User implements Serializable {
         } else {
             String s = ".gitlet/" + c.getCode() + "/" + file;
             File f = new File(s);
-            File t = new File(file);
+            File t = new File(".gitlet/" + file);
             if (t.exists()) {
                 t.delete();
             }
@@ -502,10 +506,11 @@ public class User implements Serializable {
             prev.removeIf(f -> f.getName().equals(lamb.getName()));
             now[i] = null;
         }
-        for (File f: prev) {
-            for (String s: removal) {
+        for (String s: removal) {
+            for (File f: prev) {
                 if (f.getName().contains(s.substring(GITLET))) {
                     prev.remove(f);
+                    break;
                 }
             }
         }
