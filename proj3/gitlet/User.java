@@ -361,7 +361,9 @@ public class User implements Serializable {
             file.delete();
         }
         for (File f : c.getTracked()) {
-            checkout(HEAD.getCommit().getCode(), f.getName());
+            if (f.getName().contains(".txt")) {
+                checkout(HEAD.getCommit().getCode(), f.getName());
+            }
         }
     }
 
@@ -484,8 +486,12 @@ public class User implements Serializable {
      * add modified files to modified.
      */
     public void update() {
-        ArrayList<File> prev = new ArrayList<>(HEAD.getCommit().getTracked());
+        deleted.clear();
+        modified.clear();
+        untracked.clear();
         FilenameFilter forNow = (dir, name) -> !dir.getPath().equals(STAGING.getPath());
+        ArrayList<File> prev = new ArrayList<>(HEAD.getCommit().getTracked());
+        prev.removeIf(f -> f.getName().contains("/stage"));
         File[] now = DIRECTORY.listFiles(forNow);
         if (now == null) {
             return;
