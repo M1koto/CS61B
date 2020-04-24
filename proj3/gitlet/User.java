@@ -402,7 +402,7 @@ public class User implements Serializable {
         } else {
             String s = ".gitlet/" + c.getCode() + "/" + file;
             File f = new File(s);
-            File t = new File(".gitlet/" + file);
+            File t = new File(file);
             if (t.exists()) {
                 t.delete();
             }
