@@ -63,7 +63,6 @@ public class User implements Serializable {
         deleted = new ArrayList<>();
         removal = new ArrayList<>();
         branches = new ArrayList<>();
-        rmList = new ArrayList<>();
 
         Commit first = new Commit("initial commit", null, initParent(), null);
         total.add(first);
@@ -124,24 +123,21 @@ public class User implements Serializable {
         delete(name);
         staged.remove(file);
         real.remove(buffer);
-        //if (compare(f, file)) {
-
-        //}
+        Commit c = HEAD.getCommit();
+        if (file.exists() && c.getFile(file.getName()) != null
+                && compare(file, c.getFile(file.getName()))) {
+            removal.remove(file);
+            return;
+        }
         try {
             f.createNewFile();
         } catch (IOException e) {
             e.printStackTrace();
         }
         Utils.writeContents(f, Utils.readContentsAsString(file));
+
         real.putIfAbsent(buffer, file.getName());
-        Commit c = HEAD.getCommit();
-        if (c.tracking(".gitlet/" + file.getName())) {
-            if (!compare(file, c.getFile(file.getName()))) {
-                staged.add(file);
-            }
-        } else {
-            staged.add(file);
-        }
+        staged.add(file);
         untracked.remove(file);
     }
 
@@ -188,7 +184,7 @@ public class User implements Serializable {
             System.out.println("Please enter a commit message.");
             return;
         }
-        ArrayList<File> pass = delSimilar(HEAD.getCommit().getTracked(), staged);
+        ArrayList<File> pass = delSimilar(HEAD.getCommit().getTracked(), removal);
         Commit c = new Commit(message, time(),
                 pass, staged);
         c.setReal(real); // add staged file's real name to this commit's real name hashmap
@@ -218,11 +214,10 @@ public class User implements Serializable {
         File temp = new File(name);
         boolean removed = staged.remove(temp);
         delete(stage);
-        if (!removal.contains(name) && HEAD.getCommit().tracking(name)) {
+        if (!removal.contains(temp) && HEAD.getCommit().tracking(name)) {
             removed = true;
             delete(name);
-            removal.add(name);
-            rmList.add(name);
+            removal.add(temp);
         } else if (!removed) {
             System.out.println("No reason to remove the file.");
             System.exit(0);
@@ -439,10 +434,8 @@ public class User implements Serializable {
         }
         System.out.println("");
         System.out.println("=== Removed Files ===");
-        for (File f : HEAD.getCommit().getTracked()) {
-            if (f.getName().contains(".txt") && rmList.contains(f.getName())) {
-                System.out.println(f.getName());
-            }
+        for (File f : removal) {
+            System.out.println(f.getName());
         }
         System.out.println("");
         System.out.println("=== Modifications Not Staged For Commit ===");
@@ -523,15 +516,10 @@ public class User implements Serializable {
             prev.removeIf(f -> f.getName().equals(lamb.getName()));
             now[i] = null;
         }
-        for (String s : removal) {
-            for (File f : prev) {
-                if (f.getName().contains(s.substring(GITLET))) {
-                    prev.remove(f);
-                    break;
-                }
-            }
-        }
         deleted.addAll(prev);
+        for (File f: removal) {
+            deleted.removeIf(f2 -> f.getName().equals(f2.getName()));
+        }
 
         for (File f : staged) {
             while (modified.remove(f)) {
@@ -608,15 +596,10 @@ public class User implements Serializable {
     /**
      * Arraylist that keeps track of REMOVAl files.
      */
-    private ArrayList<String> removal;
+    private ArrayList<File> removal;
 
     /**
      * Arraylist that keeps track of branch names.
      */
     private ArrayList<String> branches;
-
-    /**
-     * Arraylist specifically for rm command.
-     */
-    private ArrayList<String> rmList;
 }
