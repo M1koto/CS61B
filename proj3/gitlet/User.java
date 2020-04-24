@@ -377,15 +377,11 @@ public class User implements Serializable {
      * Switches to commit with CODE, and checkout file with name FILE.
      */
     public void checkout(String code, String file) {
-        DoubleHT temp = HEAD;
-        Commit c = temp.getCommit();
-        Iterator<DoubleHT> i = _branchHeads.values().iterator();
-        while (c != null && !c.getCode().equals(code)) {
-            if (i.hasNext()) {
-                temp = i.next().findCommit(code);
-                if (temp != null) {
-                    c = temp.getCommit();
-                }
+        Commit c = null;
+        for (Commit c2: total) {
+            if (c2.getCode().equals(code)) {
+                c = c2;
+                break;
             }
         }
         if (c == null) {
@@ -397,6 +393,9 @@ public class User implements Serializable {
         } else {
             String s = ".gitlet/" + c.getCode() + "/" + file;
             File f = new File(s);
+            //if (!file.contains(".gitlet/")) {
+                //file = ".gitlet/" + file;
+            //} //FIXME
             File t = new File(file);
             if (t.exists()) {
                 t.delete();
