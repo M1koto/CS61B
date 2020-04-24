@@ -38,6 +38,9 @@ public class User implements Serializable {
      */
     DoubleHT INITIAL;
 
+    /** For convienence. */
+    static final int GITLET = 9;
+
     /**
      * Creates a unique user for gitlet.
      */
@@ -58,6 +61,7 @@ public class User implements Serializable {
         deleted = new ArrayList<>();
         removal = new ArrayList<>();
         branches = new ArrayList<>();
+        rmList = new ArrayList<>();
 
         Commit first = new Commit("initial commit", null, initParent(), null);
         total.add(first);
@@ -141,23 +145,28 @@ public class User implements Serializable {
             temp.delete();
         }
     }
-    /** Delete file if B has the same name with A. */
+
+    /**
+     * Delete file if B has the same name with A.
+     */
     private ArrayList<File> delSimilar(ArrayList<File> a, ArrayList<File> b) {
         ArrayList<File> ret = new ArrayList<>();
         boolean flag = true;
-        for (File f1: a) {
-            for (File f2: b) {
+        for (File f1 : a) {
+            for (File f2 : b) {
                 if (f1.getName().equals(f2.getName())) {
                     flag = false;
                     break;
                 }
             }
-            if (flag) {
+            if (flag && !removal.contains(f1.getName())) {
                 ret.add(f1);
             }
         }
+        removal.clear();
         return ret;
     }
+
     /**
      * Makes a commit with MESSAGE.
      */
@@ -200,11 +209,11 @@ public class User implements Serializable {
         File temp = new File(name);
         boolean removed = staged.remove(temp);
         delete(stage);
-        if (HEAD.getCommit().tracking(name)) {
+        if (!removal.contains(name) && HEAD.getCommit().tracking(name)) {
             removed = true;
-            HEAD.getCommit().remove(name);
             delete(name);
-            removal.add(temp);
+            removal.add(name);
+            rmList.add(name);
         } else if (!removed) {
             System.out.println("No reason to remove the file.");
             System.exit(0);
@@ -286,7 +295,7 @@ public class User implements Serializable {
      */
     public void find(String m) {
         ArrayList<String> ans = new ArrayList<>();
-        for (Commit c: total) {
+        for (Commit c : total) {
             if (c.getMessage().equals(m)) {
                 ans.add(c.getCode());
             }
@@ -294,7 +303,7 @@ public class User implements Serializable {
         if (ans.size() == 0) {
             System.out.println("Found no commit with that message.");
         } else {
-            for (String s: ans) {
+            for (String s : ans) {
                 System.out.println(s);
             }
         }
@@ -413,8 +422,10 @@ public class User implements Serializable {
         }
         System.out.println("");
         System.out.println("=== Removed Files ===");
-        for (File f : removal) {
-            System.out.println(f.getName());
+        for (File f : HEAD.getCommit().getTracked()) {
+            if (f.getName().contains(".txt") && rmList.contains(f.getName())) {
+                System.out.println(f.getName());
+            }
         }
         System.out.println("");
         System.out.println("=== Modifications Not Staged For Commit ===");
@@ -434,10 +445,10 @@ public class User implements Serializable {
         int d = 0;
         int m = 0;
         while (d < deleted.size() || m < modified.size()) {
-            if (d >= deleted.size() - 1) {
+            if (m <= modified.size() - 1 && d >= deleted.size() - 1) {
                 System.out.println(modified.get(m).getName() + " (modified)");
                 m += 1;
-            } else if (m >= modified.size() - 1) {
+            } else if (m >= modified.size() - 1 && d <= deleted.size() - 1) {
                 System.out.println(deleted.get(d).getName() + " (deleted)");
                 d += 1;
             } else {
@@ -491,19 +502,28 @@ public class User implements Serializable {
             prev.removeIf(f -> f.getName().equals(lamb.getName()));
             now[i] = null;
         }
+        for (File f: prev) {
+            for (String s: removal) {
+                if (f.getName().contains(s.substring(GITLET))) {
+                    prev.remove(f);
+                }
+            }
+        }
         deleted.addAll(prev);
 
         for (File f : staged) {
             while (modified.remove(f)) {
-                while (deleted.remove(f));
+                while (deleted.remove(f)) ;
             }
         }
     }
 
-    /** Returns index if arraylist PREV contains file with name FILE.
-     * Returns -1 otherwise*/
+    /**
+     * Returns index if arraylist PREV contains file with name FILE.
+     * Returns -1 otherwise
+     */
     private int has(ArrayList<File> prev, File file) {
-        for (File f: prev) {
+        for (File f : prev) {
             if (f.getName().equals(file.getName())) {
                 return prev.indexOf(f);
             }
@@ -566,10 +586,13 @@ public class User implements Serializable {
     /**
      * Arraylist that keeps track of REMOVAl files.
      */
-    private ArrayList<File> removal;
+    private ArrayList<String> removal;
 
     /**
      * Arraylist that keeps track of branch names.
      */
     private ArrayList<String> branches;
+
+    /** Arraylist specifically for rm command. */
+    private ArrayList<String> rmList;
 }
