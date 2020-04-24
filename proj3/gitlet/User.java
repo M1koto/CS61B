@@ -132,7 +132,9 @@ public class User implements Serializable {
         }
         Utils.writeContents(f, Utils.readContentsAsString(file));
         real.putIfAbsent(buffer, file.getName());
-        staged.add(file);
+        if (!HEAD.getCommit().tracking(".gitlet/" + file.getName())) {
+            staged.add(file);
+        }
         untracked.remove(file);
     }
 
