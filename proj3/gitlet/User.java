@@ -43,6 +43,10 @@ public class User implements Serializable {
      */
     static final int GITLET = 9;
 
+    /** For convienence. */
+
+    static final int abbrev = 6;
+
     /**
      * Creates a unique user for gitlet.
      */
@@ -375,7 +379,7 @@ public class User implements Serializable {
     public void checkout(String code, File file) {
         Commit c = null;
         for (Commit c2: total) {
-            if (c2.getCode().equals(code)) {
+            if (c2.getCode().substring(0, abbrev).equals(code.substring(0, abbrev))) {
                 c = c2;
                 break;
             }
@@ -510,9 +514,9 @@ public class User implements Serializable {
         deleted.removeIf(f -> removal.contains(f.getName()));
 
         for (File f : staged) {
-            while (modified.remove(f)) {
-                while (deleted.remove(f));
-            }
+            deleted.remove(f);
+            modified.remove(f);
+            untracked.remove(f);
         }
     }
 
