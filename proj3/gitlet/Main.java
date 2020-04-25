@@ -44,6 +44,7 @@ public class Main {
                 break;
             case "add":
                 File temp = new File(args[1]);
+                _user.setDir(temp.getPath());
                 if (!temp.exists()) {
                     System.out.println("File does not exist.");
                     System.exit(0);

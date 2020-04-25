@@ -21,7 +21,7 @@ public class User implements Serializable {
     /**
      * File in which the .gitlet directory exists.
      */
-    static final File DIRECTORY = new File(".gitlet");
+    File DIRECTORY = new File(".gitlet");
 
     /**
      * Dir Staging.
@@ -156,19 +156,18 @@ public class User implements Serializable {
      */
     private ArrayList<File> delSimilar(ArrayList<File> a, ArrayList<File> b) {
         ArrayList<File> ret = new ArrayList<>();
-        boolean flag = true;
         for (File f1 : a) {
+            boolean flag = true;
             for (File f2 : b) {
                 if (f1.getName().equals(f2.getName())) {
                     flag = false;
                     break;
                 }
             }
-            if (flag && !removal.contains(f1.getName())) {
+            if (flag) {
                 ret.add(f1);
             }
         }
-        removal.clear();
         return ret;
     }
 
@@ -360,9 +359,11 @@ public class User implements Serializable {
     public void checkAll() {
         Commit c = HEAD.getCommit();
         File[] all = DIRECTORY.listFiles();
-        for (File file : all) {
-            if (file.isFile() && file.getName().contains(".txt")) {
-                file.delete();
+        if (all != null) {
+            for (File file : all) {
+                if (file.isFile() && file.getName().contains(".txt")) {
+                    file.delete();
+                }
             }
         }
         for (File f : c.getTracked()) {
@@ -433,12 +434,12 @@ public class User implements Serializable {
         }
         System.out.println("");
         System.out.println("=== Modifications Not Staged For Commit ===");
-        compareTwo(deleted, modified);
+        //compareTwo(deleted, modified);
         System.out.println("");
         System.out.println("=== Untracked Files ===");
-        for (File f : untracked) {
-            System.out.println(f.getName());
-        }
+        //for (File f : untracked) {
+            //System.out.println(f.getName());
+        //}
         System.out.println("");
     }
 
@@ -489,7 +490,7 @@ public class User implements Serializable {
         untracked.clear();
         FilenameFilter forNow = (dir, name) -> !dir.getPath().equals(STAGING.getPath());
         ArrayList<File> prev = new ArrayList<>(HEAD.getCommit().getTracked());
-        prev.removeIf(f -> f.getName().contains("/stage"));
+        prev.removeIf(f -> !f.getName().contains("/stage"));
         File[] now = DIRECTORY.listFiles(forNow);
         if (now == null) {
             return;
@@ -517,7 +518,7 @@ public class User implements Serializable {
 
         for (File f : staged) {
             while (modified.remove(f)) {
-                while (deleted.remove(f)) ;
+                while (deleted.remove(f));
             }
         }
     }
@@ -596,4 +597,8 @@ public class User implements Serializable {
      * Arraylist that keeps track of branch names.
      */
     private ArrayList<String> branches;
+
+    public void setDir(String path) {
+        DIRECTORY = new File(path);
+    }
 }

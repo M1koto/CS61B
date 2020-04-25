@@ -128,8 +128,8 @@ public class Commit implements Serializable {
      * Returns true if this Commit is tracking File with name NAME.
      */
     public boolean tracking(File file) {
-        for (File f : _tracked) {
-            if (f == file) {
+        for (File f: _tracked) {
+            if (f.getName().equals(file.getName())) {
                 return true;
             }
         }

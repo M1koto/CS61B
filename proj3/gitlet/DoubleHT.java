@@ -112,9 +112,9 @@ public class DoubleHT implements Serializable {
 
     /** Removes branch NAME for it and all of its parents. */
     public void rmbranch(String name) {
-        if (_branch1.equals(name)) {
+        if (_branch1 != null && _branch1.equals(name)) {
             _branch1 = null;
-        } else if (_branch2.equals(name)) {
+        } else if (_branch2 != null && _branch2.equals(name)) {
             _branch2 = null;
         }
         if (_parent1 != null) {
