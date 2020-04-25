@@ -209,14 +209,13 @@ public class User implements Serializable {
     /**
      * Removes file with name NAME.
      */
-    public void rm(String name) {
-        String stage = ".gitlet/stage/" + Utils.sha1(name);
-        File temp = new File(name);
+    public void rm(File temp) {
+        String stage = ".gitlet/stage/" + Utils.sha1(temp.getName());
         boolean removed = staged.remove(temp);
         delete(stage);
-        if (!removal.contains(temp) && HEAD.getCommit().tracking(name)) {
+        if (!removal.contains(temp) && HEAD.getCommit().tracking(temp)) {
             removed = true;
-            delete(name);
+            temp.delete();
             removal.add(temp);
         } else if (!removed) {
             System.out.println("No reason to remove the file.");
@@ -368,7 +367,7 @@ public class User implements Serializable {
         }
         for (File f : c.getTracked()) {
             if (f.getName().contains(".txt")) {
-                checkout(HEAD.getCommit().getCode(), f.getName());
+                checkout(HEAD.getCommit().getCode(), f);
             }
         }
     }
@@ -376,7 +375,7 @@ public class User implements Serializable {
     /**
      * Switches to commit with CODE, and checkout file with name FILE.
      */
-    public void checkout(String code, String file) {
+    public void checkout(String code, File file) {
         Commit c = null;
         for (Commit c2: total) {
             if (c2.getCode().equals(code)) {
@@ -387,25 +386,21 @@ public class User implements Serializable {
         if (c == null) {
             System.out.println("No commit with that id exists.");
             System.exit(0);
-        } else if (!c.trackingR(file)) {
+        } else if (!c.trackingR(file.getName())) {
             System.out.println("File does not exist in that commit.");
             System.exit(0);
         } else {
-            String s = ".gitlet/" + c.getCode() + "/" + file;
+            String s = ".gitlet/" + c.getCode() + "/" + file.getName();
             File f = new File(s);
-            //if (!file.contains(".gitlet/")) {
-                //file = ".gitlet/" + file;
-            //} //FIXME
-            File t = new File(file);
-            if (t.exists()) {
-                t.delete();
+            if (file.exists()) {
+                file.delete();
             }
             try {
-                t.createNewFile();
+                file.createNewFile();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            Utils.writeContents(t, Utils.readContentsAsString(f));
+            Utils.writeContents(file, Utils.readContentsAsString(f));
         }
     }
 

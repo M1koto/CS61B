@@ -127,14 +127,9 @@ public class Commit implements Serializable {
     /**
      * Returns true if this Commit is tracking File with name NAME.
      */
-    public boolean tracking(String name) {
-        if (!name.substring(0, GITLET).equals(".gitlet/")) {
-            return false;
-        } else {
-            name = name.substring(GITLET, name.length());
-        }
+    public boolean tracking(File file) {
         for (File f : _tracked) {
-            if (f.getName().equals(name)) {
+            if (f == file) {
                 return true;
             }
         }

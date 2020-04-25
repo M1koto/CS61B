@@ -56,7 +56,8 @@ public class Main {
                 _user.save();
                 break;
             case "rm":
-                _user.rm(args[1]);
+                File temp2 = new File(args[1]);
+                _user.rm(temp2);
                 _user.save();
                 break;
             case "log":
@@ -72,15 +73,18 @@ public class Main {
                 _user.status();
                 break;
             case "checkout":
+                File temp3;
                 if (_user.warning()) {
                     System.out.println("There is an untracked file in the way; delete it, or add and commit it first.");
                     System.exit(0);
                 }
                 if (args[1].equals("--")) {
-                    _user.checkout(_user.getH().getCommit().getCode(), args[2]);
+                    temp3 = new File(args[2]);
+                    _user.checkout(_user.getH().getCommit().getCode(), temp3);
                 } else {
                     if (args.length > 2 && args[2].equals("--")) {
-                        _user.checkout(args[1], args[3]);
+                        temp3 = new File(args[3]);
+                        _user.checkout(args[1], temp3);
                     } else {
                         _user.switchBranch(args[1]);
                         _user.checkAll();
