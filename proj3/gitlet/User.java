@@ -154,12 +154,12 @@ public class User implements Serializable {
     /**
      * Delete file if B has the same name with A.
      */
-    private ArrayList<File> delSimilar(ArrayList<File> a, ArrayList<File> b) {
+    private ArrayList<File> delSimilar(ArrayList<File> a, ArrayList<String> b) {
         ArrayList<File> ret = new ArrayList<>();
         for (File f1 : a) {
             boolean flag = true;
-            for (File f2 : b) {
-                if (f1.getName().equals(f2.getName())) {
+            for (String s : b) {
+                if (f1.getName().equals(s)) {
                     flag = false;
                     break;
                 }
@@ -214,8 +214,8 @@ public class User implements Serializable {
         delete(stage);
         if (!removal.contains(temp) && HEAD.getCommit().tracking(temp)) {
             removed = true;
+            removal.add(temp.getName());
             temp.delete();
-            removal.add(temp);
         } else if (!removed) {
             System.out.println("No reason to remove the file.");
             System.exit(0);
@@ -425,8 +425,8 @@ public class User implements Serializable {
         }
         System.out.println("");
         System.out.println("=== Removed Files ===");
-        for (File f : removal) {
-            System.out.println(f.getName());
+        for (String s : removal) {
+            System.out.println(s);
         }
         System.out.println("");
         System.out.println("=== Modifications Not Staged For Commit ===");
@@ -507,7 +507,7 @@ public class User implements Serializable {
             now[i] = null;
         }
         deleted.addAll(prev);
-        deleted.removeAll(removal);
+        deleted.removeIf(f -> removal.contains(f.getName()));
 
         for (File f : staged) {
             while (modified.remove(f)) {
@@ -584,7 +584,7 @@ public class User implements Serializable {
     /**
      * Arraylist that keeps track of REMOVAl files.
      */
-    private ArrayList<File> removal;
+    private ArrayList<String> removal;
 
     /**
      * Arraylist that keeps track of branch names.
