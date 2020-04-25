@@ -358,17 +358,13 @@ public class User implements Serializable {
      */
     public void checkAll() {
         Commit c = HEAD.getCommit();
-        File[] all = DIRECTORY.listFiles();
-        if (all != null) {
-            for (File file : all) {
-                if (file.isFile() && file.getName().contains(".txt")) {
-                    file.delete();
-                }
-            }
+        File here = new File(System.getProperty("user.dir"));
+        for (File f: here.listFiles()) {
+            f.delete();
         }
         for (File f : c.getTracked()) {
             if (f.getName().contains(".txt")) {
-                checkout(HEAD.getCommit().getCode(), f);
+                checkout(HEAD.getCommit().getCode(), new File(f.getName()));
             }
         }
     }
@@ -434,12 +430,12 @@ public class User implements Serializable {
         }
         System.out.println("");
         System.out.println("=== Modifications Not Staged For Commit ===");
-        //compareTwo(deleted, modified);
+        compareTwo(deleted, modified);
         System.out.println("");
         System.out.println("=== Untracked Files ===");
-        //for (File f : untracked) {
-            //System.out.println(f.getName());
-        //}
+        for (File f : untracked) {
+            System.out.println(f.getName());
+        }
         System.out.println("");
     }
 
@@ -488,10 +484,9 @@ public class User implements Serializable {
         deleted.clear();
         modified.clear();
         untracked.clear();
-        FilenameFilter forNow = (dir, name) -> !dir.getPath().equals(STAGING.getPath());
         ArrayList<File> prev = new ArrayList<>(HEAD.getCommit().getTracked());
-        prev.removeIf(f -> !f.getName().contains("/stage"));
-        File[] now = DIRECTORY.listFiles(forNow);
+        prev.removeIf(f -> !f.getName().contains(".txt"));
+        File[] now = new File(System.getProperty("user.dir")).listFiles();
         if (now == null) {
             return;
         }
@@ -512,9 +507,7 @@ public class User implements Serializable {
             now[i] = null;
         }
         deleted.addAll(prev);
-        for (File f: removal) {
-            deleted.removeIf(f2 -> f.getName().equals(f2.getName()));
-        }
+        deleted.removeAll(removal);
 
         for (File f : staged) {
             while (modified.remove(f)) {
@@ -597,8 +590,4 @@ public class User implements Serializable {
      * Arraylist that keeps track of branch names.
      */
     private ArrayList<String> branches;
-
-    public void setDir(String path) {
-        DIRECTORY = new File(path);
-    }
 }
