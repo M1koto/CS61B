@@ -229,6 +229,7 @@ public class User implements Serializable {
      * and checks out all with CODE.
      */
     public void reset(String code) {
+        staged.clear();
         Commit target = null;
         for (Commit c : total) {
             if (c.getCode().equals(code)) {
