@@ -1,4 +1,5 @@
-I prelude1.inc
+> init
+<<<
 + f.txt wug.txt
 + g.txt notwug.txt
 > add g.txt
