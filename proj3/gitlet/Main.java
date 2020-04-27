@@ -1,8 +1,6 @@
 package gitlet;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.IllegalFormatCodePointException;
 
 /**
  * Driver class for Gitlet, the tiny stupid version-control system.
@@ -33,6 +31,11 @@ public class Main {
             System.out.println("Not in an initialized Gitlet directory.");
             System.exit(0);
         }
+        process(args);
+    }
+
+    /** Responds to commands corresponding to ARGS. */
+    private static void process(String[] args) {
         switch (args[0]) {
         case "init":
             if (_user != null) {

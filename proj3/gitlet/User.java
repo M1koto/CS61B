@@ -2,7 +2,6 @@ package gitlet;
 
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.*;
@@ -263,7 +262,7 @@ public class User implements Serializable {
             System.out.println("A branch with that name already exists.");
         } else {
             DoubleHT temp = _branchHeads.get(_current);
-            if (temp._branch2 == null) {
+            if (temp.b2() == null) {
                 temp.addBranch(name);
                 _branchHeads.put(name, temp);
                 branches.add(name);
@@ -568,7 +567,17 @@ public class User implements Serializable {
             switchBranch(branch);
             checkAll();
             System.exit(0);
+        } else {
+            Commit tip = _branchHeads.get(_current).getCommit();
+            Commit split = splitPoint.getCommit();
+            Commit given = _branchHeads.get(branch).getCommit();
+            classify(tip.getTracked(), split.getTracked(), given.getTracked());
         }
+    }
+
+    /** Classify files in CURR and TARGET using split's perspective. */
+    private void classify(ArrayList<File> curr, ArrayList<File> split, ArrayList<File> given) {
+
     }
 
     /** Return the doubleHT split point between current branch and BRANCH. */

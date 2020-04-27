@@ -32,7 +32,8 @@ public class Commit implements Serializable {
      * Creates a new Commit with following
      * MESSAGE, PARENT, STAGED and TIME.
      */
-    Commit(String message, Date time, ArrayList<File> parent, ArrayList<File> staged) {
+    Commit(String message, Date time,
+           ArrayList<File> parent, ArrayList<File> staged) {
         _message = message;
         _timestamp = time;
         if (_timestamp != null) {
@@ -47,9 +48,10 @@ public class Commit implements Serializable {
 
     /**
      * Combine all data of PARENT and STAGED files
-     * passed in to be committed.
+     * passed in to be committed return comb.
      */
-    private ArrayList<File> combine(ArrayList<File> parent, ArrayList<File> staged) {
+    private ArrayList<File> combine(ArrayList<File> parent,
+                                    ArrayList<File> staged) {
         ArrayList<File> comb = new ArrayList<>();
         if (parent != null) {
             comb.addAll(parent);
@@ -125,7 +127,7 @@ public class Commit implements Serializable {
     }
 
     /**
-     * Returns true if this Commit is tracking File with name NAME.
+     * Returns true if this Commit is tracking File with name FILE.
      */
     public boolean tracking(File file) {
         for (File f: _tracked) {
@@ -136,10 +138,15 @@ public class Commit implements Serializable {
         return false;
     }
     /**
-     * Returns true if this Commit is tracking File with REAL name.
+     * Returns true if this Commit is tracking File with R name.
      */
-    public boolean trackingR(String real) {
-        return real.contains(real);
+    public boolean trackingR(String r) {
+        for (File f: _tracked) {
+            if (f.getName().equals(r)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 

@@ -14,9 +14,7 @@ import java.util.ArrayList;
 public class DoubleHT implements Serializable {
 
     /** Creates a DoubleHT data structure.
-     * @param parent
-     * @param c
-     * @param branch
+     * PARENT. C. BRANCH.
      */
     DoubleHT(DoubleHT parent, Commit c, String branch) {
         _parent1 = parent;
@@ -42,7 +40,7 @@ public class DoubleHT implements Serializable {
     }
 
     /**
-     * Check if D is in same branch as this.
+     * Check if D is in same branch as this return true if so.
      */
     public boolean branchMatch(DoubleHT d) {
         return d._branch1.equals(_branch1) || d._branch1.equals(_branch2)
@@ -88,7 +86,8 @@ public class DoubleHT implements Serializable {
     }
 
     /**
-     * For a given Commit Message M add all corresponding Commit to ArrayList ANS.
+     * For a given Commit Message M add all
+     * corresponding Commit to ArrayList ANS.
      */
     public void findMessage(String m, ArrayList<String> ans) {
         if (_commit.getMessage().equals(m)) {
@@ -126,16 +125,17 @@ public class DoubleHT implements Serializable {
         }
     }
 
-    /** Prints Commited info on branch _current. */
+    /** Prints Commited info on branch CURRENT. */
     public void printlog(String current) {
-        if (_branch1.equals(current) || (_branch2 != null && _branch2.equals(current))) {
+        if (_branch1.equals(current)
+                || (_branch2 != null && _branch2.equals(current))) {
             Commit c = _commit;
             System.out.println(String.format("===\ncommit %s\nDate: %s\n%s\n",
                     c.getCode(), c.time(), c.getMessage()));
         }
         if (_parent1 != null) {
             _parent1.printlog(current);
-        } else if (_parent2 != null){
+        } else if (_parent2 != null) {
             _parent2.printlog(current);
         }
     }
@@ -151,6 +151,10 @@ public class DoubleHT implements Serializable {
                 || (_branch2 != null && _branch2.equals(branch));
     }
 
+    /** Return branch2. */
+    public String b2() {
+        return _branch2;
+    }
     /**
      * The commit stored in this DoubleHT.
      */
@@ -160,12 +164,12 @@ public class DoubleHT implements Serializable {
      * The first branch of where this DoubleHT is on.
      * This field is never null.
      */
-    public String _branch1;
+    private String _branch1;
 
     /**
      * The second branch of where this DoubleHT is on.
      */
-    public String _branch2;
+    private String _branch2;
 
     /**
      * The first parent of this DoubleHT.
