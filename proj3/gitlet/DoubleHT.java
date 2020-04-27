@@ -138,6 +138,17 @@ public class DoubleHT implements Serializable {
         }
     }
 
+    /** Returns paren1. */
+    public DoubleHT getParent() {
+        return _parent1;
+    }
+
+    /** Return if b1 or b2 is BRANCH .*/
+    public boolean bran(String branch) {
+        return (_branch1 != null && _branch1.equals(branch))
+                || (_branch2 != null && _branch2.equals(branch));
+    }
+
     /**
      * The commit stored in this DoubleHT.
      */

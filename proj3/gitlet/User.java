@@ -538,6 +538,14 @@ public class User implements Serializable {
         return untracked.size() != 0;
     }
 
+
+
+
+
+
+
+
+
     /** Merges the file from the tip of the given BRANCH with
      * the file at the tip of the current branch. */
     public void merge(String branch) {
@@ -551,23 +559,35 @@ public class User implements Serializable {
         }
 
         DoubleHT splitPoint = getSplit(branch);
-
+        if (splitPoint == _branchHeads.get(branch)) {
+            System.out.println("Given branch is an ancestor of the current branch.");
+            System.exit(0);
+        } else if (splitPoint == null) {
+            switchBranch(branch);
+            checkAll();
+            System.out.println("Current branch fast-forwarded.");
+            System.exit(0);
+        }
     }
 
     /** Return the doubleHT split point between current branch and BRANCH. */
     private DoubleHT getSplit(String branch) {
         DoubleHT split = _branchHeads.get(_current);
-        while (split != null && split.bran(branch)) {
+        while (split != null && !split.bran(branch)) {
             split = split.getParent();
-        }
-        if (split == _branchHeads.get(branch)) {
-            System.out.println("Given branch is an ancestor of the current branch.");
-        } else if (split == null) {
-            System.out.println("Current branch fast-forwarded.");
-            System.exit(0);
         }
         return split;
     }
+
+
+
+
+
+
+
+
+
+
 
     /**
      * An arraylist that stores all the staged files.
