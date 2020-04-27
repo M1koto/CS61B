@@ -262,7 +262,7 @@ public class User implements Serializable {
             System.out.println("A branch with that name already exists.");
         } else {
             DoubleHT temp = _branchHeads.get(_current);
-            if (temp._branch2 == null) {
+            if (temp.b2() == null) {
                 temp.addBranch(name);
                 _branchHeads.put(name, temp);
                 branches.add(name);
@@ -551,12 +551,22 @@ public class User implements Serializable {
         }
 
         DoubleHT splitPoint = getSplit(branch);
+
     }
 
     /** Return the doubleHT split point between current branch and BRANCH. */
     private DoubleHT getSplit(String branch) {
-        DoubleHT curr = _branchHeads.get(_current);
-        return null;
+        DoubleHT split = _branchHeads.get(_current);
+        while (split != null && split.bran(branch)) {
+            split = split.getParent();
+        }
+        if (split == _branchHeads.get(branch)) {
+            System.out.println("Given branch is an ancestor of the current branch.");
+        } else if (split == null) {
+            System.out.println("Current branch fast-forwarded.");
+            System.exit(0);
+        }
+        return split;
     }
 
     /**

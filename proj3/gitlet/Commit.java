@@ -30,9 +30,9 @@ public class Commit implements Serializable {
 
     /**
      * Creates a new Commit with following
-     * MESSAGE, PARENT, STAGED and TIME.
+     * MESSAGE, P, S and TIME.
      */
-    Commit(String message, Date time, ArrayList<File> parent, ArrayList<File> staged) {
+    Commit(String message, Date time, ArrayList<File> p, ArrayList<File> s) {
         _message = message;
         _timestamp = time;
         if (_timestamp != null) {
@@ -40,22 +40,22 @@ public class Commit implements Serializable {
         } else {
             _time = FIRSTCOMMIT;
         }
-        _tracked = combine(parent, staged);
+        _tracked = combine(p, s);
         real = new HashMap<>();
         makeCode();
     }
 
     /**
-     * Combine all data of PARENT and STAGED files
-     * passed in to be committed.
+     * Combine all data of P and S files
+     * passed in to be committed and return comb.
      */
-    private ArrayList<File> combine(ArrayList<File> parent, ArrayList<File> staged) {
+    private ArrayList<File> combine(ArrayList<File> p, ArrayList<File> s) {
         ArrayList<File> comb = new ArrayList<>();
-        if (parent != null) {
-            comb.addAll(parent);
+        if (p != null) {
+            comb.addAll(p);
         }
-        if (staged != null) {
-            comb.addAll(staged);
+        if (s != null) {
+            comb.addAll(s);
         }
         return comb;
     }
@@ -125,7 +125,7 @@ public class Commit implements Serializable {
     }
 
     /**
-     * Returns true if this Commit is tracking File with name NAME.
+     * Returns true if this Commit is tracking file with name FILE.
      */
     public boolean tracking(File file) {
         for (File f: _tracked) {
@@ -136,10 +136,10 @@ public class Commit implements Serializable {
         return false;
     }
     /**
-     * Returns true if this Commit is tracking File with REAL name.
+     * Returns true if this Commit is tracking File with R name.
      */
-    public boolean trackingR(String real) {
-        return real.contains(real);
+    public boolean trackingR(String r) {
+        return real.containsKey(r);
     }
 
 
