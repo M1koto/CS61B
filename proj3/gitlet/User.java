@@ -1,7 +1,5 @@
 package gitlet;
 
-import edu.neu.ccs.util.FileUtilities;
-import org.checkerframework.checker.units.qual.A;
 
 import java.io.File;
 import java.io.FilenameFilter;
