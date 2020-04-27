@@ -4,7 +4,10 @@ package gitlet;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Collections;
+import java.util.Date;
 
 /**
  * This class stores permanent information for 'user'
@@ -18,7 +21,7 @@ public class User implements Serializable {
     /**
      * File in which the .gitlet directory exists.
      */
-    File DIRECTORY = new File(".gitlet");
+    static final File DIRECTORY = new File(".gitlet");
 
     /**
      * Dir Staging.
@@ -28,21 +31,23 @@ public class User implements Serializable {
     /**
      * File for permanent storage.
      */
-    File USER = new File(".gitlet/USER");
+    static final File USER = new File(".gitlet/USER");
 
     /**
      * First commit's doubleHT.
      */
-    DoubleHT INITIAL;
+    private DoubleHT initial;
 
     /**
      * For convienence.
      */
     static final int GITLET = 9;
 
-    /** For convienence. */
+    /**
+     * For convienence.
+     */
 
-    static final int abbrev = 6;
+    static final int ABBREV = 6;
 
     /**
      * Creates a unique user for gitlet.
@@ -68,18 +73,18 @@ public class User implements Serializable {
         Commit first = new Commit("initial commit", null, initParent(), null);
         total.add(first);
         branches.add("master");
-        INITIAL = new DoubleHT(null, first, "master");
-        first.setFather(INITIAL);
-        HEAD = INITIAL;
+        initial = new DoubleHT(null, first, "master");
+        first.setFather(initial);
+        head = initial;
         _current = "master";
         _branchHeads = new HashMap<String, DoubleHT>();
-        _branchHeads.put("master", INITIAL);
+        _branchHeads.put("master", initial);
 
         publish(first, first.getCode());
     }
 
     /**
-     * Adds all existing files when initializing to the first commit.
+     * Return all existing files when initializing to the first commit.
      */
     private ArrayList<File> initParent() {
         File[] temp = DIRECTORY.listFiles();
@@ -91,7 +96,7 @@ public class User implements Serializable {
     }
 
     /**
-     * File writing of Commit c with code as name.
+     * File writing of Commit C with CODE as name.
      */
     private void publish(Commit c, String code) {
         ArrayList<File> buffer = new ArrayList<>();
@@ -107,6 +112,7 @@ public class User implements Serializable {
             try {
                 Utils.writeContents(temp, Utils.readContentsAsString(f));
             } catch (IllegalArgumentException ignored) {
+                int a = 3;
             }
             buffer.add(temp);
         }
@@ -124,7 +130,7 @@ public class User implements Serializable {
         delete(name);
         staged.remove(file);
         real.remove(buffer);
-        Commit c = HEAD.getCommit();
+        Commit c = head.getCommit();
         if (file.exists() && c.getFile(file.getName()) != null
                 && compare(file, c.getFile(file.getName()))) {
             removal.remove(file.getName());
@@ -153,7 +159,7 @@ public class User implements Serializable {
     }
 
     /**
-     * Delete file if B has the same name with A.
+     * Return the Delete file if B has the same name with A.
      */
     private ArrayList<File> delSimilar(ArrayList<File> a, ArrayList<String> b) {
         ArrayList<File> ret = new ArrayList<>();
@@ -184,36 +190,39 @@ public class User implements Serializable {
             System.out.println("Please enter a commit message.");
             return;
         }
-        ArrayList<File> pass = delSimilar(HEAD.getCommit().getTracked(), removal);
+        ArrayList<File> pass =
+                delSimilar(head.getCommit().getTracked(), removal);
         Commit c = new Commit(message, time(),
                 pass, staged);
-        c.setReal(real); // add staged file's real name to this commit's real name hashmap
-        c.setReal(HEAD.getCommit().getReal()); // add real name of files of parent commit to this commit's real name
+        c.setReal(real);
+        c.setReal(head.getCommit().getReal());
 
         total.add(c);
-        DoubleHT d = new DoubleHT(HEAD, c, _current);
+        DoubleHT d = new DoubleHT(head, c, _current);
         c.setFather(d);
         _branchHeads.remove(_current);
         _branchHeads.put(_current, d);
-        HEAD = d;
+        head = d;
 
         publish(c, c.getCode());
         staged.clear();
         removal.clear();
         real.clear();
-        for (File file : STAGING.listFiles())
-            if (!file.isDirectory())
+        for (File file : STAGING.listFiles()) {
+            if (!file.isDirectory()) {
                 file.delete();
+            }
+        }
     }
 
     /**
-     * Removes file with name NAME.
+     * Removes file TEMP.
      */
     public void rm(File temp) {
         String stage = ".gitlet/stage/" + Utils.sha1(temp.getName());
         boolean removed = staged.remove(temp);
         delete(stage);
-        if (!removal.contains(temp) && HEAD.getCommit().tracking(temp)) {
+        if (!removal.contains(temp) && head.getCommit().tracking(temp)) {
             removed = true;
             removal.add(temp.getName());
             temp.delete();
@@ -240,9 +249,9 @@ public class User implements Serializable {
             System.out.println("No commit with that id exists.");
             System.exit(0);
         } else {
-            HEAD = target.getFather();
+            head = target.getFather();
             _branchHeads.remove(_current);
-            _branchHeads.put(_current, HEAD);
+            _branchHeads.put(_current, head);
             checkAll();
         }
     }
@@ -283,7 +292,7 @@ public class User implements Serializable {
         } else {
             branches.remove(name);
             _branchHeads.remove(name);
-            HEAD.rmbranch(name);
+            head.rmbranch(name);
         }
     }
 
@@ -344,7 +353,7 @@ public class User implements Serializable {
             System.exit(0);
         } else {
             _current = arg;
-            HEAD = _branchHeads.get(_current);
+            head = _branchHeads.get(_current);
         }
     }
 
@@ -352,21 +361,21 @@ public class User implements Serializable {
      * Returns the HEAD.
      */
     public DoubleHT getH() {
-        return HEAD;
+        return head;
     }
 
     /**
      * Checks out all files in a commit.
      */
     public void checkAll() {
-        Commit c = HEAD.getCommit();
+        Commit c = head.getCommit();
         File here = new File(System.getProperty("user.dir"));
-        for (File f: here.listFiles()) {
+        for (File f : here.listFiles()) {
             f.delete();
         }
         for (File f : c.getTracked()) {
             if (f.getName().contains(".txt")) {
-                checkout(HEAD.getCommit().getCode(), new File(f.getName()));
+                checkout(head.getCommit().getCode(), new File(f.getName()));
             }
         }
     }
@@ -376,8 +385,9 @@ public class User implements Serializable {
      */
     public void checkout(String code, File file) {
         Commit c = null;
-        for (Commit c2: total) {
-            if (c2.getCode().substring(0, abbrev).equals(code.substring(0, abbrev))) {
+        for (Commit c2 : total) {
+            if (c2.getCode().substring(0,
+                    ABBREV).equals(code.substring(0, ABBREV))) {
                 c = c2;
                 break;
             }
@@ -385,7 +395,8 @@ public class User implements Serializable {
         if (c == null) {
             System.out.println("No commit with that id exists.");
             System.exit(0);
-        } else if (file.getName().contains("warg") || !c.trackingR(file.getName())) {
+        } else if (file.getName().contains("warg")
+                || !c.trackingR(file.getName())) {
             System.out.println("File does not exist in that commit.");
             System.exit(0);
         } else {
@@ -442,21 +453,21 @@ public class User implements Serializable {
     }
 
     /**
-     * Decide the ordering of printing of DELETED and MODIFIED.
+     * Decide the ordering of printing of DELETE and MODIFY.
      */
-    private void compareTwo(ArrayList<File> deleted, ArrayList<File> modified) {
+    private void compareTwo(ArrayList<File> delete, ArrayList<File> modify) {
         int d = 0;
         int m = 0;
-        while (d < deleted.size() || m < modified.size()) {
-            if (m <= modified.size() - 1 && d >= deleted.size() - 1) {
-                System.out.println(modified.get(m).getName() + " (modified)");
+        while (d < delete.size() || m < modify.size()) {
+            if (m <= modify.size() - 1 && d >= delete.size() - 1) {
+                System.out.println(modify.get(m).getName() + " (modified)");
                 m += 1;
-            } else if (m >= modified.size() - 1 && d <= deleted.size() - 1) {
-                System.out.println(deleted.get(d).getName() + " (deleted)");
+            } else if (m >= modify.size() - 1 && d <= delete.size() - 1) {
+                System.out.println(delete.get(d).getName() + " (deleted)");
                 d += 1;
             } else {
-                String del = deleted.get(d).getName();
-                String mod = modified.get(m).getName();
+                String del = delete.get(d).getName();
+                String mod = modify.get(m).getName();
                 if (del.compareTo(mod) > 0) {
                     System.out.println(del + " (deleted)");
                     d += 1;
@@ -469,7 +480,7 @@ public class User implements Serializable {
     }
 
     /**
-     * Compares two files,
+     * Compares two files A B,
      * returns true if same content false otherwise.
      */
     private boolean compare(File a, File b) {
@@ -486,7 +497,7 @@ public class User implements Serializable {
         deleted.clear();
         modified.clear();
         untracked.clear();
-        ArrayList<File> prev = new ArrayList<>(HEAD.getCommit().getTracked());
+        ArrayList<File> prev = new ArrayList<>(head.getCommit().getTracked());
         prev.removeIf(f -> !f.getName().contains(".txt"));
         File[] now = new File(System.getProperty("user.dir")).listFiles();
         if (now == null) {
@@ -539,15 +550,10 @@ public class User implements Serializable {
     }
 
 
-
-
-
-
-
-
-
-    /** Merges the file from the tip of the given BRANCH with
-     * the file at the tip of the current branch. */
+    /**
+     * Merges the file from the tip of the given BRANCH with
+     * the file at the tip of the current branch.
+     */
     public void merge(String branch) {
         if (_branchHeads.get(branch) == null) {
             System.out.println("A branch with that name does not exist.");
@@ -560,7 +566,8 @@ public class User implements Serializable {
 
         DoubleHT splitPoint = getSplit(branch);
         if (splitPoint == _branchHeads.get(branch)) {
-            System.out.println("Given branch is an ancestor of the current branch.");
+            System.out.println("Given branch is "
+                    + "an ancestor of the current branch.");
             System.exit(0);
         } else if (splitPoint == _branchHeads.get(_current)) {
             System.out.println("Current branch fast-forwarded.");
@@ -575,12 +582,17 @@ public class User implements Serializable {
         }
     }
 
-    /** Classify files in CURR and TARGET using split's perspective. */
-    private void classify(ArrayList<File> curr, ArrayList<File> split, ArrayList<File> given) {
+    /**
+     * Classify files in CURR SPLIT GIVEN using split's perspective.
+     */
+    private void classify(ArrayList<File> curr,
+                          ArrayList<File> split, ArrayList<File> given) {
 
     }
 
-    /** Return the doubleHT split point between current branch and BRANCH. */
+    /**
+     * Return the doubleHT split point between current branch and BRANCH.
+     */
     private DoubleHT getSplit(String branch) {
         DoubleHT split = _branchHeads.get(_current);
         while (split != null && !split.bran(branch)) {
@@ -588,15 +600,6 @@ public class User implements Serializable {
         }
         return split;
     }
-
-
-
-
-
-
-
-
-
 
 
     /**
@@ -607,7 +610,7 @@ public class User implements Serializable {
     /**
      * Where the HEAD is on.
      */
-    private DoubleHT HEAD;
+    private DoubleHT head;
 
     /**
      * Stores name : position of branch head.

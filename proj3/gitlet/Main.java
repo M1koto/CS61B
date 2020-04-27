@@ -39,7 +39,8 @@ public class Main {
         switch (args[0]) {
         case "init":
             if (_user != null) {
-                System.out.println("A Gitlet version-control system already exists in the current directory.");
+                System.out.println("A Gitlet version-control "
+                        + "system already exists in the current directory.");
                 break;
             }
             _user = new User();
@@ -75,10 +76,19 @@ public class Main {
         case "status":
             _user.status();
             break;
+        default:
+            second(args);
+        }
+    }
+
+    /** Responds to commands corresponding to ARGS. */
+    private static void second(String[] args) {
+        switch (args[0]) {
         case "checkout":
             File temp3;
             if (_user.warning()) {
-                System.out.println("There is an untracked file in the way; delete it, or add and commit it first.");
+                System.out.println("There is an untracked file "
+                        + "in the way; delete it, or add and commit it first.");
                 System.exit(0);
             }
             if (args[1].equals("--")) {
@@ -88,11 +98,10 @@ public class Main {
                 if (args.length > 2 && args[2].equals("--")) {
                     temp3 = new File(args[3]);
                     _user.checkout(args[1], temp3);
-                } else if (args.length == 2){
+                } else if (args.length == 2) {
                     _user.switchBranch(args[1]);
                     _user.checkAll();
-                }
-                else {
+                } else {
                     System.out.println("Incorrect operands.");
                     System.exit(0);
                 }
@@ -109,7 +118,8 @@ public class Main {
             break;
         case "reset":
             if (_user.warning()) {
-                System.out.println("There is an untracked file in the way; delete it, or add and commit it first.");
+                System.out.println("There is an untracked file in"
+                        + " the way; delete it, or add and commit it first.");
                 System.exit(0);
             }
             _user.reset(args[1]);
@@ -117,7 +127,8 @@ public class Main {
             break;
         case "merge":
             if (_user.warning()) {
-                System.out.println("There is an untracked file in the way; delete it, or add and commit it first.");
+                System.out.println("There is an untracked file in the"
+                        + " way; delete it, or add and commit it first.");
                 System.exit(0);
             }
             _user.merge(args[1]);
@@ -128,6 +139,7 @@ public class Main {
         }
     }
 
+    /** Return ARGS in appropriate form. */
     static String split(String[] args) {
         StringBuilder ret = new StringBuilder();
         for (int i = 1; i < args.length; i++) {
