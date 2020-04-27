@@ -113,7 +113,11 @@ public class Main {
                 _user.save();
                 break;
             case "merge":
-                //FIXME
+                if (_user.warning()) {
+                    System.out.println("There is an untracked file in the way; delete it, or add and commit it first.");
+                    System.exit(0);
+                }
+                _user.merge(args[1]);
                 break;
             default:
                 System.out.println("No command with that name exists.");

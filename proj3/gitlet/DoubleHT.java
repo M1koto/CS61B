@@ -38,7 +38,6 @@ public class DoubleHT implements Serializable {
             _child2 = d;
         } else {
             System.out.println("More than two branches in the same commit");
-            //FIXME
         }
     }
 
@@ -121,7 +120,7 @@ public class DoubleHT implements Serializable {
             _parent1.rmbranch(name);
         }
         if (_parent2 != null) {
-            _parent2.rmbranch(name); //FIXME test 30 contradicts website
+            _parent2.rmbranch(name);
         }
     }
 

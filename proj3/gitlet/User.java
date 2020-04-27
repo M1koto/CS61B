@@ -540,6 +540,28 @@ public class User implements Serializable {
         return untracked.size() != 0;
     }
 
+    /** Merges the file from the tip of the given BRANCH with
+     * the file at the tip of the current branch. */
+    public void merge(String branch) {
+        if (_branchHeads.get(branch) == null) {
+            System.out.println("A branch with that name does not exist.");
+            System.exit(0);
+        }
+        if (removal.size() != 0 || staged.size() != 0) {
+            System.out.println("You have uncommitted changes.");
+            System.exit(0);
+        }
+
+        DoubleHT splitPoint = getSplit(branch);
+    }
+
+    /** Return the doubleHT split point between current branch and BRANCH. */
+    private DoubleHT getSplit(String branch) {
+        DoubleHT given = _branchHeads.get(branch);
+        DoubleHT curr = _branchHeads.get(_current);
+        return null;
+    }
+
     /**
      * An arraylist that stores all the staged files.
      */
