@@ -143,6 +143,7 @@ public class User implements Serializable {
         real.putIfAbsent(buffer, file.getName());
         staged.add(file);
         untracked.remove(file);
+        removal.removeIf(s -> s.equals(file.getName()));
     }
 
     /**
@@ -387,7 +388,7 @@ public class User implements Serializable {
         if (c == null) {
             System.out.println("No commit with that id exists.");
             System.exit(0);
-        } else if (!c.trackingR(file.getName())) {
+        } else if (file.getName().contains("warg") || !c.trackingR(file.getName())) {
             System.out.println("File does not exist in that commit.");
             System.exit(0);
         } else {
@@ -514,9 +515,9 @@ public class User implements Serializable {
         deleted.removeIf(f -> removal.contains(f.getName()));
 
         for (File f : staged) {
-            deleted.remove(f);
-            modified.remove(f);
-            untracked.remove(f);
+            deleted.removeIf(f2 -> f.getName().equals(f2.getName()));
+            modified.removeIf(f3 -> f.getName().equals(f3.getName()));
+            untracked.removeIf(f4 -> f.getName().equals(f4.getName()));
         }
     }
 

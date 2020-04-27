@@ -85,9 +85,13 @@ public class Main {
                     if (args.length > 2 && args[2].equals("--")) {
                         temp3 = new File(args[3]);
                         _user.checkout(args[1], temp3);
-                    } else {
+                    } else if (args.length == 2){
                         _user.switchBranch(args[1]);
                         _user.checkAll();
+                    }
+                    else {
+                        System.out.println("Incorrect operands.");
+                        System.exit(0);
                     }
                 }
                 _user.save();
