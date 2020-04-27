@@ -53,7 +53,9 @@ public class DoubleHT implements Serializable {
      * Add string S to all of its parents.
      */
     public void addBranch(String s) {
-        _branch2 = s;
+        if (_branch2 == null) {
+            _branch2 = s;
+        }
         if (_parent1 != null) {
             _parent1.addBranch(s);
         }

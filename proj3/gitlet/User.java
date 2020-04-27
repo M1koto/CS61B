@@ -562,10 +562,10 @@ public class User implements Serializable {
         if (splitPoint == _branchHeads.get(branch)) {
             System.out.println("Given branch is an ancestor of the current branch.");
             System.exit(0);
-        } else if (splitPoint == null) {
+        } else if (splitPoint == _branchHeads.get(_current)) {
+            System.out.println("Current branch fast-forwarded.");
             switchBranch(branch);
             checkAll();
-            System.out.println("Current branch fast-forwarded.");
             System.exit(0);
         }
     }
