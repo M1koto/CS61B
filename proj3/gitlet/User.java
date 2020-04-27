@@ -555,7 +555,6 @@ public class User implements Serializable {
 
     /** Return the doubleHT split point between current branch and BRANCH. */
     private DoubleHT getSplit(String branch) {
-        DoubleHT given = _branchHeads.get(branch);
         DoubleHT curr = _branchHeads.get(_current);
         return null;
     }

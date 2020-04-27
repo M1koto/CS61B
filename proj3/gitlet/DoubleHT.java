@@ -57,7 +57,7 @@ public class DoubleHT implements Serializable {
         if (_parent1 != null) {
             _parent1.addBranch(s);
         }
-        if (_parent2 != null) {      //FIXME Now writing add branch to both idk if true
+        if (_parent2 != null) {
             _parent2.addBranch(s);
         }
     }
@@ -126,12 +126,14 @@ public class DoubleHT implements Serializable {
 
     /** Prints Commited info on branch _current. */
     public void printlog(String current) {
-        Commit c = _commit;
-        System.out.println(String.format("===\ncommit %s\nDate: %s\n%s\n",
-                c.getCode(), c.time(), c.getMessage()));
-        if (_parent1 != null && _branch1.equals(current)) {
+        if (_branch1.equals(current) || (_branch2 != null && _branch2.equals(current))) {
+            Commit c = _commit;
+            System.out.println(String.format("===\ncommit %s\nDate: %s\n%s\n",
+                    c.getCode(), c.time(), c.getMessage()));
+        }
+        if (_parent1 != null) {
             _parent1.printlog(current);
-        } else if (_parent2 != null && _branch2.equals(current)){
+        } else if (_parent2 != null){
             _parent2.printlog(current);
         }
     }
