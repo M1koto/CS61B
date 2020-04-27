@@ -130,7 +130,7 @@ public class User implements Serializable {
         Commit c = HEAD.getCommit();
         if (file.exists() && c.getFile(file.getName()) != null
                 && compare(file, c.getFile(file.getName()))) {
-            removal.remove(file);
+            removal.remove(file.getName());
             return;
         }
         try {
@@ -143,7 +143,6 @@ public class User implements Serializable {
         real.putIfAbsent(buffer, file.getName());
         staged.add(file);
         untracked.remove(file);
-        removal.removeIf(s -> s.equals(file.getName()));
     }
 
     /**
