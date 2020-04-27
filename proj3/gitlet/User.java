@@ -242,8 +242,8 @@ public class User implements Serializable {
             System.exit(0);
         } else {
             HEAD = target.getFather();
-            _branchHeads.remove(code);
-            _branchHeads.put(code, target.getFather());
+            _branchHeads.remove(_current);
+            _branchHeads.put(_current, HEAD);
             checkAll();
         }
     }
