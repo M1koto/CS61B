@@ -63,47 +63,6 @@ public class DoubleHT implements Serializable {
     }
 
     /**
-     * For a given Commit ID S return the corresponding Commit C.
-     */
-    public DoubleHT findCommit(String s) {
-        DoubleHT a;
-        DoubleHT b = null;
-        if (_commit.getCode().equals(s)) {
-            return this;
-        } else {
-            a = _parent1.findCommit(s);
-            if (_parent2 != null) {
-                b = _parent2.findCommit(s);
-            }
-        }
-        if (a == null && b == null) {
-            return null;
-        } else if (a != null) {
-            return a;
-        } else {
-            return b;
-        }
-    }
-
-    /**
-     * For a given Commit Message M add all
-     * corresponding Commit to ArrayList ANS.
-     */
-    public void findMessage(String m, ArrayList<String> ans) {
-        if (_commit.getMessage().equals(m)) {
-            ans.add(_commit.getMessage());
-            System.out.println(_commit.getCode());
-        }
-        if (_parent1 != null) {
-            _parent1.findMessage(m, ans);
-        }
-        if (_parent2 != null) {
-            _parent2.findMessage(m, ans);
-
-        }
-    }
-
-    /**
      * Return the Commit stored here.
      */
     public Commit getCommit() {
@@ -143,6 +102,11 @@ public class DoubleHT implements Serializable {
     /** Returns paren1. */
     public DoubleHT getParent() {
         return _parent1;
+    }
+
+    /** Only update _branch2 to BRANCH. */
+    public void two(String branch) {
+        _branch2 = branch;
     }
 
     /** Return if b1 or b2 is BRANCH .*/
@@ -195,4 +159,3 @@ public class DoubleHT implements Serializable {
      */
     private DoubleHT _child2;
 }
-

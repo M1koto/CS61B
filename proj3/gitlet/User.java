@@ -580,83 +580,103 @@ public class User implements Serializable {
             Commit given = _branchHeads.get(branch).getCommit();
 
             File here = new File(System.getProperty("user.dir"));
-            for (File f: here.listFiles()) {
+            for (File f : here.listFiles()) {
                 f.delete();
             }
 
             classify(tip.getTracked(), split.getTracked(), given.getTracked(),
                     tip.getCode(), split.getCode(), given.getCode());
 
-            commit(String.format("Merged %s into %s", branch, _current));
+            commit(String.format("Merged %s into %s.", branch, _current));
+            _branchHeads.get(_current).two(branch);
         }
     }
 
     /**
      * Classify files in CURR SPLIT GIVEN using split's perspective.
+     * With String C, S, G.
      */
     private void classify(ArrayList<File> curr,
-   ArrayList<File> split, ArrayList<File> given,
-                String c, String s, String g) {
-            for (File spl: split) {
-                boolean curExist = false;
-                boolean givExist = false;
-                File cacheC = null;
-                File cacheG = null;
-                for (File cur: curr) {
-                    if (spl.getName().equals(cur.getName())) {
-                        curExist = true;
-                        cacheC = cur;
-                    }
+                          ArrayList<File> split, ArrayList<File> given,
+                          String c, String s, String g) {
+        ArrayList<File> trash1 = new ArrayList<>();
+        ArrayList<File> trash2 = new ArrayList<>();
+        for (File spl : split) {
+            boolean curExist = false;
+            boolean givExist = false;
+            File cacheC = null;
+            File cacheG = null;
+            for (File cur : curr) {
+                if (spl.getName().equals(cur.getName())) {
+                    curExist = true;
+                    cacheC = cur;
                 }
-                for (File giv: given) {
-                    if (spl.getName().equals(giv.getName())) {
-                        givExist = true;
-                        cacheG = giv;
-                    }
-                }
-                if (curExist && givExist) {
-                    work(cacheC, spl, cacheG, c, s, g);
-                    curr.remove(cacheC);
-                    given.remove(cacheG);
-                } else if (curExist) {
-                    if (!compare(cacheC, spl)) { // 6
-                        conflict(cacheC, null);
-                    }
-                    curr.remove(cacheC);
-                } else if (givExist) {
-                    if (!compare(cacheG, spl)) { // 7
-                        conflict(null, cacheG);
-                    }
-                    given.remove(cacheG);
-                }
-                split.remove(spl);
             }
-            File t = null;
-            for (File f1: curr) {
-                for (File f2: given) {
-                    if (f1.getName().equals(f2.getName())) {
-                        if (compare(f1, f2)) {
-                            checkout(c, f1);
-                        } else {
-                            conflict(f1, f2);
-                        }
-                        t = f1;
-                    }
-                    given.remove(f2);
+            for (File giv : given) {
+                if (spl.getName().equals(giv.getName())) {
+                    givExist = true;
+                    cacheG = giv;
                 }
-                curr.remove(t);
             }
-            for (File f1: curr) {
-                checkout(c, f1); //4
-            }
-            for (File f2: given) {
-                checkout(g, f2); //5
-                add(f2);
+            if (curExist && givExist) {
+                work(cacheC, spl, cacheG, c, s, g);
+                curr.remove(cacheC);
+                given.remove(cacheG);
+            } else if (curExist) {
+                if (!compare(cacheC, spl)) { // 6
+                    conflict(cacheC, null);
+                }
+                curr.remove(cacheC);
+            } else if (givExist) {
+                if (!compare(cacheG, spl)) { // 7
+                    conflict(null, cacheG);
+                }
+                given.remove(cacheG);
             }
         }
+        for (File f1 : curr) {
+            for (File f2 : given) {
+                if (f1.getName().equals(f2.getName())) {
+                    if (compare(f1, f2)) {
+                        checkout(c, f1);
+                    } else {
+                        conflict(f1, f2);
+                    }
+                    trash1.add(f1);
+                    trash2.add(f2);
+                }
+            }
+        }
+        curr.removeAll(trash1);
+        given.removeAll(trash2);
+        for (File f1 : curr) {
+            present(f1, false); //4
+        }
+        for (File f2 : given) {
+            present(f2, true); //5
+            add(f2);
+        }
+    }
+
+    /** Creates file F in working directory.
+     * Stage if STAGE.*/
+    private void present(File f, boolean stage) {
+        File temp = new File(System.getProperty("user.dir") + "/" + f.getName());
+        try {
+            temp.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Utils.writeContents(temp, Utils.readContentsAsString(f));
+        if (stage) {
+            add(temp);
+        }
+    }
 
 
-    /** Process files CACHEC, SPL, CACHEG, C, S , G. */
+    /**
+     * Process files CACHEC, SPL, CACHEG, C, S , G.
+     */
     private void work(File cacheC, File spl, File cacheG, String c, String s, String g) {
         if (!compare(spl, cacheG) && compare(spl, cacheC)) { // 1
             checkout(g, cacheG);
@@ -671,7 +691,9 @@ public class User implements Serializable {
         }
     }
 
-    /** Format conflicting file CACHEC and CACHEG. */
+    /**
+     * Return Format conflicting file CACHEC and CACHEG.
+     */
     private File conflict(File cacheC, File cacheG) {
         File ret = new File(System.getProperty("user.dir"));
         try {
