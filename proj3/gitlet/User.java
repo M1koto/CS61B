@@ -623,12 +623,12 @@ public class User implements Serializable {
                 curr.remove(cacheC);
                 given.remove(cacheG);
             } else if (curExist) {
-                if (!compare(cacheC, spl)) { // 6
+                if (!compare(cacheC, spl)) {
                     conflict(cacheC, null);
                 }
                 curr.remove(cacheC);
             } else if (givExist) {
-                if (!compare(cacheG, spl)) { // 7
+                if (!compare(cacheG, spl)) {
                     conflict(null, cacheG);
                 }
                 given.remove(cacheG);
@@ -650,10 +650,10 @@ public class User implements Serializable {
         curr.removeAll(trash1);
         given.removeAll(trash2);
         for (File f1 : curr) {
-            present(f1, false); //4
+            present(f1, false);
         }
         for (File f2 : given) {
-            present(f2, true); //5
+            present(f2, true);
             add(f2);
         }
     }
@@ -661,7 +661,8 @@ public class User implements Serializable {
     /** Creates file F in working directory.
      * Stage if STAGE.*/
     private void present(File f, boolean stage) {
-        File temp = new File(System.getProperty("user.dir") + "/" + f.getName());
+        File temp = new File(System.getProperty("user.dir")
+                + "/" + f.getName());
         try {
             temp.createNewFile();
         } catch (IOException e) {
@@ -677,17 +678,18 @@ public class User implements Serializable {
     /**
      * Process files CACHEC, SPL, CACHEG, C, S , G.
      */
-    private void work(File cacheC, File spl, File cacheG, String c, String s, String g) {
-        if (!compare(spl, cacheG) && compare(spl, cacheC)) { // 1
+    private void work(File cacheC, File spl,
+                      File cacheG, String c, String s, String g) {
+        if (!compare(spl, cacheG) && compare(spl, cacheC)) {
             checkout(g, cacheG);
             add(cacheG);
-        } else if (compare(spl, cacheG) && !compare(spl, cacheC)) { //2
+        } else if (compare(spl, cacheG) && !compare(spl, cacheC)) {
             checkout(c, cacheC);
-        } else if (!compare(spl, cacheG) && !compare(spl, cacheC)) { // 8
+        } else if (!compare(spl, cacheG) && !compare(spl, cacheC)) {
             File temp = conflict(cacheC, cacheG);
             add(temp);
         } else {
-            checkout(c, cacheC); // 3
+            checkout(c, cacheC);
         }
     }
 

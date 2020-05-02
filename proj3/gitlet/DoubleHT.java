@@ -1,7 +1,6 @@
 package gitlet;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 /**
  * This class implements linked list by allowing

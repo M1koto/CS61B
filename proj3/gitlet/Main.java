@@ -132,6 +132,7 @@ public class Main {
                 System.exit(0);
             }
             _user.merge(args[1]);
+            _user.save();
             break;
         default:
             System.out.println("No command with that name exists.");
