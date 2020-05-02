@@ -580,13 +580,13 @@ public class User implements Serializable {
             Commit given = _branchHeads.get(branch).getCommit();
 
             File here = new File(System.getProperty("user.dir"));
-            for (File f : here.listFiles()) {
+            for (File f: here.listFiles()) {
                 f.delete();
             }
 
             classify(tip.getTracked(), split.getTracked(), given.getTracked(),
                     tip.getCode(), split.getCode(), given.getCode());
-            
+
             commit(String.format("Merged %s into %s", branch, _current));
         }
     }
@@ -647,10 +647,10 @@ public class User implements Serializable {
                 curr.remove(t);
             }
             for (File f1: curr) {
-                checkout(c, f1);
+                checkout(c, f1); //4
             }
             for (File f2: given) {
-                checkout(g, f2);
+                checkout(g, f2); //5
                 add(f2);
             }
         }
