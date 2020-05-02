@@ -578,7 +578,14 @@ public class User implements Serializable {
             Commit tip = _branchHeads.get(_current).getCommit();
             Commit split = splitPoint.getCommit();
             Commit given = _branchHeads.get(branch).getCommit();
-            classify(tip.getTracked(), split.getTracked(), given.getTracked());
+
+            File here = new File(System.getProperty("user.dir"));
+            for (File f : here.listFiles()) {
+                f.delete();
+            }
+
+            classify(tip.getTracked(), split.getTracked(), given.getTracked(),
+                    tip.getCode(), split.getCode(), given.getCode());
         }
     }
 
@@ -586,8 +593,103 @@ public class User implements Serializable {
      * Classify files in CURR SPLIT GIVEN using split's perspective.
      */
     private void classify(ArrayList<File> curr,
-                          ArrayList<File> split, ArrayList<File> given) {
+   ArrayList<File> split, ArrayList<File> given,
+                String c, String s, String g) {
+            for (File spl: split) {
+                boolean curExist = false;
+                boolean givExist = false;
+                File cacheC = null;
+                File cacheG = null;
+                for (File cur: curr) {
+                    if (spl.getName().equals(cur.getName())) {
+                        curExist = true;
+                        cacheC = cur;
+                    }
+                }
+                for (File giv: given) {
+                    if (spl.getName().equals(giv.getName())) {
+                        givExist = true;
+                        cacheG = giv;
+                    }
+                }
+                if (curExist && givExist) {
+                    work(cacheC, spl, cacheG, c, s, g);
+                    curr.remove(cacheC);
+                    given.remove(cacheG);
+                } else if (curExist) {
+                    if (!compare(cacheC, spl)) { // 6
+                        conflict(cacheC, null);
+                    }
+                    curr.remove(cacheC);
+                } else if (givExist) {
+                    if (!compare(cacheG, spl)) { // 7
+                        conflict(null, cacheG);
+                    }
+                    given.remove(cacheG);
+                }
+                split.remove(spl);
+            }
+            File t = null;
+            for (File f1: curr) {
+                for (File f2: given) {
+                    if (f1.getName().equals(f2.getName())) {
+                        if (compare(f1, f2)) {
+                            checkout(c, f1);
+                        } else {
+                            conflict(f1, f2);
+                        }
+                        t = f1;
+                    }
+                    given.remove(f2);
+                }
+                curr.remove(t);
+            }
+            for (File f1: curr) {
+                checkout(c, f1);
+            }
+            for (File f2: given) {
+                checkout(g, f2);
+                add(f2);
+            }
+        }
 
+
+    /** Process files CACHEC, SPL, CACHEG, C, S , G. */
+    private void work(File cacheC, File spl, File cacheG, String c, String s, String g) {
+        if (!compare(spl, cacheG) && compare(spl, cacheC)) { // 1
+            checkout(g, cacheG);
+            add(cacheG);
+        } else if (compare(spl, cacheG) && !compare(spl, cacheC)) { //2
+            checkout(c, cacheC);
+        } else if (!compare(spl, cacheG) && !compare(spl, cacheC)) { // 8
+            File temp = conflict(cacheC, cacheG);
+            add(temp);
+        } else {
+            checkout(c, cacheC); // 3
+        }
+    }
+
+    /** Format conflicting file CACHEC and CACHEG. */
+    private File conflict(File cacheC, File cacheG) {
+        File ret = new File(System.getProperty("user.dir"));
+        try {
+            ret.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String content = "<<<<<<< HEAD\n";
+        if (cacheC == null) {
+            content += "=======";
+        } else {
+            content += Utils.readContentsAsString(cacheC) + "=======";
+        }
+        if (cacheG == null) {
+            content += ">>>>>>>";
+        } else {
+            content += Utils.readContentsAsString(cacheG) + ">>>>>>>";
+        }
+        Utils.writeContents(ret, content);
+        return ret;
     }
 
     /**
