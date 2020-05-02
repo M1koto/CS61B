@@ -586,6 +586,8 @@ public class User implements Serializable {
 
             classify(tip.getTracked(), split.getTracked(), given.getTracked(),
                     tip.getCode(), split.getCode(), given.getCode());
+            
+            commit(String.format("Merged %s into %s", branch, _current));
         }
     }
 
