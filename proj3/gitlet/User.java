@@ -698,6 +698,7 @@ public class User implements Serializable {
             File temp = conflict(cacheC, cacheG);
             add(temp);
             conflict = true;
+            System.out.println("Encountered a merge conflict.");
         } else {
             checkout(c, cacheC);
         }
