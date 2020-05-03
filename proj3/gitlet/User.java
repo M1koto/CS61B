@@ -563,6 +563,10 @@ public class User implements Serializable {
             System.out.println("You have uncommitted changes.");
             System.exit(0);
         }
+        if (_current.equals(branch)) {
+            System.out.println("Cannot merge a branch with itself.");
+            System.exit(0);
+        }
 
         DoubleHT splitPoint = getSplit(branch);
         if (splitPoint == _branchHeads.get(branch)) {
@@ -584,10 +588,15 @@ public class User implements Serializable {
                 f.delete();
             }
 
+            conflict = false;
             classify(tip.getTracked(), split.getTracked(), given.getTracked(),
                     tip.getCode(), split.getCode(), given.getCode());
 
-            commit(String.format("Merged %s into %s.", branch, _current));
+            if (conflict) {
+                commit("Encountered a merge conflict.");
+            } else {
+                commit(String.format("Merged %s into %s.", branch, _current));
+            }
             _branchHeads.get(_current).two(branch);
         }
     }
@@ -688,6 +697,7 @@ public class User implements Serializable {
         } else if (!compare(spl, cacheG) && !compare(spl, cacheC)) {
             File temp = conflict(cacheC, cacheG);
             add(temp);
+            conflict = true;
         } else {
             checkout(c, cacheC);
         }
@@ -729,6 +739,8 @@ public class User implements Serializable {
         return split;
     }
 
+    /** Check to see if exist conflict. */
+    private boolean conflict;
 
     /**
      * An arraylist that stores all the staged files.

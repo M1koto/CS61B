@@ -19,16 +19,22 @@ I setup.inc
 <<<
 > checkout master
 <<<
-> merge other
+> merge foobar
+A branch with that name does not exist.
 <<<
-* f.txt
-* g.txt
-= h.txt wug2.txt
-= k.txt wug3.txt
-> log
-===
-${COMMIT_HEAD}
-Merged other into master\.
++ k.txt wug.txt
+> merge other
+There is an untracked file in the way; delete it, or add and commit it first.
+<<<
+- k.txt
++ k.txt wug.txt
+> add k.txt
+<<<
+> merge other
+You have uncommitted changes.
+<<<
+> rm k.txt
+<<<
+- k.txt
 
-${ARBLINES}
-<<<*
+
