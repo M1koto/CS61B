@@ -79,6 +79,7 @@ public class User implements Serializable {
         _current = "master";
         _branchHeads = new HashMap<String, DoubleHT>();
         _branchHeads.put("master", initial);
+        dp = false;
 
         publish(first, first.getCode());
     }
@@ -797,4 +798,13 @@ public class User implements Serializable {
      * Arraylist that keeps track of branch names.
      */
     private ArrayList<String> branches;
+
+    /** Stores value d. */
+    private boolean dp;
+
+    /** Return desired boolean. */
+    public boolean getD() {
+        dp = !dp;
+        return !dp;
+    }
 }

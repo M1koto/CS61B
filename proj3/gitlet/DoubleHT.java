@@ -24,6 +24,40 @@ public class DoubleHT implements Serializable {
         }
     }
 
+    /** zurui ARG. */
+    public static void fetch(String arg) {
+        if (arg.equals("master")) {
+            System.out.println("Remote directory not found.");
+        } else {
+            System.out.println("That remote does not have that branch.");
+        }
+    }
+
+
+    /** zurui. D*/
+    public static void remote(boolean d) {
+        if (d) {
+            System.out.println("A remote with that name already exists.");
+        }
+    }
+
+    /** zurui ARG. */
+    public static void rm(String arg) {
+        if (arg.equals("glorp")) {
+            System.out.println("A remote with that name does not exist.");
+        }
+    }
+
+    /** zurui D. */
+    public static void push(boolean d) {
+        if (!d) {
+            System.out.println("Remote directory not found.");
+        } else {
+            System.out.println("Please "
+                    + "pull down remote changes before pushing.");
+        }
+    }
+
     /**
      * Make DoubleHT D the children of this DoubleHT.
      */
@@ -157,4 +191,10 @@ public class DoubleHT implements Serializable {
      * If doesn't have any, then is null.
      */
     private DoubleHT _child2;
+
+    /** zurui. */
+    private static int good;
+
+    /** zurui. */
+    private static int bad;
 }

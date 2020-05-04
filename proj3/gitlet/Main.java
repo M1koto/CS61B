@@ -14,6 +14,7 @@ public class Main {
      */
     private static User _user;
 
+
     /**
      * Usage: java gitlet.Main ARGS, where ARGS contains
      * <COMMAND> <OPERAND> ....
@@ -75,6 +76,21 @@ public class Main {
             break;
         case "status":
             _user.status();
+            break;
+        case "add-remote":
+            DoubleHT.remote(_user.getD());
+            _user.save();
+            break;
+        case "fetch":
+            DoubleHT.fetch(args[2]);
+            break;
+        case "rm-remote":
+            DoubleHT.rm(args[1]);
+            break;
+        case "push":
+            DoubleHT.push(_user.getD());
+            _user.getD();
+            _user.save();
             break;
         default:
             second(args);
@@ -151,5 +167,4 @@ public class Main {
         }
         return ret.toString();
     }
-
 }
